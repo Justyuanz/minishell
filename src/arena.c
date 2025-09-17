@@ -13,7 +13,7 @@ int	arena_init(t_arena *arena, size_t capacity)
 }
 
 char *arena_push(t_arena *arena, char *s)
-{	
+{
 	size_t	len;
 	char	*current_start;
 	if (!arena || !s)
@@ -31,7 +31,10 @@ char *arena_push(t_arena *arena, char *s)
 	arena->offset += len;
 	return (current_start);
 }
-
+void arena_reset(t_arena *arena)
+{
+	arena->offset = 0;
+}
 void arena_free(t_arena *arena)
 {
 	free(arena->data);

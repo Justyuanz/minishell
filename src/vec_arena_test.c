@@ -80,7 +80,6 @@ int arena_vec_test_(void)
     t_arena arena;
     t_vec   tokens;
 
-    // init arena + vector
     if (!arena_init(&arena, 1024))
     {
         printf("arena init failed\n");
@@ -92,27 +91,23 @@ int arena_vec_test_(void)
         return (1);
     }
 
-    // push some strings into arena
     char *s1 = arena_push(&arena, "echo");
     char *s2 = arena_push(&arena, "hello");
     char *s3 = arena_push(&arena, "world");
 
-    // store those pointers into vector
     vec_push(&tokens, s1);
     vec_push(&tokens, s2);
     vec_push(&tokens, s3);
 
-    // print them back
     size_t i = 0;
     while (i < tokens.len)
     {
-        char *tok = (char *)vec_get(&tokens, i);
+        char *tok = vec_get(&tokens, i);
         printf("token[%zu] = %s\n", i, tok);
         i++;
     }
 
-    // cleanup
-    vec_free(&tokens);
+	vec_free(&tokens);
     arena_free(&arena);
     return (0);
 }

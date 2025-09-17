@@ -3,12 +3,62 @@
 void vec_test(void);
 void print_vec(t_vec *v);
 int arena_vec_test_(void);
+
+//updated vec_new vec_push vec_get vec_resize to work with array of ptr
+//a func to init arena and vector
+//a func to destroy
+//a func to exit?
+//a func for readline
+//a func for bash delimiters
+//tokenizerecho
+void shell_init(t_arena *arena, t_vec *token)
+{
+	if (arena_init(arena, 10000) == -1)
+		exit(EXIT_FAILURE);
+	if (vec_new(token, 8) == -1)
+	{
+		arena_free(arena);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void read_input(t_arena *arena, t_vec *token)
+{
+	char	*line;
+	char	*arena_line;
+	char	*vec_tok;
+	line = readline("~/Minishell$");
+	if (!line)
+	{
+		//call the destroy func
+		exit(EXIT_FAILURE);
+	}
+	if (*line)
+	{
+		add_history(line);
+		arena_line = arena_push(arena, line);
+		vec_push(token, arena_line);
+	}
+	free(line);
+	vec_tok = vec_get(token, 0);
+	printf("%s\n", vec_tok);
+	arena_reset(arena);
+}
 int main(void)
 {
 
-    //vec_test();
-	//updated vec_new vec_push vec_get vec_resize to work with array of ptr
-	arena_vec_test_();
+	t_arena arena;
+	t_vec	token;
+
+	shell_init(&arena, &token);
+	while (1)
+	{
+		read_input(&arena, &token);
+		arena_reset(&arena);
+	}
+	arena_free(&arena);
+	vec_free(&token);
+	//arena_vec_test_();
 	return 0;
 }
 

@@ -23,5 +23,6 @@ typedef struct s_arena
 
 int	arena_init(t_arena *arena, size_t capacity);
 char *arena_push(t_arena *arena, char *s);
-void	arena_free(t_arena *arena);
+void arena_reset(t_arena *arena);
+void arena_free(t_arena *arena);
 #endif
