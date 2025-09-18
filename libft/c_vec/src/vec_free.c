@@ -6,5 +6,6 @@ void	vec_free(t_vec *src)
 	src->memory = NULL;
 	src->capacity = 0;
 	src->len = 0;
+	src->size_element = 0;
 }
 

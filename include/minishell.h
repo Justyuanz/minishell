@@ -6,13 +6,22 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
 typedef enum e_token_type
 {
 	WORD,
 	PIPE,
 	REDIR_IN,
 	REDIR_OUT,
+	APPEND,
+	HEREDOC
 }	s_token_type;
+
+typedef struct s_quote
+{
+	bool single_ON;
+	bool double_ON;
+}	t_quote;
 
 typedef struct s_arena
 {
@@ -20,6 +29,20 @@ typedef struct s_arena
 	size_t	capacity;
 	size_t	offset;
 }	t_arena;
+
+typedef struct s_token
+{
+	char	*token;
+	s_token_type type;
+}	t_token;
+
+typedef struct s_data
+{
+	t_arena	arena;
+	t_vec	vec_tok;
+	t_token	
+	t_quote	q;
+}	t_data;
 
 int	arena_init(t_arena *arena, size_t capacity);
 char *arena_push(t_arena *arena, char *s);

@@ -8,11 +8,11 @@ int vec_push(t_vec *dst, char *element)
 	if (!dst || !element)
 		return (-1);
 	if (!dst->memory)
-	{	
-		if (vec_new(dst, 16) == -1)
+	{
+		if (vec_new(dst, 1, dst->size_element) == -1)
 			return (-1);
 	}
-	if (dst->len >= dst->capacity)
+	if (dst->len * dst->size_element >= dst->capacity)
 	{
 		if (vec_resize(dst, dst->len * 2) == -1)
 			return (-1);
