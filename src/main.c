@@ -5,14 +5,38 @@ void print_vec(t_vec *v);
 int arena_vec_test_(void);
 
 //updated vec_new vec_push vec_get vec_resize to work with array of ptr
-//a func to init arena and vector
+
 //a func to destroy
 //a func to exit?
 //a func for readline
-//a func for bash delimiters
+//a func for bash delimiters(is space, is operator, is quote, is word?)
 //tokenizerecho
+
+bool is_double_quote(char c)
+{
+	return(c == '"');
+}
+bool is_single_quote(char c)
+{
+	return(c == '\'');
+}
+
+bool is_pipe(char c)
+{
+	return (c == '|');
+}
+bool is_operator(char c)
+{
+	return (c == '>' || c == '<');
+}
+
+bool is_space(char c)
+{
+	return (c == ' ');
+}
 void shell_init(t_arena *arena, t_vec *token)
 {
+	//perhaps more things to init here
 	if (arena_init(arena, 10000) == -1)
 		exit(EXIT_FAILURE);
 	if (vec_new(token, 8) == -1)
@@ -54,7 +78,6 @@ int main(void)
 	while (1)
 	{
 		read_input(&arena, &token);
-		arena_reset(&arena);
 	}
 	arena_free(&arena);
 	vec_free(&token);

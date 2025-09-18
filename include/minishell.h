@@ -26,3 +26,87 @@ char *arena_push(t_arena *arena, char *s);
 void arena_reset(t_arena *arena);
 void arena_free(t_arena *arena);
 #endif
+
+/*
+-----Prompt & Readline-----
+Used to show prompt, handle history, and update input line.
+
+readline("minishell> ")			Show prompt and return user input as char *
+add_history(line)				Add a command to history (↑ ↓ keys)
+rl_replace_line("", 0)			Replace current input (used in signal handler)
+rl_on_new_line()				Move cursor to new line
+rl_redisplay()					Redraw prompt after interruption
+rl_clear_history()				Free all history (used on cleanup)
+
+-----Signal Handling-----
+Used to make Ctrl+C and Ctrl+\ behave like in Bash.
+
+signal(SIGINT, handler)			Handle Ctrl+C
+sigaction(SIGINT, &act, NULL)	More powerful alternative to signal()
+sigemptyset(&set)				Prepare empty signal set
+sigaddset(&set, SIGQUIT)		Add signal to signal set
+kill(pid, SIGTERM)				Send signal to process (used for kill or heredoc)
+
+----Process Management----
+Used to fork processes, wait for them, and execute commands.
+
+fork()							Creates child process (returns 0 in child, >0 in parent)
+execve(path, argv, envp)		Replaces current process with another program
+exit(status)					Terminates current process
+wait(&status)					Waits for any child
+waitpid(pid, &status, 0)		Waits for specific child
+wait3(), wait4()				Advanced wait with resource usage
+
+----File I/O and Redirection----
+Used to handle >, >>, <, <<, and pipes.
+
+open(path, flags, mode)			Opens a file
+read(fd, buf, size)				Read from fd
+write(fd, buf, size)			Write to fd
+dup(fd)							Duplicate a file descriptor
+dup2(old, new)					Redirect new to old
+close(fd)						Close a file descriptor
+pipe(fd[2])						Create a pipe: fd[0] = read, fd[1] = write
+unlink(path)					Delete file (used for heredoc temp file)
+
+----Environment & Path----
+Used for env, export, unset, cd, and finding executables.
+
+getcwd(buf, size)				Get current directory
+chdir(path)						Change current directory
+getenv("PATH")					Get value of environment variable
+access(path, mode)				Check if file is executable (X_OK)
+stat, fstat, lstat				File metadata (used for env, . check)
+
+----Directory Functions----
+Only needed if parse files or directories (e.g., . or for cd)
+
+opendir(path)					Opens directory stream
+readdir(dir)					Reads directory entries
+closedir(dir)					Closes directory stream
+
+-----Error Handling-----
+Show meaningful error messages to stderr.
+
+perror("msg")					Print "msg: system error"
+strerror(errno)					Convert error code to readable message
+
+----TTY & Terminal Control----
+For checking if user is in a real terminal or for fancy output.
+
+isatty(fd)						Is fd a terminal?
+ttyname(fd)						Get name of terminal device
+ttyslot()						Get terminal slot
+ioctl()							Terminal control (rarely needed)
+
+----Termcap (for terminal formatting)----
+Used to do things like clear screen, move cursor.
+
+tgetent(buf, termname)			Load terminal capabilities
+tgetflag(capname)				Get boolean cap
+tgetnum(capname)				Get numeric cap
+tgetstr(capname, &area)			Get string cap
+tgoto(cap, col, row)			Build cursor movement string
+tputs(str, affcnt, putc)		Output termcap string
+
+*/
