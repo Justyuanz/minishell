@@ -18,7 +18,6 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 SRCS = $(addprefix $(SRCDIR)/,\
 		main.c \
 		arena.c \
-		vec_arena_test.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)

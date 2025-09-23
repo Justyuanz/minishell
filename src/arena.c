@@ -11,14 +11,23 @@ int	arena_init(t_arena *arena, size_t capacity)
 	arena->offset = 0;
 	return (1);
 }
-
-char *arena_push(t_arena *arena, char *s)
+void *arena_alloc(t_arena *arena, size_t elem_size)
 {
-	size_t	len;
+	char *current_start;
+	
+	if (!arena || !arena->data || elem_size == 0)
+		return (NULL); //maybe add safe exit here?
+	if (arena->offset + elem_size > arena->capacity)
+        return NULL; // out of memory, perhaps link to next arena
+	current_start = &arena->data[arena->offset];
+	arena->offset += elem_size;
+	return (current_start);
+}
+char *arena_push(t_arena *arena, char *s, size_t len)
+{
 	char	*current_start;
 	if (!arena || !s)
 		return (NULL);
-	len = ft_strlen(s) + 1;
 	if (!arena->data && arena_init(arena, len) == -1)
 		return (NULL);
 	if (arena->offset + len > arena->capacity)

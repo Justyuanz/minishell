@@ -15,7 +15,7 @@ typedef enum e_token_type
 	REDIR_OUT,
 	APPEND,
 	HEREDOC
-}	s_token_type;
+}	t_token_type;
 
 typedef struct s_quote
 {
@@ -32,20 +32,20 @@ typedef struct s_arena
 
 typedef struct s_token
 {
-	char	*token;
-	s_token_type type;
+	char	*str;
+	t_token_type type;
 }	t_token;
 
 typedef struct s_data
 {
 	t_arena	arena;
 	t_vec	vec_tok;
-	t_token	
 	t_quote	q;
 }	t_data;
 
-int	arena_init(t_arena *arena, size_t capacity);
-char *arena_push(t_arena *arena, char *s);
+int	 arena_init(t_arena *arena, size_t capacity);
+char *arena_push(t_arena *arena, char *s, size_t len);
+void *arena_alloc(t_arena *arena, size_t elem_size);
 void arena_reset(t_arena *arena);
 void arena_free(t_arena *arena);
 #endif

@@ -9,10 +9,10 @@ int	vec_resize(t_vec *src, size_t target_len)
 	if(!src)
 		return (-1);
 	if(!src->memory)
-		return (vec_new(src, target_len));
+		return (vec_new(src, target_len, src->size_element));
 	else
 	{
-		if (vec_new(&tmp, target_len) == -1)
+		if (vec_new(&tmp, target_len, src->size_element) == -1)
 			return (-1);
 		else
 		{

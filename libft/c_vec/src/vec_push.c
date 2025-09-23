@@ -1,6 +1,6 @@
 #include "vec.h"
 
-int vec_push(t_vec *dst, char *element)
+int vec_push(t_vec *dst, void *element)
 {
 	int	i;
 
