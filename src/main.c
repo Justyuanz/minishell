@@ -14,6 +14,17 @@ t_data *get_data(void)
 	return &d;
 }
 
+
+// the vector is storing pointers to tokens.
+// vec_get returns the ADDRESS of the element slot inside the vector.
+// each element is a t_token *, that means the return type here is t_token **.
+// casting(t_token **) interpret the returned void * as a t_token **
+// * (...) → read the value stored in the slot = the actual t_token *, not the address of the slot 
+t_token *get_tok(t_data *d, size_t index)
+{
+    return (*(t_token **)vec_get(&d->vec_tok, index));
+}
+
 bool ft_isspace(char c)
 {
 	return (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
@@ -35,20 +46,17 @@ void shell_init(t_data *d)
 
 }
 
-void push_tok(t_data *d, char *ptr, size_t len, int type)
+void push_tok(t_data *d, char *line, size_t len, int type)
 {
     t_token *tok;
 
     tok = (t_token *)arena_alloc(&d->arena, sizeof(t_token));
-    printf("arena alloc done\n");
-    tok->str = arena_push(&d->arena, ptr, len + 1);
-    printf("arena push done\n");
+    tok->str = arena_push(&d->arena, line, len + 1);
     tok->str[len] = '\0';
     tok->type = type;
-    printf("\\0 done\n");
-    if (vec_push(&d->vec_tok, &tok) == -1)//only push the address of the pointer
-        exit (EXIT_FAILURE); //ERROR HANDLING
-    printf("vec push done\n");
+    if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
+		exit (EXIT_FAILURE); //ERROR HANDLING
+	fprintf(stderr,"vec_tok.memory:",&d->vec_tok.memory, &d->vec_tok.len)
 }
 
 size_t read_operator(char *line, size_t i)
@@ -69,18 +77,15 @@ size_t read_operator(char *line, size_t i)
             i++;
         }
     }
+	for (size_t j = 0; j < d->vec_tok.len; j++)
+     {
+        t_token *tok_back = get_tok(d, j);
+        fprintf(stderr, "tok->str[%zu]:%s tok->type:%d\n", j, tok_back->str, tok_back->type);
+		fprintf(stderr, "vec_tok.len: %zu\n", *(&d->vec_tok.len));
+     }
     return (i);
 }
 
-// the vector is storing pointers to tokens.
-// vec_get returns the ADDRESS of the element slot inside the vector.
-// each element is a t_token *, that means the return type here is t_token **.
-// casting(t_token **) interpret the returned void * as a t_token **
-// * (...) → read the value stored in the slot = the actual t_token *, not the address of the slot 
-t_token *get_tok(t_data *d, size_t index)
-{
-    return (*(t_token **)vec_get(&d->vec_tok, index));
-}
 void tokenizer(t_data *d, char *line)
 {
     size_t i;
@@ -95,9 +100,7 @@ void tokenizer(t_data *d, char *line)
         start = i;
         if(line[i] == '>' || line[i] == '<' || line[i] == '$'
             || line[i] == '|')
-        {
-            i = read_operator(line, i);    
-        } 
+            i = read_operator(line, i);
     }
 }
 
@@ -114,12 +117,6 @@ void read_the_line(t_data *d)
         tokenizer(d, line);
     }
     free(line);
-     for (size_t j = 0; j < d->vec_tok.len; j++)
-     {
-        t_token *tok_back = get_tok(d, j);
-        printf("tok->str[%zu]:%s tok->type:%d\n", j, tok_back->str, tok_back->type);
-     }
-    
 }
 
 int main(void)

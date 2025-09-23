@@ -51,6 +51,30 @@ void arena_free(t_arena *arena);
 #endif
 
 /*
+
+Stack (t_data)
++------------------+
+| arena            |
+| vec_tok {        |---> memory (malloc, heap)
+|   memory ------+ |
+|   len = 0      | |
+|   capacity = 4 | |
+| }              | |
+| q              | |
++------------------+
+
+Heap (vec_tok.memory, capacity=4)
++---------+---------+---------+---------+
+| tok*    | tok*    | tok*    | tok*    |
++---------+---------+---------+---------+
+
+Heap (arena.data)
++----------------------+-----------------+ ...
+| t_token structs      | strings "..."   |
++----------------------+-----------------+ ...
+
+*/
+/*
 -----Prompt & Readline-----
 Used to show prompt, handle history, and update input line.
 
