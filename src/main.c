@@ -66,98 +66,28 @@ void push_tok(t_data *d, char *line, size_t len, int type)
 		exit (EXIT_FAILURE); //ERROR HANDLING
 }
 
-size_t read_pipe(char *line, size_t i)
-{
-    t_data  *d;
 
-    d = get_data();
-    if (line[i] == '|' )
-    {
-        push_tok(d, &line[i], 2, PIPE);
-        i++;
-    }
-    
-    return (i);
-}
-size_t read_env_operator(char *line, size_t i)
-{
-    t_data  *d;
-
-    d = get_data();
-    if (line[i + 1] == '?' )
-    {
-        push_tok(d, &line[i], 3, EXPAND);
-        i += 2;
-    }
-    else
-    {
-        push_tok(d,&line[i], 2, ENVIRONMENT);
-        i++;
-    }
-    
-    return (i);
-}
-size_t read_redir_operator2(char *line, size_t i)
-{
-    t_data  *d;
-
-    d = get_data();
-    if (line[i + 1] == '<')
-    {
-        push_tok(d, &line[i], 2, HEREDOC);
-        i += 2;
-    }
-    else
-    {
-        push_tok(d, &line[i], 1, REDIR_IN);
-        i++;
-    }
-    return (i);
-}
-
-
-size_t read_redir_operator(char *line, size_t i)
-{
-    t_data  *d;
-
-    d = get_data();
-    if (line[i + 1] == '>' )
-    {
-        push_tok(d, &line[i], 2, APPEND);
-        i += 2;
-    }
-    else
-    {
-        push_tok(d, &line[i], 1, REDIR_OUT);
-        i++;
-    }
-
-    return (i);
-}
-
-void tokenizer(char *line)
+void tokenizer(t_data *d, char *line)
 {
     size_t i;
-    size_t start;
     i = 0;
 
     while (line[i])
     {
         while(ft_isspace(line[i]))
             i++;
-        start = i;
         if(line[i] == '>')
-            i = read_redir_operator(line, i);
+            i = read_redir_operator(d, line, i);
         else if (line[i] == '<')
-            i = read_redir_operator2(line, i);
+            i = read_redir_operator2(d, line, i);
         else if (line[i] == '$')
-            i = read_env_operator(line, i);
+            i = read_env_operator(d, line, i);
         else if (line[i] == '|')
-            i = read_pipe(line, i);
-       // else if (line[i] == '\'' || line[i] == '"')
-         //   i = read_quote(line, i);
+            i = read_pipe(d, line, i);
+        //else if (line[i] == '\'' || line[i] == '"')
+          // i = read_quote(d, line, i);
         else
-            i ++;
+            i = read_word(d, line, i);
     }
 }
 
@@ -171,7 +101,7 @@ void read_the_line(t_data *d)
     if (*line)
     {
         add_history(line);
-        tokenizer(line);
+        tokenizer(d, line);
         debug_print_tokens(d); //for testing
         arena_reset(&d->arena);
         vec_reset(&d->vec_tok);
