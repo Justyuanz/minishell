@@ -19,5 +19,6 @@ int		vec_resize(t_vec *src, size_t target_size);
 int		vec_push(t_vec *dst, void *element);
 void 	*vec_get(t_vec *src, size_t index);
 void	vec_free(t_vec *src);
+void 	vec_reset(t_vec *vec);
 
 #endif

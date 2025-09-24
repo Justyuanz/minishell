@@ -6,7 +6,6 @@
 //a func to exit?
 //tokenizerecho
 
-
 t_data *get_data(void)
 {
 	static t_data d;
@@ -14,15 +13,24 @@ t_data *get_data(void)
 	return &d;
 }
 
+void debug_print_tokens(t_data *d)
+{
+    fprintf(stderr, "\n=== TOKENS IN VECTOR ===\n");
+    fprintf(stderr, "vec_tok.len = %zu\n", d->vec_tok.len);
+    for (size_t j = 0; j < d->vec_tok.len; j++)
+    {
+         // memory[j] is a void*, cast back to t_token*
+        t_token *tok = (t_token *)d->vec_tok.memory[j];
+        fprintf(stderr, "vec_tok.memory[%zu] -> tok=%p\n", j, (void *)tok);
+        fprintf(stderr, "    tok->str  = \"%s\"\n", tok->str);
+        fprintf(stderr, "    tok->type = %d\n", tok->type);
+    }
+    fprintf(stderr, "=========================\n\n");
+}
 
-// the vector is storing pointers to tokens.
-// vec_get returns the ADDRESS of the element slot inside the vector.
-// each element is a t_token *, that means the return type here is t_token **.
-// casting(t_token **) interpret the returned void * as a t_token **
-// * (...) → read the value stored in the slot = the actual t_token *, not the address of the slot 
 t_token *get_tok(t_data *d, size_t index)
 {
-    return (*(t_token **)vec_get(&d->vec_tok, index));
+    return ((t_token *)vec_get(&d->vec_tok, index));
 }
 
 bool ft_isspace(char c)
@@ -56,41 +64,81 @@ void push_tok(t_data *d, char *line, size_t len, int type)
     tok->type = type;
     if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
 		exit (EXIT_FAILURE); //ERROR HANDLING
-	fprintf(stderr,"vec_tok.memory:",&d->vec_tok.memory, &d->vec_tok.len)
 }
 
-size_t read_operator(char *line, size_t i)
+size_t read_pipe(char *line, size_t i)
 {
     t_data  *d;
 
     d = get_data();
-    if (line[i] == '>')
+    if (line[i] == '|' )
     {
-        if (line[i + 1] == '>' )
-        {
-            push_tok(d, &line[i], 2, APPEND);
-            i += 2;
-        }
-        else
-        {
-            push_tok(d, &line[i], 1, REDIR_OUT);
-            i++;
-        }
+        push_tok(d, &line[i], 2, PIPE);
+        i++;
     }
-	for (size_t j = 0; j < d->vec_tok.len; j++)
-     {
-        t_token *tok_back = get_tok(d, j);
-        fprintf(stderr, "tok->str[%zu]:%s tok->type:%d\n", j, tok_back->str, tok_back->type);
-		fprintf(stderr, "vec_tok.len: %zu\n", *(&d->vec_tok.len));
-     }
+    
+    return (i);
+}
+size_t read_env_operator(char *line, size_t i)
+{
+    t_data  *d;
+
+    d = get_data();
+    if (line[i + 1] == '?' )
+    {
+        push_tok(d, &line[i], 3, EXPAND);
+        i += 2;
+    }
+    else
+    {
+        push_tok(d,&line[i], 2, ENVIRONMENT);
+        i++;
+    }
+    
+    return (i);
+}
+size_t read_redir_operator2(char *line, size_t i)
+{
+    t_data  *d;
+
+    d = get_data();
+    if (line[i + 1] == '<')
+    {
+        push_tok(d, &line[i], 2, HEREDOC);
+        i += 2;
+    }
+    else
+    {
+        push_tok(d, &line[i], 1, REDIR_IN);
+        i++;
+    }
     return (i);
 }
 
-void tokenizer(t_data *d, char *line)
+
+size_t read_redir_operator(char *line, size_t i)
+{
+    t_data  *d;
+
+    d = get_data();
+    if (line[i + 1] == '>' )
+    {
+        push_tok(d, &line[i], 2, APPEND);
+        i += 2;
+    }
+    else
+    {
+        push_tok(d, &line[i], 1, REDIR_OUT);
+        i++;
+    }
+
+    return (i);
+}
+
+void tokenizer(char *line)
 {
     size_t i;
     size_t start;
-    (void)d;
     i = 0;
 
     while (line[i])
@@ -98,9 +146,18 @@ void tokenizer(t_data *d, char *line)
         while(ft_isspace(line[i]))
             i++;
         start = i;
-        if(line[i] == '>' || line[i] == '<' || line[i] == '$'
-            || line[i] == '|')
-            i = read_operator(line, i);
+        if(line[i] == '>')
+            i = read_redir_operator(line, i);
+        else if (line[i] == '<')
+            i = read_redir_operator2(line, i);
+        else if (line[i] == '$')
+            i = read_env_operator(line, i);
+        else if (line[i] == '|')
+            i = read_pipe(line, i);
+       // else if (line[i] == '\'' || line[i] == '"')
+         //   i = read_quote(line, i);
+        else
+            i ++;
     }
 }
 
@@ -114,8 +171,11 @@ void read_the_line(t_data *d)
     if (*line)
     {
         add_history(line);
-        tokenizer(d, line);
-    }
+        tokenizer(line);
+        debug_print_tokens(d); //for testing
+        arena_reset(&d->arena);
+        vec_reset(&d->vec_tok);
+     }
     free(line);
 }
 

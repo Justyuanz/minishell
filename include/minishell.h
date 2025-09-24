@@ -12,9 +12,11 @@ typedef enum e_token_type
 	WORD,
 	PIPE,
 	REDIR_IN,
-	REDIR_OUT,
 	APPEND,
-	HEREDOC
+	REDIR_OUT,
+	HEREDOC,
+	ENVIRONMENT,
+	EXPAND
 }	t_token_type;
 
 typedef struct s_quote
