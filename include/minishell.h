@@ -19,12 +19,6 @@ typedef enum e_token_type
 	EXPAND
 }	t_token_type;
 
-typedef struct s_quote
-{
-	bool single_ON;
-	bool double_ON;
-}	t_quote;
-
 typedef struct s_arena
 {
 	char	*data;
@@ -36,7 +30,6 @@ typedef struct s_token
 {
 	char	*str;
 	t_token_type type;
-	t_quote	q;
 }	t_token;
 
 typedef struct s_data

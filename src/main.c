@@ -95,7 +95,7 @@ void read_the_line(t_data *d)
 {
     char  *line;
 
-    line = readline("minishell\n$");
+    line = readline("minishell$");
     if (!line)
         exit(EXIT_FAILURE); //error handling
     if (*line)
@@ -121,9 +121,3 @@ int main(void)
     vec_free(&d->vec_tok);
     return 0;
 }
-
-
-//' ' = super safe → everything is literal.
-//" " = semi safe → things like $ and \" still work.
-//You can’t mix ' inside '...'.
-//You can put " " inside '...' and vice versa.

@@ -6,12 +6,19 @@
 #include <stdbool.h>
 #include "libft.h"
 
+typedef struct s_quote
+{
+	bool saw_single_quote;
+	bool saw_double_quote;
+}	t_quote;
+
 typedef struct s_vec
 {
 	void			**memory;
 	size_t			capacity;
 	size_t			len;
 	size_t			size_element;
+	t_quote			q;
 }	t_vec;
 
 int		vec_new(t_vec *dst, size_t init_len, size_t size_element);
