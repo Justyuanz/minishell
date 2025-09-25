@@ -6,98 +6,88 @@
 //a func to exit?
 //tokenizerecho
 
-
 t_data *get_data(void)
 {
 	static t_data d;
 
 	return &d;
 }
-
-bool ft_isspace(char c)
+char *tok_type(t_token_type tok_type)
 {
-	return (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
-		|| c == ' ');
+    if (tok_type == WORD)
+        return ("WORD");
+    else if (tok_type == PIPE)
+        return ("PIPE");
+    else if (tok_type == REDIR_IN)
+        return ("REDIR_IN");
+    else if (tok_type == APPEND)
+        return ("APPEND");
+    else if (tok_type == REDIR_OUT)
+        return ("REDIR_OUT");
+    else if (tok_type == HEREDOC)
+        return ("HEREDOC");
+    else if (tok_type == ENV)
+        return ("ENV");
+    else if (tok_type == EXPAND)
+        return ("EXPAND");
+    return ("no type");
 }
 
-void shell_init(t_data *d)
+t_token *get_tok(t_data *d, size_t index)
 {
-	//perhaps more things to init here
-	if (arena_init(&d->arena, 10000) == -1)
-		exit(EXIT_FAILURE);
-	if (vec_new(&d->vec_tok, 1, sizeof(t_token *)) == -1)
-	{
-		arena_free(&d->arena);
-		exit(EXIT_FAILURE);
-	}
-	d->q.single_ON = false;
-	d->q.double_ON = false;
+    return ((t_token *)vec_get(&d->vec_tok, index));
+}
+void debug_print_tokens(t_data *d)
+{
+    t_token *tok;
+    size_t  j;
 
+    j = 0;
+    fprintf(stderr, "\n===============TOKEN INFO==============\n");
+    fprintf(stderr,"vec_tok.len = %zu\n\n", d->vec_tok.len);
+    while (j < d->vec_tok.len)
+    {
+        tok = get_tok(d, j);
+        fprintf(stderr, "vec_tok.memory[%zu] -> tok =%p\n", j, (void *)tok);
+        fprintf(stderr,"            tok->str  :  \"%s\"\n",tok->str);
+        fprintf(stderr,"            tok->type :  %s\n", tok_type(tok->type));
+        fprintf(stderr,"--------------------------------------\n");
+        j++;
+    }
+        fprintf(stderr, "\n===============END INFO==============\n");
 }
 
-void push_tok(t_data *d, char *ptr, size_t len, int type)
+void push_tok(t_data *d, char *line, size_t len, int type)
 {
     t_token *tok;
 
     tok = (t_token *)arena_alloc(&d->arena, sizeof(t_token));
-    printf("arena alloc done\n");
-    tok->str = arena_push(&d->arena, ptr, len + 1);
-    printf("arena push done\n");
+    tok->str = arena_push(&d->arena, line, len + 1);
     tok->str[len] = '\0';
     tok->type = type;
-    printf("\\0 done\n");
-    if (vec_push(&d->vec_tok, &tok) == -1)//only push the address of the pointer
-        exit (EXIT_FAILURE); //ERROR HANDLING
-    printf("vec push done\n");
+    if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
+		exit (EXIT_FAILURE); //ERROR HANDLING
 }
 
-size_t read_operator(char *line, size_t i)
-{
-    t_data  *d;
-
-    d = get_data();
-    if (line[i] == '>')
-    {
-        if (line[i + 1] == '>' )
-        {
-            push_tok(d, &line[i], 2, APPEND);
-            i += 2;
-        }
-        else
-        {
-            push_tok(d, &line[i], 1, REDIR_OUT);
-            i++;
-        }
-    }
-    return (i);
-}
-
-// the vector is storing pointers to tokens.
-// vec_get returns the ADDRESS of the element slot inside the vector.
-// each element is a t_token *, that means the return type here is t_token **.
-// casting(t_token **) interpret the returned void * as a t_token **
-// * (...) → read the value stored in the slot = the actual t_token *, not the address of the slot 
-t_token *get_tok(t_data *d, size_t index)
-{
-    return (*(t_token **)vec_get(&d->vec_tok, index));
-}
 void tokenizer(t_data *d, char *line)
 {
     size_t i;
-    size_t start;
-    (void)d;
     i = 0;
 
     while (line[i])
     {
         while(ft_isspace(line[i]))
             i++;
-        start = i;
-        if(line[i] == '>' || line[i] == '<' || line[i] == '$'
-            || line[i] == '|')
-        {
-            i = read_operator(line, i);    
-        } 
+        if(line[i] == '>')
+            i = read_redir_operator(d, line, i);
+        else if (line[i] == '<')
+            i = read_redir_operator2(d, line, i);
+        else if (line[i] == '$')
+            i = read_env_operator(d, line, i);
+        else if (line[i] == '|')
+            i = read_pipe(d, line, i);
+        else
+            i = read_word(d, line, i);
     }
 }
 
@@ -112,14 +102,11 @@ void read_the_line(t_data *d)
     {
         add_history(line);
         tokenizer(d, line);
-    }
-    free(line);
-     for (size_t j = 0; j < d->vec_tok.len; j++)
-     {
-        t_token *tok_back = get_tok(d, j);
-        printf("tok->str[%zu]:%s tok->type:%d\n", j, tok_back->str, tok_back->type);
+        debug_print_tokens(d); //for testing
+        arena_reset(&d->arena);
+        vec_reset(&d->vec_tok);
      }
-    
+    free(line);
 }
 
 int main(void)
@@ -135,44 +122,8 @@ int main(void)
     return 0;
 }
 
-/*
-• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-• Implement the following redirections:
-◦ < should redirect input.
-◦ > should redirect output.
-◦ << should be given a delimiter, then read the input until a line containing the
-delimiter is seen. However, it doesn’t have to update the history!
-◦ >> should redirect output in append mode.
-• Implement pipes (| character). The output of each command in the pipeline is
-connected to the input of the next command via a pipe.
-• Handle environment variables ($ followed by a sequence of characters) which
-should expand to their values.
-• Handle $? which should expand to the exit status of the most recently executed
-foreground pipeline.
-*/
 
 //' ' = super safe → everything is literal.
 //" " = semi safe → things like $ and \" still work.
 //You can’t mix ' inside '...'.
 //You can put " " inside '...' and vice versa.
-
-
-
-
-/*
-• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-• Implement the following redirections:
-◦ < should redirect input.
-◦ > should redirect output.
-◦ << should be given a delimiter, then read the input until a line containing the
-delimiter is seen. However, it doesn’t have to update the history!
-◦ >> should redirect output in append mode.
-• Implement pipes (| character). The output of each command in the pipeline is
-connected to the input of the next command via a pipe.
-• Handle environment variables ($ followed by a sequence of characters) which
-should expand to their values.
-• Handle $? which should expand to the exit status of the most recently executed
-foreground pipeline.
-*/

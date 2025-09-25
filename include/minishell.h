@@ -12,9 +12,11 @@ typedef enum e_token_type
 	WORD,
 	PIPE,
 	REDIR_IN,
-	REDIR_OUT,
 	APPEND,
-	HEREDOC
+	REDIR_OUT,
+	HEREDOC,
+	ENV,
+	EXPAND
 }	t_token_type;
 
 typedef struct s_quote
@@ -34,22 +36,64 @@ typedef struct s_token
 {
 	char	*str;
 	t_token_type type;
+	t_quote	q;
 }	t_token;
 
 typedef struct s_data
 {
 	t_arena	arena;
 	t_vec	vec_tok;
-	t_quote	q;
 }	t_data;
+
+
+
+t_data *get_data(void);
+void debug_print_tokens(t_data *d); // for debugging
+t_token *get_tok(t_data *d, size_t index);
+void push_tok(t_data *d, char *line, size_t len, int type);
+void tokenizer(t_data *d, char *line);
+void read_the_line(t_data *d);
+
+bool ft_isspace(char c);
+void shell_init(t_data *d);
 
 int	 arena_init(t_arena *arena, size_t capacity);
 char *arena_push(t_arena *arena, char *s, size_t len);
 void *arena_alloc(t_arena *arena, size_t elem_size);
 void arena_reset(t_arena *arena);
 void arena_free(t_arena *arena);
+
+size_t read_pipe(t_data *d, char *line, size_t i);
+size_t read_word(t_data *d, char *line, size_t i);
+size_t read_env_operator(t_data *d, char *line, size_t i);
+size_t read_redir_operator2(t_data *d, char *line, size_t i);
+size_t read_redir_operator(t_data *d, char *line, size_t i);
 #endif
 
+/*
+
+Stack (t_data)
++------------------+
+| arena            |
+| vec_tok {        |---> memory (malloc, heap)
+|   memory ------+ |
+|   len = 0      | |
+|   capacity = 4 | |
+| }              | |
+| q              | |
++------------------+
+
+Heap (vec_tok.memory, capacity=4)
++---------+---------+---------+---------+
+| tok*    | tok*    | tok*    | tok*    |
++---------+---------+---------+---------+
+
+Heap (arena.data)
++----------------------+-----------------+ ...
+| t_token structs      | strings "..."   |
++----------------------+-----------------+ ...
+
+*/
 /*
 -----Prompt & Readline-----
 Used to show prompt, handle history, and update input line.

@@ -14,7 +14,7 @@ int	arena_init(t_arena *arena, size_t capacity)
 void *arena_alloc(t_arena *arena, size_t elem_size)
 {
 	char *current_start;
-	
+
 	if (!arena || !arena->data || elem_size == 0)
 		return (NULL); //maybe add safe exit here?
 	if (arena->offset + elem_size > arena->capacity)

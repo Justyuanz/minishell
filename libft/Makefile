@@ -32,7 +32,7 @@ PRINTF_SRCS = $(addprefix $(PRINTF_DIR)/src/, \
 )
 
 C_VEC_SRCS = $(addprefix $(C_VEC_DIR)/src/,\
-	vec_free.c vec_new.c vec_resize.c vec_push.c vec_get.c \
+	vec_free.c vec_new.c vec_resize.c vec_push.c vec_get.c vec_reset.c\
 )
 
 SRCS = $ $(LIB_SRCS) $(GNL_SRCS) $(PRINTF_SRCS) $(C_VEC_SRCS)
