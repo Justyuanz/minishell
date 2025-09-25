@@ -12,46 +12,49 @@ t_data *get_data(void)
 
 	return &d;
 }
-
-void debug_print_tokens(t_data *d)
+char *tok_type(t_token_type tok_type)
 {
-    fprintf(stderr, "\n=== TOKENS IN VECTOR ===\n");
-    fprintf(stderr, "vec_tok.len = %zu\n", d->vec_tok.len);
-    for (size_t j = 0; j < d->vec_tok.len; j++)
-    {
-         // memory[j] is a void*, cast back to t_token*
-        t_token *tok = (t_token *)d->vec_tok.memory[j];
-        fprintf(stderr, "vec_tok.memory[%zu] -> tok=%p\n", j, (void *)tok);
-        fprintf(stderr, "    tok->str  = \"%s\"\n", tok->str);
-        fprintf(stderr, "    tok->type = %d\n", tok->type);
-    }
-    fprintf(stderr, "=========================\n\n");
+    if (tok_type == WORD)
+        return ("WORD");
+    else if (tok_type == PIPE)
+        return ("PIPE");
+    else if (tok_type == REDIR_IN)
+        return ("REDIR_IN");
+    else if (tok_type == APPEND)
+        return ("APPEND");
+    else if (tok_type == REDIR_OUT)
+        return ("REDIR_OUT");
+    else if (tok_type == HEREDOC)
+        return ("HEREDOC");
+    else if (tok_type == ENV)
+        return ("ENV");
+    else if (tok_type == EXPAND)
+        return ("EXPAND");
+    return ("no type");
 }
 
 t_token *get_tok(t_data *d, size_t index)
 {
     return ((t_token *)vec_get(&d->vec_tok, index));
 }
-
-bool ft_isspace(char c)
+void debug_print_tokens(t_data *d)
 {
-	return (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
-		|| c == ' ');
-}
+    t_token *tok;
+    size_t  j;
 
-void shell_init(t_data *d)
-{
-	//perhaps more things to init here
-	if (arena_init(&d->arena, 10000) == -1)
-		exit(EXIT_FAILURE);
-	if (vec_new(&d->vec_tok, 1, sizeof(t_token *)) == -1)
-	{
-		arena_free(&d->arena);
-		exit(EXIT_FAILURE);
-	}
-	d->q.single_ON = false;
-	d->q.double_ON = false;
-
+    j = 0;
+    fprintf(stderr, "\n===============TOKEN INFO==============\n");
+    fprintf(stderr,"vec_tok.len = %zu\n\n", d->vec_tok.len);
+    while (j < d->vec_tok.len)
+    {
+        tok = get_tok(d, j);
+        fprintf(stderr, "vec_tok.memory[%zu] -> tok =%p\n", j, (void *)tok);
+        fprintf(stderr,"            tok->str  :  \"%s\"\n",tok->str);
+        fprintf(stderr,"            tok->type :  %s\n", tok_type(tok->type));
+        fprintf(stderr,"--------------------------------------\n");
+        j++;
+    }
+        fprintf(stderr, "\n===============END INFO==============\n");
 }
 
 void push_tok(t_data *d, char *line, size_t len, int type)
@@ -65,7 +68,6 @@ void push_tok(t_data *d, char *line, size_t len, int type)
     if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
 		exit (EXIT_FAILURE); //ERROR HANDLING
 }
-
 
 void tokenizer(t_data *d, char *line)
 {
@@ -84,8 +86,6 @@ void tokenizer(t_data *d, char *line)
             i = read_env_operator(d, line, i);
         else if (line[i] == '|')
             i = read_pipe(d, line, i);
-        //else if (line[i] == '\'' || line[i] == '"')
-          // i = read_quote(d, line, i);
         else
             i = read_word(d, line, i);
     }
@@ -122,44 +122,8 @@ int main(void)
     return 0;
 }
 
-/*
-• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-• Implement the following redirections:
-◦ < should redirect input.
-◦ > should redirect output.
-◦ << should be given a delimiter, then read the input until a line containing the
-delimiter is seen. However, it doesn’t have to update the history!
-◦ >> should redirect output in append mode.
-• Implement pipes (| character). The output of each command in the pipeline is
-connected to the input of the next command via a pipe.
-• Handle environment variables ($ followed by a sequence of characters) which
-should expand to their values.
-• Handle $? which should expand to the exit status of the most recently executed
-foreground pipeline.
-*/
 
 //' ' = super safe → everything is literal.
 //" " = semi safe → things like $ and \" still work.
 //You can’t mix ' inside '...'.
 //You can put " " inside '...' and vice versa.
-
-
-
-
-/*
-• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-• Implement the following redirections:
-◦ < should redirect input.
-◦ > should redirect output.
-◦ << should be given a delimiter, then read the input until a line containing the
-delimiter is seen. However, it doesn’t have to update the history!
-◦ >> should redirect output in append mode.
-• Implement pipes (| character). The output of each command in the pipeline is
-connected to the input of the next command via a pipe.
-• Handle environment variables ($ followed by a sequence of characters) which
-should expand to their values.
-• Handle $? which should expand to the exit status of the most recently executed
-foreground pipeline.
-*/

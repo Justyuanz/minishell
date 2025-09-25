@@ -10,31 +10,32 @@ size_t read_word(t_data *d, char *line, size_t i)
 		push_tok(d, &line[start], i - start, WORD);
 	return (i);
 }
+
 size_t read_pipe(t_data *d, char *line, size_t i)
 {
-    if (line[i + 1] != '|')
+    if (line[i] == '|')
     {
-        push_tok(d, &line[i], 2, PIPE);
+        push_tok(d, &line[i], 1, PIPE);
         i++;
     } 
-
     return (i);
 }
+
 size_t read_env_operator(t_data *d, char *line, size_t i)
 {
     if (line[i + 1] == '?' )
     {
-        push_tok(d, &line[i], 3, EXPAND);
+        push_tok(d, &line[i], 2, EXPAND);
         i += 2;
     }
     else
     {
-        push_tok(d,&line[i], 2, ENVIRONMENT);
+        push_tok(d,&line[i], 1, ENV);
         i++;
     }
-
     return (i);
 }
+
 size_t read_redir_operator2(t_data *d, char *line, size_t i)
 {
     if (line[i + 1] == '<')
@@ -73,6 +74,5 @@ size_t read_redir_operator(t_data *d, char *line, size_t i)
         push_tok(d, &line[i], 1, REDIR_OUT);
         i++;
     }
-
     return (i);
 }

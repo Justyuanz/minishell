@@ -15,7 +15,7 @@ typedef enum e_token_type
 	APPEND,
 	REDIR_OUT,
 	HEREDOC,
-	ENVIRONMENT,
+	ENV,
 	EXPAND
 }	t_token_type;
 
@@ -36,13 +36,13 @@ typedef struct s_token
 {
 	char	*str;
 	t_token_type type;
+	t_quote	q;
 }	t_token;
 
 typedef struct s_data
 {
 	t_arena	arena;
 	t_vec	vec_tok;
-	t_quote	q;
 }	t_data;
 
 
