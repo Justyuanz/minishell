@@ -6,44 +6,29 @@
 //You can’t mix ' inside '...'.
 //You can put " " inside '...' and vice versa.
 
-//loop till encountering single or double quote
-//enter handle single or double quote
-	//create a tmp buf to store all the word
-//maybe need to read $ here?
-size_t handle_single_quote(t_data *d, char *line, char *strbuf, size_t i)
+size_t handle_single_quote(char *buf, char *line, size_t i, size_t *off)
 {
-	size_t off;
-	size_t start;
-
 	i++;
-	start = i;
-	off = 0;
 	while (line[i] && line[i] != '\'')
 	{
-		strbuf[off] = line[i];
-		off++;
+		buf[*off] = line[i];
+		(*off)++;
 		i++;
 	}
 	if (line[i] == '\'')
 		i++;
 	else
 		printf("unclosed single quote\n"); // unclosed quote error handle
-	push_tok(d, &line[start], off - start, WORD);
 	return (i);
 }
 
-size_t handle_double_quote(t_data *d, char *line, char *strbuf, size_t i)
+size_t handle_double_quote(char *buf, char *line, size_t i, size_t *off)
 {
-	size_t off;
-	size_t start;
-
 	i++;
-	start = i;
-	off = 0;
 	while (line[i] && line[i] != '"')
 	{
-		strbuf[off] = line[i];
-		off++;
+		buf[*off] = line[i];
+		(*off)++;
 		i++;
 		//if (line[i] == '$')
 			//work on expansion...
@@ -52,38 +37,27 @@ size_t handle_double_quote(t_data *d, char *line, char *strbuf, size_t i)
 		i++;
 	else
 		printf("unclosed single quote\n"); // unclosed quote error handle
-	push_tok(d, &line[start], off - start, WORD);
 	return (i);
 }
-size_t handle_no_quote(t_data *d, char *line, char *strbuf, size_t i)
-{
-	size_t off;
-	size_t start;
 
-	start = i;
-	off = 0;
-	while (line[i] && line[i] != '>' && line[i] != '<' &&
-			line[i] != '|' && line[i] != '\'' && line[i] == '"')
-	{
-		strbuf[off] = line[i]; //copy normal word
-		off++;
-		i++;
-	}
-	push_tok(d, &line[start], off -start, WORD);
-	return (i);
-}
 size_t read_word(t_data *d, char *line, size_t i)
 {
-	char   strbuf[1024];
+	char	buf[1024];
+	size_t  off = 0; 
 
-	while (line[i] && line[i] != '>' && line[i] != '<' && line[i] != '|')
+	while (line[i] && line[i] != '>' && line[i] != '<' && line[i] != '|' && !ft_isspace(line[i]))
 	{
-		if (line[i] == '\'') //handle single quote
-			i = handle_single_quote(d, line, strbuf, i);
+		if (line[i] == '\'')
+		{
+			i = handle_single_quote(buf, line, i, &off);
+		}
 		else if (line[i] == '"')
-			i = handle_double_quote(d, line, strbuf, i);
+		{
+			i = handle_double_quote(buf, line, i, &off);			
+		}
 		else
-			i = handle_no_quote(d, line, strbuf, i);
+			buf[off++] = line[i++];
 	}
+		push_tok(d, buf, off, WORD);
 	return (i);
 }
