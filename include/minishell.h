@@ -71,6 +71,8 @@ size_t read_word(t_data *d, char *line, size_t i);
 size_t read_env_operator(t_data *d, char *line, size_t i);
 size_t read_redir_operator2(t_data *d, char *line, size_t i);
 size_t read_redir_operator(t_data *d, char *line, size_t i);
+
+void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
 #endif
 
 /*
@@ -97,6 +99,7 @@ Heap (arena.data)
 +----------------------+-----------------+ ...
 
 */
+
 /*
 -----Prompt & Readline-----
 Used to show prompt, handle history, and update input line.

@@ -3,6 +3,47 @@
 //loop through envp, try to print them out,
 //push env struct to arena, the the strings
 
+// $$
+//$?
+//$variable
+
+void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
+{
+	t_env *env;
+	char tmp[1024];
+	size_t j = 0;
+
+	(*i)++;
+	while (line[*i] && line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && !ft_isspace(line[*i]) && line[*i] != '"')
+	{
+		tmp[j] = line[*i];
+		j++;
+		(*i)++;
+	}
+	//jinzhang@c2r6p8:~/Github/minishell$ echo $> bash: syntax error near unexpected token `newline'
+	tmp[j] = '\0';
+	j = 0;
+	for (size_t k = 0; k < d->vec_env.len; k++)
+	{
+		env = get_env(d, k);
+		if (ft_strncmp(tmp, env->key, ft_strlen(tmp)) == 0)
+		{
+			for (size_t h = 0; h < ft_strlen(env->value); h++)
+			{
+				buf[*off] = env->value[h];
+				(*off)++;
+			}
+		}
+		else
+		{
+			buf[*off] = tmp[j];
+			(*off)++;
+			j++;
+		}
+	}
+
+}
+
 void push_env(t_data *d, char **envp, size_t i)
 {
 	char	*str;

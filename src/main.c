@@ -88,8 +88,6 @@ void tokenizer(t_data *d, char *line)
             i = read_redir_operator(d, line, i);
         else if (line[i] == '<')
             i = read_redir_operator2(d, line, i);
-        else if (line[i] == '$')
-            i = read_env_operator(d, line, i);
         else if (line[i] == '|')
             i = read_pipe(d, line, i);
         else
