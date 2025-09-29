@@ -24,6 +24,8 @@ size_t handle_single_quote(char *buf, char *line, size_t i, size_t *off)
 
 size_t handle_double_quote(char *buf, char *line, size_t i, size_t *off)
 {
+	t_env *env;
+
 	i++;
 	while (line[i] && line[i] != '"')
 	{
@@ -31,7 +33,10 @@ size_t handle_double_quote(char *buf, char *line, size_t i, size_t *off)
 		(*off)++;
 		i++;
 		//if (line[i] == '$')
-			//work on expansion...
+		//skip $ index
+		// get_env
+		//find the key, match with value, return the value string 
+		//copy to buf
 	}
 	if (line[i] == '"')
 		i++;
@@ -43,21 +48,26 @@ size_t handle_double_quote(char *buf, char *line, size_t i, size_t *off)
 size_t read_word(t_data *d, char *line, size_t i)
 {
 	char	buf[1024];
-	size_t  off = 0; 
-
+	size_t  off; 
+	size_t quote_flag;
+	off = 0;
+	quote_flag = 0;
 	while (line[i] && line[i] != '>' && line[i] != '<' && line[i] != '|' && !ft_isspace(line[i]))
 	{
 		if (line[i] == '\'')
 		{
+			quote_flag = 1;
 			i = handle_single_quote(buf, line, i, &off);
 		}
 		else if (line[i] == '"')
 		{
+			quote_flag = 1;
 			i = handle_double_quote(buf, line, i, &off);			
 		}
 		else
 			buf[off++] = line[i++];
 	}
+	if (off > 0 || quote_flag == 1)
 		push_tok(d, buf, off, WORD);
 	return (i);
 }

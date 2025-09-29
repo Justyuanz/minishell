@@ -32,10 +32,18 @@ typedef struct s_token
 	t_token_type type;
 }	t_token;
 
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}	t_env;
+
 typedef struct s_data
 {
-	t_arena	arena;
+	t_arena	arena_tok;
+	t_arena arena_env;
 	t_vec	vec_tok;
+	t_vec	vec_env;
 }	t_data;
 
 
@@ -43,14 +51,16 @@ typedef struct s_data
 t_data *get_data(void);
 void debug_print_tokens(t_data *d); // for debugging
 t_token *get_tok(t_data *d, size_t index);
+t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d);
 
 bool ft_isspace(char c);
-void shell_init(t_data *d);
+void shell_init(t_data *d, char **envp);
 
 int	 arena_init(t_arena *arena, size_t capacity);
+void envp_init(t_data *d, char **envp);
 char *arena_push(t_arena *arena, char *s, size_t len);
 void *arena_alloc(t_arena *arena, size_t elem_size);
 void arena_reset(t_arena *arena);

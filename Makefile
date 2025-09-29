@@ -20,6 +20,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		arena.c \
 		read_operators.c \
 		read_word.c \
+		env.c \
 		utils.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

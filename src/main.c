@@ -12,6 +12,7 @@ t_data *get_data(void)
 
 	return &d;
 }
+
 char *tok_type(t_token_type tok_type)
 {
     if (tok_type == WORD)
@@ -37,6 +38,11 @@ t_token *get_tok(t_data *d, size_t index)
 {
     return ((t_token *)vec_get(&d->vec_tok, index));
 }
+
+t_env *get_env(t_data *d, size_t index)
+{
+    return ((t_env *)vec_get(&d->vec_env, index));
+}
 void debug_print_tokens(t_data *d)
 {
     t_token *tok;
@@ -61,8 +67,8 @@ void push_tok(t_data *d, char *line, size_t len, int type)
 {
     t_token *tok;
 
-    tok = (t_token *)arena_alloc(&d->arena, sizeof(t_token));
-    tok->str = arena_push(&d->arena, line, len + 1);
+    tok = (t_token *)arena_alloc(&d->arena_tok, sizeof(t_token));
+    tok->str = arena_push(&d->arena_tok, line, len + 1);
     tok->str[len] = '\0';
     tok->type = type;
     if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
@@ -103,21 +109,23 @@ void read_the_line(t_data *d)
         add_history(line);
         tokenizer(d, line);
         debug_print_tokens(d); //for testing
-        arena_reset(&d->arena);
+        arena_reset(&d->arena_tok);
         vec_reset(&d->vec_tok);
      }
     free(line);
 }
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
     t_data *d;
 
+    (void)argc;
+    (void)argv;
     d = get_data();
-    shell_init(d);
+    shell_init(d, envp);
     while (1)
         read_the_line(d);
-    arena_free(&d->arena);
+    arena_free(&d->arena_tok);
     vec_free(&d->vec_tok);
     return 0;
 }
