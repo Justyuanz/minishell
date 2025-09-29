@@ -19,6 +19,17 @@ typedef enum e_token_type
 	EXPAND
 }	t_token_type;
 
+typedef enum e_builtin_type
+{
+	BUILTIN_CD = 11,
+	BUILTIN_ECHO,
+	BUILTIN_PWD,
+	BUILTIN_EXPORT,
+	BUILTIN_UNSET,
+	BUILTIN_ENV,
+	BUILTIN_EXIT
+}	t_builtin_type;
+
 typedef struct s_quote
 {
 	bool single_ON;
@@ -45,7 +56,23 @@ typedef struct s_data
 	t_vec	vec_tok;
 }	t_data;
 
+typedef struct s_command
+{
+	char	**command_array;
+	t_token_type	type;
+	char *str;
+}	t_command;
 
+
+typedef struct	s_shell
+{
+	int exitcode;
+	int	input;
+	int	output;
+	int	command_index;
+	int *pids;
+	struct t_command *commands;
+} t_shell;
 
 t_data *get_data(void);
 void debug_print_tokens(t_data *d); // for debugging
