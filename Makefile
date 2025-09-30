@@ -21,6 +21,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		read_operators.c \
 		read_word.c \
 		env.c \
+		expansion.c \
 		utils.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
