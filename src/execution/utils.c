@@ -20,6 +20,9 @@ void    free_string(char *str)
 
 void    update_exitcode(int error_code, t_shell *shell)
 {
-    //some condition maybe, fills weird like this
-    shell->exitcode = error_code;
+    /*
+        That will be final exit code after all execution happened.
+    */
+    if (shell->command_index < 2 || shell->index == shell->command_index)
+        shell->exitcode = error_code;
 }

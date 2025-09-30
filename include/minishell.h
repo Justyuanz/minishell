@@ -61,6 +61,7 @@ typedef struct s_command
 	char	**command_array;
 	t_token_type	type;
 	char *str;
+	struct t_command	*next;
 }	t_command;
 
 
@@ -70,7 +71,10 @@ typedef struct	s_shell
 	int	input;
 	int	output;
 	int	command_index;
+	int	index;
 	int *pids;
+	int	**pipe_array;
+	int	pipes_count;
 	struct t_command *commands;
 } t_shell;
 
@@ -95,6 +99,15 @@ size_t read_word(t_data *d, char *line, size_t i);
 size_t read_env_operator(t_data *d, char *line, size_t i);
 size_t read_redir_operator2(t_data *d, char *line, size_t i);
 size_t read_redir_operator(t_data *d, char *line, size_t i);
+
+//execution
+void    handle_command(t_command *command, t_shell *shell);
+int ft_strcmp(char *s1, char *s2);
+void    free_string(char *str);
+void    update_exitcode(int error_code, t_shell *shell);
+void    handle_builtin(int flag, t_command *command, t_shell *shell);
+int check_if_builtin(char *command);
+void    builtin_cd(int i, char **command_array, t_shell *shell);
 #endif
 
 /*

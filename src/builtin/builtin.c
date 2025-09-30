@@ -27,13 +27,13 @@ void    handle_builtin(int flag, t_command *command, t_shell *shell)
     if (flag == BUILTIN_ECHO)
         builtin_echo();
     if (flag == BUILTIN_PWD)
-        builtin_pwd();
+        builtin_pwd(command, shell);
     if (flag == BUILTIN_EXPORT)
-        builtin_export();
+        builtin_export(command, shell);
     if (flag == BUILTIN_UNSET)
-        builtin_unset();
+        builtin_unset(command, shell);
     if (flag == BUILTIN_ENV)
-        builtin_env();
+        builtin_env(command, shell);
     if (flag == BUILTIN_EXIT)
         builtin_exit();
     // need some error exit? 

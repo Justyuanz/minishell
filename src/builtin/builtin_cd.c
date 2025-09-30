@@ -36,8 +36,7 @@ int cd_home(char *old_pwd, t_shell *shell)
 int update_old_pwd(char *old_pwd)
 {
     /*
-        current pwd will become old
-        don't know yet how to do it
+        pwd will be home after successful "cd"
     */
 }
 
