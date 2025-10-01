@@ -25,3 +25,17 @@ void shell_init(t_data *d,char **envp)
 	}
 	envp_init(d, envp);
 }
+
+bool str_cmp(char *s1, char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (false);
+		i++;
+	}
+	return (true);
+}

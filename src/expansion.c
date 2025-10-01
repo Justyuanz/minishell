@@ -11,7 +11,7 @@ bool exit_status(void)
 
 bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 {
-	if (line[*i] == '$')
+	if (line[*i] == '$') //$$
 	{
 		buf[*off] = '$';
 		(*off)++;
@@ -29,30 +29,35 @@ bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 
 void store_var_name(char *line, char *tmp, size_t *i, size_t *j)
 {
-	while (line[*i] && line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && !ft_isspace(line[*i]) && line[*i] != '"')
+	//a-zA-Z0-9_
+	fprintf(stderr,"line:%s start store var name\n", &line[*i]);
+	while (line[*i] && ((line[*i] >= 'a' && line[*i] <= 'z') || (line[*i] >= 'A' && line[*i] <= 'Z')
+		|| (line[*i] >= '0' && line[*i] <= '9') || line[*i] == '_' ))
 	{
+		fprintf(stderr,"line[i]:%c copied\n", line[*i]);
 		tmp[*j] = line[*i]; //writes the var name
 		(*j)++;
 		(*i)++;
 	}
+	tmp[*j] = '\0';
 }
 
 void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 {
 	t_env *env;
 	char tmp[1024];
-	size_t j = 0;
 	size_t k;
+	size_t j;
 
+	j = 0;
 	store_var_name(line, tmp, i, &j);
 	k = 0;
 	//jinzhang@c2r6p8:~/Github/minishell$ echo $> bash: syntax error near unexpected token `newline'
-	tmp[j] = '\0';
 	j = 0;
 	while(j < d->vec_env.len)
 	{
 		env = get_env(d, j);
-		if (ft_strncmp(tmp, env->key, ft_strlen(env->key)) == 0)
+		if (str_cmp(tmp, env->key) == true)
 		{
 			while (k < ft_strlen(env->value))
 			{
@@ -67,7 +72,7 @@ void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 {
-	(*i)++;
+	(*i)++; //skip $
 
 	//	exit_status()
 
