@@ -1,13 +1,24 @@
 #include "minishell.h"
-//loop through envp, try to print them out,
-//push env struct to arena, the the strings
 
 // $$
 //$?
 //$variable
+bool exit_status(void)
+{
+	fprintf(stderr,"exit_status");
+	return(true);
+}
+
 bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 {
-	if (!line[*i] || ft_isspace(line[*i]) ||  line[*i] == '|' || line[*i] == '>' || line[*i] == '<')
+	if (line[*i] == '$')
+	{
+		buf[*off] = '$';
+		(*off)++;
+		(*i)++;
+		return (true);
+	}
+	else if (!line[*i] || ft_isspace(line[*i]) ||line[*i] == '|' || line[*i] == '>' || line[*i] == '<')
 	{
 		buf[*off] = '$';
 		(*off)++;
@@ -15,39 +26,54 @@ bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 	}
 	return (false);
 }
-void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
+
+void store_var_name(char *line, char *tmp, size_t *i, size_t *j)
+{
+	while (line[*i] && line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && !ft_isspace(line[*i]) && line[*i] != '"')
+	{
+		tmp[*j] = line[*i]; //writes the var name
+		(*j)++;
+		(*i)++;
+	}
+}
+
+void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 {
 	t_env *env;
 	char tmp[1024];
 	size_t j = 0;
+	size_t k;
 
-	(*i)++;
-	//if line[*i] == ?
-	//if line[*i] == $
-	if (double_dollor(line, buf, off, i))
-	//if only bare $
-	if (bare_dollar(line, buf, off, i))
-		return;
-	//normal var
-	while (line[*i] && line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && !ft_isspace(line[*i]) && line[*i] != '"')
-	{
-		tmp[j] = line[*i]; //writes the var name
-		j++;
-		(*i)++;
-	}
+	store_var_name(line, tmp, i, &j);
+	k = 0;
 	//jinzhang@c2r6p8:~/Github/minishell$ echo $> bash: syntax error near unexpected token `newline'
 	tmp[j] = '\0';
 	j = 0;
-	for (size_t k = 0; k < d->vec_env.len; k++)
+	while(j < d->vec_env.len)
 	{
-		env = get_env(d, k);
+		env = get_env(d, j);
 		if (ft_strncmp(tmp, env->key, ft_strlen(env->key)) == 0)
 		{
-			for (size_t h = 0; h < ft_strlen(env->value); h++)
+			while (k < ft_strlen(env->value))
 			{
-				buf[*off] = env->value[h];
+				buf[*off] = env->value[k];
 				(*off)++;
+				k++;
 			}
 		}
+		j++;
 	}
 }
+
+void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
+{
+	(*i)++;
+
+	//	exit_status()
+
+	if (bare_dollar(line, buf, off, i))
+		return;
+	//normal var
+	handle_variable(d, buf,line, i ,off);
+}
+

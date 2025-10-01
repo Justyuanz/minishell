@@ -1,8 +1,4 @@
 #include "minishell.h"
-//' ' = super safe → everything is literal.
-//" " = semi safe → things like $ and \" still work.
-//You can’t mix ' inside '...'.
-//You can put " " inside '...' and vice versa.
 
 size_t handle_single_quote(char *buf, char *line, size_t i, size_t *off)
 {
@@ -29,10 +25,7 @@ size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 	while (line[i] && line[i] != '"')
 	{
 		if (line[i] == '$')
-		{
-			if (line[i + 1])
 				handle_expansion(d, buf, line, &i, off);
-		}
 		buf[*off] = line[i];
 		(*off)++;
 		i++;
