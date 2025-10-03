@@ -80,11 +80,11 @@ size_t read_word(t_data *d, char *line, size_t i)
 			quote_flag = 1;
 			i = handle_double_quote(d, buf, line, i, &off);
 		}
-		else if (line[i] == '$')
-		{
-			fprintf(stderr,"$ line[%zu]:%c\n", i, line[i]);
-			i = handle_no_quote(d, buf, line, i, &off);
-		}
+		// else if (line[i] == '$')
+		// {
+		// 	fprintf(stderr,"$ line[%zu]:%c\n", i, line[i]);
+		// 	i = handle_no_quote(d, buf, line, i, &off);
+		// }
 		else
 		{
 			fprintf(stderr,"others line[%zu]:%c\n", i, line[i]);

@@ -1,5 +1,22 @@
 #include "minishell.h"
 
+t_data *get_data(void)
+{
+	static t_data d;
+
+	return &d;
+}
+
+t_token *get_tok(t_data *d, size_t index)
+{
+    return ((t_token *)vec_get(&d->vec_tok, index));
+}
+
+t_env *get_env(t_data *d, size_t index)
+{
+    return ((t_env *)vec_get(&d->vec_env, index));
+}
+
 bool ft_isspace(char c)
 {
 	return (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'

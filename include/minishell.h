@@ -26,10 +26,10 @@ typedef struct s_arena
 	size_t	offset;
 }	t_arena;
 
-type struct s_cmd
+typedef struct s_cmd
 {
-	char
-}
+	char	*str;
+} 	t_cmd;
 
 typedef struct s_token
 {

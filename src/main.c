@@ -6,12 +6,6 @@
 //a func to exit?
 //tokenizerecho
 
-t_data *get_data(void)
-{
-	static t_data d;
-
-	return &d;
-}
 
 char *tok_type(t_token_type tok_type)
 {
@@ -34,15 +28,6 @@ char *tok_type(t_token_type tok_type)
     return ("no type");
 }
 
-t_token *get_tok(t_data *d, size_t index)
-{
-    return ((t_token *)vec_get(&d->vec_tok, index));
-}
-
-t_env *get_env(t_data *d, size_t index)
-{
-    return ((t_env *)vec_get(&d->vec_env, index));
-}
 void debug_print_tokens(t_data *d)
 {
     t_token *tok;
@@ -95,6 +80,34 @@ void tokenizer(t_data *d, char *line)
     }
 }
 
+void group_cmd(t_data *d)
+{
+	t_cmd	*cmd;
+	t_token *tok;
+	size_t	i;
+
+	i = 0;
+	if (vec_new(&d->vec_cmd, 1, sizeof(t_cmd *)) == -1)
+	{
+		return; //safe exit
+	}
+	while (i < d->vec_tok.len)
+	{
+		//if it is PIPE, START A NEW CMD
+		tok = get_tok(d, i);
+		if (tok->type == WORD)
+		{
+			cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+			cmd->str = arena_push(&d->arena_tok, tok->str, ft_strlen(tok->str) + 1);
+			if (vec_push(&d->vec_cmd, cmd) == -1)
+				exit (EXIT_FAILURE);
+		}
+		i++;
+	}
+
+	//TEST TO GET THE CMD
+	fprintf(stderr,"vec_cmd.len: %zu\n", d->vec_cmd.len);
+}
 void read_the_line(t_data *d)
 {
     char  *line;
@@ -107,6 +120,7 @@ void read_the_line(t_data *d)
         add_history(line);
         tokenizer(d, line);
         debug_print_tokens(d); //for testing
+		group_cmd(d);
         arena_reset(&d->arena_tok);
         vec_reset(&d->vec_tok);
      }
