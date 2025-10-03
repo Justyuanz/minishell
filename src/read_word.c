@@ -25,15 +25,18 @@ size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 		if (line[i] == '$')
 		{
 			handle_expansion(d, buf, line, &i, off);
+			continue;
 		}
-		fprintf(stderr,"line[i]:%c handle_double_quote inside loop\n", line[i]);
 		buf[*off] = line[i];
 		(*off)++;
 		i++;
 	}
-
+	fprintf(stderr,"line[i]:%c handle_double_quote out loop\n", line[i]);
+	if(line[i] == '"')
+		i++;
 	return (i);
 }
+
 size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
 	while (line[i])

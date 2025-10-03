@@ -26,6 +26,11 @@ typedef struct s_arena
 	size_t	offset;
 }	t_arena;
 
+type struct s_cmd
+{
+	char
+}
+
 typedef struct s_token
 {
 	char	*str;
@@ -44,6 +49,7 @@ typedef struct s_data
 	t_arena arena_env;
 	t_vec	vec_tok;
 	t_vec	vec_env;
+	t_vec	vec_cmd;
 }	t_data;
 
 

@@ -18,7 +18,7 @@ bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 		(*i)++;
 		return (true);
 	}
-	else if (!line[*i] || ft_isspace(line[*i]) ||line[*i] == '|' || line[*i] == '>' || line[*i] == '<')
+	else if (!line[*i] || ft_isspace(line[*i]) ||line[*i] == '|' || line[*i] == '>' || line[*i] == '<' || line[*i] == '"')
 	{
 		buf[*off] = '$';
 		(*off)++;
