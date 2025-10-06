@@ -79,7 +79,16 @@ void tokenizer(t_data *d, char *line)
             i = read_word(d, line, i);
     }
 }
+// t_vec vec_cmd (need to store all the WORDS and redirs in to **argv)
+// one command vector stores one argv contents(one pipe action)
+// remember to add the last argv after the last pipe
+// vec_cmd[0] = argv = ("echo", "HI")
 
+// all token before pipe goes into argv
+//arena_alloc(arena_tok) t_cmd strcut 
+//while tok->str !| -> arena push tok->str as argv[i], if |
+//argv[i] = NULL
+//vec_push(vec_cmd[index], argv[i])
 void group_cmd(t_data *d)
 {
 	t_cmd	*cmd;
@@ -107,6 +116,13 @@ void group_cmd(t_data *d)
 
 	//TEST TO GET THE CMD
 	fprintf(stderr,"vec_cmd.len: %zu\n", d->vec_cmd.len);
+    for (size_t i = 0; i < d->vec_cmd.len; i++)
+    {
+        t_cmd *cmd = get_cmd(d, i);
+        fprintf(stderr, "vec_cmd[%zu]:%s\n", i, cmd->str);
+    }
+    
+    
 }
 void read_the_line(t_data *d)
 {

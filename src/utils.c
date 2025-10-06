@@ -6,6 +6,10 @@ t_data *get_data(void)
 
 	return &d;
 }
+t_cmd *get_cmd(t_data *d, size_t index)
+{
+    return ((t_cmd *)vec_get(&d->vec_cmd, index));
+}
 
 t_token *get_tok(t_data *d, size_t index)
 {
