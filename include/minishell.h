@@ -49,7 +49,7 @@ typedef struct s_data
 	t_arena arena_env;
 	t_vec	vec_tok;
 	t_vec	vec_env;
-	t_vec	vec_cmd;
+	t_vec	vec_cmds;
 }	t_data;
 
 
@@ -57,7 +57,7 @@ typedef struct s_data
 t_data *get_data(void);
 void debug_print_tokens(t_data *d); // for debugging
 t_token *get_tok(t_data *d, size_t index);
-t_cmd *get_cmd(t_data *d, size_t index);
+t_vec *get_vec_cmd(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);

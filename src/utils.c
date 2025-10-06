@@ -6,11 +6,10 @@ t_data *get_data(void)
 
 	return &d;
 }
-t_cmd *get_cmd(t_data *d, size_t index)
+t_vec *get_vec_cmd(t_data *d, size_t index)
 {
-    return ((t_cmd *)vec_get(&d->vec_cmd, index));
+    return ((t_vec *)vec_get(&d->vec_cmds, index));
 }
-
 t_token *get_tok(t_data *d, size_t index)
 {
     return ((t_token *)vec_get(&d->vec_tok, index));
@@ -45,6 +44,7 @@ void shell_init(t_data *d,char **envp)
 		exit(EXIT_FAILURE);
 	}
 	envp_init(d, envp);
+	vec_new(&d->vec_cmds, 1, sizeof(t_vec));
 }
 
 bool str_cmp(char *s1, char *s2)
