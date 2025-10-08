@@ -92,7 +92,7 @@ void tokenizer(t_data *d, char *line)
 
 void build_vec_cmds(t_data *d)
 {
-	t_vec	argv;
+	t_cmd	*cmd;
 	t_token	*tok;
 	char	*null;
 	size_t	i;
