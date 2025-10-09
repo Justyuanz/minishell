@@ -29,7 +29,6 @@ typedef struct s_arena
 typedef struct s_cmd
 {
 	char	**argv;
-	char	**envp;
 	t_vec	redirs;
 	bool	is_builtin;
 } 	t_cmd;

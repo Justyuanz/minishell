@@ -99,7 +99,9 @@ void build_vec_cmds(t_data *d)
 
 	null = NULL;
 	i = 0;
-	vec_new(&argv, 1, sizeof(char *));
+	d->vec_cmds = (t_vec *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+	
+	vec_new(&d->vec_cmds, 1, sizeof(t_cmd *));
 	while (i < d->vec_tok.len)
 	{
 		tok = get_tok(d, i);
@@ -111,9 +113,9 @@ void build_vec_cmds(t_data *d)
 		else if (tok->type == PIPE)
 		{
 			vec_push(&argv, null);                // NULL terminate argv
-			t_vec *copy = arena_alloc(&d->arena_tok, sizeof(t_vec)); // allocate space in arena
-			*copy = argv;                          // copy the struct
-			vec_push(&d->vec_cmds, copy);          // push pointer to vec_cmds
+			//t_vec *copy = arena_alloc(&d->arena_tok, sizeof(t_vec)); // allocate space in arena
+			//*copy = argv;                          // copy the struct
+			//vec_push(&d->vec_cmds, copy);          // push pointer to vec_cmds
 			vec_new(&argv, 1, sizeof(char *));     // start a new argv for next command
 		}
 		i++;
