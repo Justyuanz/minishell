@@ -92,52 +92,7 @@ void tokenizer(t_data *d, char *line)
 
 void build_vec_cmds(t_data *d)
 {
-	t_cmd	*cmd;
-	t_token	*tok;
-	char	*null;
-	size_t	i;
 
-	null = NULL;
-	i = 0;
-	d->vec_cmds = (t_vec *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
-	
-	vec_new(&d->vec_cmds, 1, sizeof(t_cmd *));
-	while (i < d->vec_tok.len)
-	{
-		tok = get_tok(d, i);
-		if (tok->type == WORD)
-		{
-			vec_push(&argv, tok->str);
-		}
-		// else if tok->type == REDIR
-		else if (tok->type == PIPE)
-		{
-			vec_push(&argv, null);                // NULL terminate argv
-			//t_vec *copy = arena_alloc(&d->arena_tok, sizeof(t_vec)); // allocate space in arena
-			//*copy = argv;                          // copy the struct
-			//vec_push(&d->vec_cmds, copy);          // push pointer to vec_cmds
-			vec_new(&argv, 1, sizeof(char *));     // start a new argv for next command
-		}
-		i++;
-	}
-			vec_push(&argv, null);                // NULL terminate argv
-			t_vec *copy = arena_alloc(&d->arena_tok, sizeof(t_vec)); // allocate space in arena
-			*copy = argv;                          // copy the struct
-			vec_push(&d->vec_cmds, copy);          // push pointer to vec_cmds
-
-
-	size_t k = 0;
-	for (size_t i = 0; i < d->vec_cmds.len; i++)
-	{
-		t_vec *cmd = get_vec_cmd(d, i);
-		fprintf(stderr,"vec_cmd[%zu]\n", i);
-				k = 0;
-		while (cmd->memory[k]!= NULL)
-		{
-			fprintf(stderr,"argv[%zu], %s\n",k,  (char *)cmd->memory[k]);
-			k++;
-		}
-	}
 	//free argv vec here i guess?
 }
 
