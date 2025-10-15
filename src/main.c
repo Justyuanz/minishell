@@ -96,7 +96,9 @@ void debug_print_cmds(t_data *d)
         t_cmd *cmd = (t_cmd *)vec_get(&d->vec_cmds, i);
         fprintf(stderr, "cmd[%zu]:\n", i);
         for (size_t j = 0; cmd->argv[j]; j++)
+		{
             fprintf(stderr, "  argv[%zu]: %s\n", j, cmd->argv[j]);
+		}
     }
 }
 void build_vec_cmds(t_data *d)
@@ -110,7 +112,7 @@ void build_vec_cmds(t_data *d)
 
     vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)); // vector of cmd pointers
     vec_new(&argv, 1, sizeof(char *));          // temp argv holder
-
+    vec_new(&cmd->redirs, 1, sizeof(void *)); // empty for now
     // iterate tokens
     while (i < d->vec_tok.len)
     {
@@ -118,8 +120,14 @@ void build_vec_cmds(t_data *d)
 
         if (tok->type == WORD)
             vec_push(&argv, tok->str);
-
-        else if (tok->type == PIPE)
+        //if tok->type == redirs should i store the redirs to a tmp holder here first
+		//how can i make sure that it belongs to the same cmd group
+		else if (tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND || tok->type == HEREDOC)
+		{
+			
+			//save the type,  check for the next element and push if it is a string
+		}
+		else if (tok->type == PIPE)
         {
             // terminate argv with NULL
             vec_push(&argv, null);
@@ -128,7 +136,6 @@ void build_vec_cmds(t_data *d)
             cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
             cmd->argv = (char **)argv.memory;
             cmd->is_builtin = false; // default
-            vec_new(&cmd->redirs, 1, sizeof(void *)); // empty for now
 
             // push cmd pointer into main vector
             vec_push(&d->vec_cmds, cmd);
