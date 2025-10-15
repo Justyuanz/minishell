@@ -25,11 +25,11 @@ typedef struct s_arena
 	size_t	capacity;
 	size_t	offset;
 }	t_arena;
-typedef	struct s_redirs
+typedef	struct s_redir
 {
 	t_token_type	type;
-	char			*filename;
-}	t_redirs;
+	char			*file;
+}	t_redir;
 typedef struct s_cmd
 {
 	char	**argv;

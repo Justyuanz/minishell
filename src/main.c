@@ -95,63 +95,70 @@ void debug_print_cmds(t_data *d)
     {
         t_cmd *cmd = (t_cmd *)vec_get(&d->vec_cmds, i);
         fprintf(stderr, "cmd[%zu]:\n", i);
+
         for (size_t j = 0; cmd->argv[j]; j++)
-		{
             fprintf(stderr, "  argv[%zu]: %s\n", j, cmd->argv[j]);
-		}
+
+        for (size_t k = 0; k < cmd->redirs.len; k++)
+        {
+            t_redir *r = (t_redir *)vec_get(&cmd->redirs, k);
+            fprintf(stderr, "  redir[%zu]: type=%d file=%s\n", k, r->type, r->file);
+        }
     }
 }
 void build_vec_cmds(t_data *d)
 {
-
     size_t  i = 0;
     t_token *tok;
     t_cmd   *cmd;
+    t_redir *redir;
     t_vec   argv;
     char    *null = NULL;
 
-    vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)); // vector of cmd pointers
-    vec_new(&argv, 1, sizeof(char *));          // temp argv holder
-    vec_new(&cmd->redirs, 1, sizeof(void *)); // empty for now
-    // iterate tokens
+    vec_new(&d->vec_cmds, 1, sizeof(t_cmd *));
+    vec_new(&argv, 1, sizeof(char *));
+    cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+    vec_new(&cmd->redirs, 1, sizeof(t_redir *));
+
     while (i < d->vec_tok.len)
     {
         tok = get_tok(d, i);
 
         if (tok->type == WORD)
             vec_push(&argv, tok->str);
-        //if tok->type == redirs should i store the redirs to a tmp holder here first
-		//how can i make sure that it belongs to the same cmd group
-		else if (tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND || tok->type == HEREDOC)
-		{
-			
-			//save the type,  check for the next element and push if it is a string
-		}
-		else if (tok->type == PIPE)
+
+        else if (tok->type == REDIR_IN || tok->type == REDIR_OUT
+              || tok->type == APPEND || tok->type == HEREDOC)
         {
-            // terminate argv with NULL
+            // allocate redir in arena
+            redir = (t_redir *)arena_alloc(&d->arena_tok, sizeof(t_redir));
+            redir->type = tok->type;
+            if (i + 1 < d->vec_tok.len)
+                redir->file = get_tok(d, i + 1)->str;
+            else
+                redir->file = NULL; // syntax error maybe
+            vec_push(&cmd->redirs, redir);
+            i++; // skip filename token
+        }
+
+        else if (tok->type == PIPE)
+        {
             vec_push(&argv, null);
-
-            // allocate a command
-            cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
             cmd->argv = (char **)argv.memory;
-            cmd->is_builtin = false; // default
-
-            // push cmd pointer into main vector
             vec_push(&d->vec_cmds, cmd);
 
-            // start a new argv for next command
+            // start new command
             vec_new(&argv, 1, sizeof(char *));
+            cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+            vec_new(&cmd->redirs, 1, sizeof(t_redir *));
+            cmd->is_builtin = false;
         }
+
         i++;
     }
-
-    // handle last command
+    // push last command
     vec_push(&argv, null);
-    cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     cmd->argv = (char **)argv.memory;
-    cmd->is_builtin = false;
-    vec_new(&cmd->redirs, 1, sizeof(void *));
     vec_push(&d->vec_cmds, cmd);
     debug_print_cmds(d);
 }
