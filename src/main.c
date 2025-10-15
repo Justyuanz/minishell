@@ -89,11 +89,64 @@ void tokenizer(t_data *d, char *line)
 //while tok->str !| -> arena push tok->str as argv[i], if |
 //argv[i] = NULL
 //vec_push(vec_cmd[index], argv[i])
-
+void debug_print_cmds(t_data *d)
+{
+    for (size_t i = 0; i < d->vec_cmds.len; i++)
+    {
+        t_cmd *cmd = (t_cmd *)vec_get(&d->vec_cmds, i);
+        fprintf(stderr, "cmd[%zu]:\n", i);
+        for (size_t j = 0; cmd->argv[j]; j++)
+            fprintf(stderr, "  argv[%zu]: %s\n", j, cmd->argv[j]);
+    }
+}
 void build_vec_cmds(t_data *d)
 {
 
-	//free argv vec here i guess?
+    size_t  i = 0;
+    t_token *tok;
+    t_cmd   *cmd;
+    t_vec   argv;
+    char    *null = NULL;
+
+    vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)); // vector of cmd pointers
+    vec_new(&argv, 1, sizeof(char *));          // temp argv holder
+
+    // iterate tokens
+    while (i < d->vec_tok.len)
+    {
+        tok = get_tok(d, i);
+
+        if (tok->type == WORD)
+            vec_push(&argv, tok->str);
+
+        else if (tok->type == PIPE)
+        {
+            // terminate argv with NULL
+            vec_push(&argv, null);
+
+            // allocate a command
+            cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+            cmd->argv = (char **)argv.memory;
+            cmd->is_builtin = false; // default
+            vec_new(&cmd->redirs, 1, sizeof(void *)); // empty for now
+
+            // push cmd pointer into main vector
+            vec_push(&d->vec_cmds, cmd);
+
+            // start a new argv for next command
+            vec_new(&argv, 1, sizeof(char *));
+        }
+        i++;
+    }
+
+    // handle last command
+    vec_push(&argv, null);
+    cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+    cmd->argv = (char **)argv.memory;
+    cmd->is_builtin = false;
+    vec_new(&cmd->redirs, 1, sizeof(void *));
+    vec_push(&d->vec_cmds, cmd);
+    debug_print_cmds(d);
 }
 
 void read_the_line(t_data *d)
