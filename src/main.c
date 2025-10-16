@@ -28,26 +28,6 @@ char *tok_type(t_token_type tok_type)
     return ("no type");
 }
 
-void debug_print_tokens(t_data *d)
-{
-    t_token *tok;
-    size_t  j;
-
-    j = 0;
-    fprintf(stderr, "\n===============TOKEN INFO==============\n");
-    fprintf(stderr,"vec_tok.len = %zu\n\n", d->vec_tok.len);
-    while (j < d->vec_tok.len)
-    {
-        tok = get_tok(d, j);
-        fprintf(stderr, "vec_tok.memory[%zu] -> tok =%p\n", j, (void *)tok);
-        fprintf(stderr,"            tok->str  :  \"%s\"\n",tok->str);
-        fprintf(stderr,"            tok->type :  %s\n", tok_type(tok->type));
-        fprintf(stderr,"--------------------------------------\n");
-        j++;
-    }
-        fprintf(stderr, "\n===============END INFO==============\n");
-}
-
 void push_tok(t_data *d, char *line, size_t len, int type)
 {
     t_token *tok;
@@ -89,23 +69,7 @@ void tokenizer(t_data *d, char *line)
 //while tok->str !| -> arena push tok->str as argv[i], if |
 //argv[i] = NULL
 //vec_push(vec_cmd[index], argv[i])
-void debug_print_cmds(t_data *d)
-{
-    for (size_t i = 0; i < d->vec_cmds.len; i++)
-    {
-        t_cmd *cmd = (t_cmd *)vec_get(&d->vec_cmds, i);
-        fprintf(stderr, "cmd[%zu]:\n", i);
 
-        for (size_t j = 0; cmd->argv[j]; j++)
-            fprintf(stderr, "  argv[%zu]: %s\n", j, cmd->argv[j]);
-
-        for (size_t k = 0; k < cmd->redirs.len; k++)
-        {
-            t_redir *r = (t_redir *)vec_get(&cmd->redirs, k);
-            fprintf(stderr, "  redir[%zu]: type=%d file=%s\n", k, r->type, r->file);
-        }
-    }
-}
 void build_vec_cmds(t_data *d)
 {
     size_t  i = 0;

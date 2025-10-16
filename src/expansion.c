@@ -30,11 +30,9 @@ bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 void store_var_name(char *line, char *tmp, size_t *i, size_t *j)
 {
 	//a-zA-Z0-9_
-	fprintf(stderr,"line:%s start store var name\n", &line[*i]);
 	while (line[*i] && ((line[*i] >= 'a' && line[*i] <= 'z') || (line[*i] >= 'A' && line[*i] <= 'Z')
 		|| (line[*i] >= '0' && line[*i] <= '9') || line[*i] == '_' ))
 	{
-		fprintf(stderr,"line[i]:%c copied\n", line[*i]);
 		tmp[*j] = line[*i]; //writes the var name
 		(*j)++;
 		(*i)++;

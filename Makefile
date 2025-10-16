@@ -17,6 +17,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 SRCS = $(addprefix $(SRCDIR)/,\
 		main.c \
+		debug_print.c \
 		arena.c \
 		read_operators.c \
 		read_word.c \

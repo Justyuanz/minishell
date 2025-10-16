@@ -25,11 +25,13 @@ typedef struct s_arena
 	size_t	capacity;
 	size_t	offset;
 }	t_arena;
+
 typedef	struct s_redir
 {
 	t_token_type	type;
 	char			*file;
 }	t_redir;
+
 typedef struct s_cmd
 {
 	char	**argv;
@@ -61,13 +63,17 @@ typedef struct s_data
 
 
 t_data *get_data(void);
+size_t get_cmd_count(t_data *d);
+t_cmd *get_cmd(t_data *d, size_t index);
 void debug_print_tokens(t_data *d); // for debugging
+void debug_print_cmds(t_data *d); //for debugging
 t_token *get_tok(t_data *d, size_t index);
 t_vec *get_vec_cmd(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d);
+char *tok_type(t_token_type tok_type);
 
 bool ft_isspace(char c);
 void shell_init(t_data *d, char **envp);
