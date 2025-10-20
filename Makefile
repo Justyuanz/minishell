@@ -23,6 +23,8 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		read_word.c \
 		env.c \
 		expansion.c \
+		build_cmds.c \
+		get.c \
 		utils.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

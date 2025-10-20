@@ -74,6 +74,7 @@ void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d);
 char *tok_type(t_token_type tok_type);
+void build_vec_cmds(t_data *d);
 
 bool ft_isspace(char c);
 void shell_init(t_data *d, char **envp);
