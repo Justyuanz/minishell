@@ -72,5 +72,5 @@ void build_vec_cmds(t_data *d)
         i++;
     }
     handle_last_cmd(d, &argv, &cmd);
-	debug_print_cmds(d);
+	//debug_print_cmds(d);
 }

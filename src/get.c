@@ -10,11 +10,14 @@ size_t get_cmd_count(t_data *d)
 {
 	return(d->vec_cmds.len);
 }
+t_redir *get_redir(t_cmd *cmd, size_t index)
+{
+	return((t_redir *)vec_get(&cmd->redirs, index));
+}
 t_cmd *get_cmd(t_data *d, size_t index)
 {
     return ((t_cmd *)vec_get(&d->vec_cmds, index));
 }
-
 
 t_token *get_tok(t_data *d, size_t index)
 {
