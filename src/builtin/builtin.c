@@ -20,21 +20,22 @@ int check_if_builtin(char *command)
         return (0);
 }
 
-void    handle_builtin(int flag, t_command *command, t_shell *shell)
+void    handle_builtin(int flag, t_cmd *command, t_shell *shell)
 {
     if (flag == BUILTIN_CD)
-        builtin_cd(0, command->command_array, shell);
+        builtin_cd(0, command->argv, shell);
     if (flag == BUILTIN_ECHO)
-        builtin_echo();
+        builtin_echo(command, shell);
+      
     if (flag == BUILTIN_PWD)
-        builtin_pwd(command, shell);
-    if (flag == BUILTIN_EXPORT)
-        builtin_export(command, shell);
-    if (flag == BUILTIN_UNSET)
-        builtin_unset(command, shell);
+        builtin_pwd();
+    //  if (flag == BUILTIN_EXPORT)
+    //    builtin_export(command, shell);
+    //if (flag == BUILTIN_UNSET)
+    //    builtin_unset(command, shell);
     if (flag == BUILTIN_ENV)
-        builtin_env(command, shell);
-    if (flag == BUILTIN_EXIT)
-        builtin_exit();
+        builtin_env(shell);
+    //if (flag == BUILTIN_EXIT)
+    //    builtin_exit();
     // need some error exit? 
 }

@@ -17,9 +17,19 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 SRCS = $(addprefix $(SRCDIR)/,\
 		main.c \
+		tokenizer.c \
+		debug_print.c \
 		arena.c \
 		read_operators.c \
+		read_word.c \
+		env.c \
+		expansion.c \
+		build_cmds.c \
+		get.c \
 		utils.c \
+		executor.c \
+		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
+		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c\
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)

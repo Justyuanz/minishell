@@ -1,5 +1,5 @@
 #include "minishell.h"
-
+/*
 void    shell_init(char **envp, t_shell *shell)
 {
     shell->exitcode = 0;
@@ -11,9 +11,9 @@ void    shell_init(char **envp, t_shell *shell)
 
 void    handle_execution(t_command *command, t_shell *shell)
 {
-    /*
+    
         get command path and do execve
-    */
+    //
 }
 
 void    do_command_fork(t_command *command, t_shell *shell)
@@ -84,20 +84,51 @@ void    command_or_pipe(t_command *command, t_shell *shell)
         current = current->next;
     }
 }
+*/
+
+int create_pids(t_shell *shell, int command_count)
+{
+    int i;
+
+    i = 0;
+    shell->pids = NULL;
+    shell->pids = malloc(command_count * sizeof(int));
+    if (!shell->pids)
+        return (1);
+    while (i < command_count)
+    {
+        shell->pids[i] = -1;
+        i++;
+    }
+    shell->pids[command_count] = 0;
+    return (0);
+}
 
 void    shell_execution(t_shell *shell)
 {
-    /*
-        initialize execution part. create pids and pipes. run commands
-        clean everything in thr end
-    */
-    if (create_pipes(shell) == -1)
+    int     command_count;
+   // printf("Here");
+
+    command_count = shell->data->vec_cmds.len;
+    //printf("Here1");
+    shell->pipes_count = command_count - 1;
+    
+    if (create_pids(shell, command_count))
     {
         error_smt();
         return ;
     }
-    command_or_pipe(shell->commands, shell);
-    free_pipes(shell);
-    shell->command_index = 0;
+    if (command_count == 1)
+    {
+        single_command_case(shell);
+    }
+    /*else
+    {
+        execute_pipes(shell);
 
+    }
+    */
+    //cleanup_parent(shell);
+    shell->command_index = 0;
+    shell->index = 0;
 }

@@ -5,7 +5,7 @@ int vec_push(t_vec *dst, void *element)
 	int	i;
 
 	i = 0;
-	if (!dst || !element)
+	if (!dst)
 		return (-1);
 	if (!dst->memory)
 	{
