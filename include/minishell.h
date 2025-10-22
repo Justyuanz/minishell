@@ -43,17 +43,38 @@ typedef struct s_arena
 	size_t	offset;
 }	t_arena;
 
+typedef	struct s_redir
+{
+	t_token_type	type;
+	char			*file;
+}	t_redir;
+
+typedef struct s_cmd
+{
+	char	**argv;
+	t_vec	redirs;
+	bool	is_builtin;
+} 	t_cmd;
+
 typedef struct s_token
 {
 	char	*str;
 	t_token_type type;
-	t_quote	q;
 }	t_token;
+
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}	t_env;
 
 typedef struct s_data
 {
-	t_arena	arena;
+	t_arena	arena_tok;
+	t_arena arena_env;
 	t_vec	vec_tok;
+	t_vec	vec_env;
+	t_vec	vec_cmds;
 }	t_data;
 
 typedef struct s_command
@@ -62,7 +83,6 @@ typedef struct s_command
 	t_token_type	type;
 	char *str;
 }	t_command;
-
 
 typedef struct	s_shell
 {
@@ -74,17 +94,28 @@ typedef struct	s_shell
 	struct t_command *commands;
 } t_shell;
 
+void executor(t_data *d);
 t_data *get_data(void);
-void debug_print_tokens(t_data *d); // for debugging
+size_t get_cmd_count(t_data *d);
+t_cmd *get_cmd(t_data *d, size_t index);
+t_redir *get_redir(t_cmd *cmd, size_t index);
+//void debug_print_tokens(t_data *d); // for debugging
+//void debug_print_cmds(t_data *d); //for debugging
 t_token *get_tok(t_data *d, size_t index);
+//t_vec *get_vec_cmd(t_data *d, size_t index);
+t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d);
+char *tok_type(t_token_type tok_type);
+void build_vec_cmds(t_data *d);
 
 bool ft_isspace(char c);
-void shell_init(t_data *d);
+void shell_init(t_data *d, char **envp);
+bool str_cmp(char *s1, char *s2);
 
 int	 arena_init(t_arena *arena, size_t capacity);
+void envp_init(t_data *d, char **envp);
 char *arena_push(t_arena *arena, char *s, size_t len);
 void *arena_alloc(t_arena *arena, size_t elem_size);
 void arena_reset(t_arena *arena);
@@ -95,6 +126,8 @@ size_t read_word(t_data *d, char *line, size_t i);
 size_t read_env_operator(t_data *d, char *line, size_t i);
 size_t read_redir_operator2(t_data *d, char *line, size_t i);
 size_t read_redir_operator(t_data *d, char *line, size_t i);
+
+void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
 #endif
 
 /*
@@ -121,6 +154,7 @@ Heap (arena.data)
 +----------------------+-----------------+ ...
 
 */
+
 /*
 -----Prompt & Readline-----
 Used to show prompt, handle history, and update input line.

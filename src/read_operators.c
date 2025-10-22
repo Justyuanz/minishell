@@ -1,15 +1,4 @@
 #include "minishell.h"
-size_t read_word(t_data *d, char *line, size_t i)
-{
-	size_t start;
-	// Words may not include unquoted metacharacters. but if quoted it is treated as literal
-	start = i;
-	while (line[i] && ft_isalnum(line[i]))
-		i++;
-	if (i > start)
-		push_tok(d, &line[start], i - start, WORD);
-	return (i);
-}
 
 size_t read_pipe(t_data *d, char *line, size_t i)
 {
@@ -17,7 +6,7 @@ size_t read_pipe(t_data *d, char *line, size_t i)
     {
         push_tok(d, &line[i], 1, PIPE);
         i++;
-    } 
+    }
     return (i);
 }
 
