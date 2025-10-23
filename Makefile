@@ -28,6 +28,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		get.c \
 		utils.c \
 		executor.c \
+		cleanup.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
