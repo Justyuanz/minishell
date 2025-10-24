@@ -1,0 +1,15 @@
+
+{
+    <readline>
+    Memcheck:Leak
+    ...
+    fun:readline
+}
+
+{
+    <readline_internal_char>
+    Memcheck:Leak
+    ...
+    fun:readline_internal_char
+}
+
