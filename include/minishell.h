@@ -113,6 +113,9 @@ bool ft_isspace(char c);
 void shell_init(t_data *d, char **envp);
 bool str_cmp(char *s1, char *s2);
 
+void cleanup_line(t_data *d);
+void cleanup_shell(t_data *d);
+
 int	 arena_init(t_arena *arena, size_t capacity);
 void envp_init(t_data *d, char **envp);
 char *arena_push(t_arena *arena, char *s, size_t len);
