@@ -1,5 +1,34 @@
 #include "minishell.h"
 
+void    wait_for_all(t_shell *shell)
+{
+    int status;
+    int i;
+    int signal;
+
+    i = 0;
+    status = 127;
+    if (!shell->pids)
+        return ;
+    while (shell->pids[i] != 0)
+    {
+        if (shell->pids > 0)
+        {
+            waitpid(shell->pids[i], &status, 0);
+            if (WIFSIGNALED(status))
+            {
+                signal = WTERMSIG(status);
+                shell->exitcode = signal + 128;
+                if (signal != 13)
+                    return ;
+            }
+            if (WIFEXITED(status))
+                update_exitcode(WEXITSTATUS(status), shell);
+        }
+        i++;
+    }
+}
+
 void    execute_single_command(t_shell *shell)
 {
     char    *command_path;
@@ -28,11 +57,8 @@ void    handle_single_command(t_shell *shell)
         error_smt();
     if (shell->pids[0] == 0)
         execute_single_command(shell);
-    /* else
-   {
+    else
         wait_for_all(shell);
-    }
-        */
     //singal here
 }
 

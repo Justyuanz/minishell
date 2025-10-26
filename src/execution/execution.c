@@ -8,83 +8,68 @@ void    shell_init(char **envp, t_shell *shell)
     shell->input = STDIN_FILENO;
     shell->output = STDOUT_FILENO;
 }
-
-void    handle_execution(t_command *command, t_shell *shell)
+*/
+void    handle_execution(t_cmd *command, t_shell *shell)
 {
-    
-        get command path and do execve
-    //
+    char    *command_path;
+
+    command_path = get_command_path(command->argv[0], shell);
+    if (command_path)
+    {
+        if (execve(command_path, command->argv, shell->envp) == -1)
+        {
+            free(command_path);
+            command_path = NULL;
+        }
+    }
+    exit(shell->exitcode);
+}
+void	close_parent_pipes(t_shell *shell)
+{
+	if (shell->index > 1)
+		close(shell->pipe_array[shell->index - 2][0]);
+	if (shell->index < shell->command_index)
+		close(shell->pipe_array[shell->index - 1][1]);
 }
 
-void    do_command_fork(t_command *command, t_shell *shell)
+void    do_command_fork(t_cmd *command, t_shell *shell)
 {
     int flag_builtin;
-
+    printf("\n%i\n", shell->index);
     shell->pids[shell->index - 1] = fork();
     if (shell->pids[shell->index - 1] < 0)
         return ;
     if (shell->pids[shell->index - 1] == 0)
     {
-        handle_pipes(shell); //not working function yet
-        if (command->type != WORD)
-        {
-            //some error handling
-        }
-        flag_builtin = check_if_builtin(command->command_array[0]);
+        handle_pipes(shell); 
+        flag_builtin = check_if_builtin(command->argv[0]);
         if (flag_builtin != 0)
             handle_builtin(flag_builtin, command, shell);
         else
-            handle_execution(command, shell); // not working yet
+            handle_execution(command, shell); 
     }
-    // do something for fork == 1
+    else
+        close_parent_pipes(shell);
 }
 
-int check_valid_command(t_command *command, t_shell *shell)
+void    handle_command(t_shell *shell, int command_count)
 {
-    // that's for sure not right
-    if (!command->command_array[0] || command->command_array[0][0] == '\0')
+    shell->index = 0;
+    t_cmd   *cmd;
+    while (shell->index < command_count)
     {
-        ft_putstr_fd("error, command not found\n", 2);
-        shell->exitcode = 127;
-        return (1);
-        // do i need to close pipes here?
-    }
-    return (0);
-}
-
-void    handle_command(t_command *command, t_shell *shell) // this will do in loop
-{
-    shell->index++;
-    if (command->command_array)
-    {
-        if (check_valid_command(command, shell))
-        {
-            if (command->type != WORD) // WORD is for commands???
-            {
-                // need to fix this if. Maybe its a heredoc or something idk
-               ft_putstr_fd("error\n", 2);
-               return ;
-            }
-            do_command_fork(command, shell);
+        cmd = get_cmd(shell->data, shell->index);
+        if (cmd->argv)
+        {   
+            //if (check_valid_command(shell, cmd->argv[shell->index]))
+            do_command_fork(cmd, shell);
         }
+        shell->index++;
     }
 }
 
-void    command_or_pipe(t_command *command, t_shell *shell)
-{
-    t_command *current;
 
-    if (!command)
-        return ;
-    current = command;
-    while (current != NULL)
-    {
-        if (current->type != PIPE)
-            handle_command(current, shell);
-        current = current->next;
-    }
-}
-*/
+
 
 int create_pids(t_shell *shell, int command_count)
 {
@@ -112,7 +97,8 @@ void    shell_execution(t_shell *shell)
     command_count = shell->data->vec_cmds.len;
     //printf("Here1");
     shell->pipes_count = command_count - 1;
-    
+    shell->command_index = command_count;
+    //printf("pipe count %i\n", shell->command_index);
     if (create_pids(shell, command_count))
     {
         error_smt();
@@ -122,12 +108,14 @@ void    shell_execution(t_shell *shell)
     {
         single_command_case(shell);
     }
-    /*else
+    else
     {
-        execute_pipes(shell);
-
+        if (create_pipes(shell) == -1) 
+            printf("pipe creation failed \n");  
+        handle_command(shell, command_count);
+        wait_for_all(shell);
+        free_pipes(shell);
     }
-    */
     //cleanup_parent(shell);
     shell->command_index = 0;
     shell->index = 0;

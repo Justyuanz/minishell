@@ -152,6 +152,7 @@ char	*get_command_path(const char *cmd, t_shell *shell);
 
 //single_command.c
 void    single_command_case(t_shell *shell);
+void    wait_for_all(t_shell *shell);
 
 //utils.c
 int ft_strcmp(char *s1, char *s2);
@@ -166,6 +167,11 @@ void    builtin_cd(int i, char **command_array, t_shell *shell);
 void    builtin_echo(t_cmd *command, t_shell *shell);
 void    builtin_pwd(void);
 void    builtin_env(t_shell *shell);
+
+//piping.c
+int create_pipes(t_shell *shell);
+void    handle_pipes(t_shell *shell);
+
 #endif
 
 /*

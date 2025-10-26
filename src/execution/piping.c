@@ -21,19 +21,21 @@ void    close_pipes(t_shell *shell)
 void    handle_pipes(t_shell *shell)
 {
     if (shell->index == 1)
+    {
         if (dup2(shell->pipe_array[shell->index - 1][1], STDOUT_FILENO) == -1)
-            error_smt(); // need to think about error handling here
+            printf("i = %i\n pipe handling failed1\n", shell->index);
+    }
     else if (shell->index > 1 && shell->index < shell->command_index)
     {
         if (dup2(shell->pipe_array[shell->index - 2][0], STDIN_FILENO) == -1)
-            error_smt();
+            printf("pipe handling failed2\n");
         if (dup2(shell->pipe_array[shell->index - 1][1], STDOUT_FILENO) == -1)
-            error_smt();
+            printf("pipe handling failed3\n");
     }
     else if (shell->index == shell->command_index)
     {
         if (dup2(shell->pipe_array[shell->index - 2][0], STDIN_FILENO) == -1)
-            error_smt();
+            printf("i = %i\npipe handling failed4\n", shell->index);
     }
     close_pipes(shell);
 }
@@ -43,7 +45,7 @@ int create_pipes(t_shell *shell)
     int i;
 
     i = 0;
-    shell->pipes_count = shell->command_index - 1;
+   // shell->pipes_count = shell->command_index - 1;
     shell->pipe_array = malloc(shell->pipes_count * sizeof(int *));
     if (!shell->pipe_array)
         return (-1);
