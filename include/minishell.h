@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 typedef enum e_token_type
 {
@@ -77,15 +79,6 @@ typedef struct s_data
 	t_vec	vec_cmds;
 }	t_data;
 
-/*
-typedef struct s_command
-{
-	char	**command_array;
-	t_token_type	type;
-	char *str;
-	struct t_command	*next;
-}	t_command;
-*/
 typedef struct	s_shell
 {
 	int exitcode;
@@ -155,10 +148,11 @@ void    single_command_case(t_shell *shell);
 void    wait_for_all(t_shell *shell);
 
 //utils.c
-int ft_strcmp(char *s1, char *s2);
+int ft_strcmp(const char *s1, const char *s2);
 void    error_smt(void);
 void    update_exitcode(int error_code, t_shell *shell);
 char *get_env_value(t_shell *shell, char *str);
+char	**convert_env_vec_to_array(t_shell *shell);
 
 //builtins
 void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
@@ -171,6 +165,9 @@ void    builtin_env(t_shell *shell);
 //piping.c
 int create_pipes(t_shell *shell);
 void    handle_pipes(t_shell *shell);
+
+//redirection.c
+void	redirect_child(t_cmd *cmd, t_shell *shell);
 
 #endif
 

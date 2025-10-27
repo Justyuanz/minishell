@@ -11,6 +11,7 @@ t_shell *ft_shell(void)
 
 	return (&shell);
 }
+
 void read_the_line(t_data *d, t_shell *shell)
 {
     char  *line;
@@ -44,6 +45,7 @@ int main(int argc, char **argv, char **envp)
     d = get_data();
     t_shell *shell = ft_shell();
     shell_init(d, envp);
+    //shell->envp = envp;
     while (1)
         read_the_line(d, shell);
     arena_free(&d->arena_tok);

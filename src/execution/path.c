@@ -53,10 +53,10 @@ static char	*search_in_path(const char *cmd, char **dirs, t_shell *shell)
 	if (found)
 	{
 		shell->exitcode = 127;
-		error_smt();
+		printf("search in path1\n");
 	}
 	else
-		error_smt();
+		printf("search in path2\n");
 	return (NULL);
 }
 

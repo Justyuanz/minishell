@@ -42,7 +42,6 @@ int update_old_pwd(t_vec *vec_env, char *old_pwd)
         }
         i++;
     }
-
     ft_putstr_fd("OLDPWD not found\n", 2);
     free(old_pwd);
     old_pwd = NULL;
@@ -85,4 +84,3 @@ void    builtin_cd(int i, char **command_array, t_shell *shell)
     }
     update_old_pwd(&shell->data->vec_env, old_pwd);
 }
-

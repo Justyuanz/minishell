@@ -35,7 +35,8 @@ void    execute_single_command(t_shell *shell)
     t_cmd   *cmd;
 
     cmd = get_cmd(shell->data, 0);
-
+    if (cmd->redirs.len > 0)
+        redirect_child(cmd, shell);
     command_path = get_command_path(cmd->argv[0], shell);
     if (command_path)
     {
