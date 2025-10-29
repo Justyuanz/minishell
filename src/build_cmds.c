@@ -18,7 +18,7 @@ static void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd)
 {
 	//if (argv_is_empty(argv)) syntax error
     vec_push(argv, NULL);
-    cmd->argv = (char **)(*argv).memory;
+    cmd->argv = (char **)(*argv).memory; //leak from here
     vec_push(&d->vec_cmds, cmd);
 }
 
@@ -41,7 +41,7 @@ static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 static void handle_last_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 {
 	vec_push(argv, NULL);
-    (*cmd)->argv = (char **)(*argv).memory;
+    (*cmd)->argv = (char **)(*argv).memory; //leak from here
     vec_push(&d->vec_cmds, *cmd);
 }
 
@@ -67,10 +67,10 @@ void build_vec_cmds(t_data *d)
         else if (tok->type == PIPE)
 		{
 			handle_pipe(d, &argv, cmd);
-			init_new_cmd(d, &argv, &cmd);
+			init_new_cmd(d, &argv, &cmd); //leak from here
 		}
         i++;
     }
     handle_last_cmd(d, &argv, &cmd);
 	//debug_print_cmds(d);
-}
+} //leak from here
