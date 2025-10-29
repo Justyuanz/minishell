@@ -23,8 +23,13 @@ void shell_init(t_data *d,char **envp)
 		arena_free(&d->arena_env);
 		exit(EXIT_FAILURE);
 	}
+	if (vec_new(&d->vec_cmds, 1, sizeof(t_vec *)) == -1)
+	{
+		arena_free(&d->arena_tok);
+		arena_free(&d->arena_env);
+		exit(EXIT_FAILURE);
+	}
 	envp_init(d, envp);
-	vec_new(&d->vec_cmds, 1, sizeof(t_vec));
 }
 
 bool str_cmp(char *s1, char *s2)

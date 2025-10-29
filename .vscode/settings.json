@@ -1,6 +1,11 @@
 {
 	"cSpell.words": [
+		"fclean",
+		"libft",
 		"minishell",
-		"redirs"
+		"misalign",
+		"redirs",
+		"valgrind",
+		"Wextra"
 	]
 }

@@ -24,7 +24,9 @@ void *arena_alloc(t_arena *arena, size_t elem_size)
 	alignment = 8;
 	misalign = arena->offset % alignment;
     if (misalign != 0)
-        arena->offset += alignment - misalign;
+	{
+        arena->offset = arena->offset +(alignment - misalign);
+	}
 	current_start = &arena->data[arena->offset];
 	arena->offset += elem_size;
 	return (current_start);

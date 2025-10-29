@@ -16,7 +16,7 @@ int	vec_resize(t_vec *src, size_t target_len)
 			return (-1);
 		else
 		{
-			while (i < target_len)
+			while (i < src->len)
     		{
         		tmp.memory[i] = src->memory[i];
         		i++;
