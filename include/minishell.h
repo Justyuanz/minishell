@@ -162,12 +162,18 @@ void    builtin_echo(t_cmd *command, t_shell *shell);
 void    builtin_pwd(void);
 void    builtin_env(t_shell *shell);
 
+void	builtin_exit(t_cmd *cmd, t_shell *shell);
+
 //piping.c
 int create_pipes(t_shell *shell);
 void    handle_pipes(t_shell *shell);
 
 //redirection.c
 void	redirect_child(t_cmd *cmd, t_shell *shell);
+
+//heredoc.c
+int	handle_heredocs(t_cmd *cmd);
+
 
 #endif
 

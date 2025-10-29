@@ -30,7 +30,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		executor.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c \
-		execution/piping.c execution/redirection.c\
+		execution/piping.c execution/redirection.c execution/heredoc.c builtin/builtin_exit.c\
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)

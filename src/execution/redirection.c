@@ -5,7 +5,7 @@ int	redir_in(t_redir *redir, t_shell *shell)
 	if (redir->type == REDIR_IN)
 		shell->input = open(redir->file, O_RDONLY);
 	else if (redir->type == HEREDOC)
-		shell->input = open("here_doc", O_RDONLY);
+		shell->input = open(redir->file, O_RDONLY);
 	if (shell->input < 0)
 		return (1);
 	if (dup2(shell->input, STDIN_FILENO) == -1)

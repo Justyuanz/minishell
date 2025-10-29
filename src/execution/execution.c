@@ -6,7 +6,6 @@ void    handle_execution(t_cmd *cmd, t_shell *shell)
 
 	if (cmd->redirs.len > 0)
         redirect_child(cmd, shell);
-	
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)
 	{
@@ -48,33 +47,6 @@ void    do_command_fork(t_cmd *cmd, t_shell *shell)
 
 }
 
-int	is_empty_or_space(const char *cmd)
-{
-	if (!cmd || cmd[0] == '\0')
-		return (1);
-	while (*cmd)
-	{
-		if (*cmd != ' ')
-			return (0);
-		cmd++;
-	}
-	return (1);
-}
-
-int	check_if_valid_command(t_cmd *cmd, t_shell *shell)
-{
-	if (is_empty_or_space(cmd->argv[0]))
-	{
-		write(2, cmd->argv[0], ft_strlen(cmd->argv[0]));
-		write(2, ": command not found\n", 21);
-		shell->exitcode = 127;
-		//if (shell->data->vec_cmds.len > 1)
-		//	close_pipes_in_parent(shell);
-		return (1);
-	}
-	return (0);
-}
-
 void    handle_command(t_shell *shell, int command_count)
 {
     t_cmd   *cmd;
@@ -85,16 +57,13 @@ void    handle_command(t_shell *shell, int command_count)
         cmd = get_cmd(shell->data, shell->index);
             if (cmd->argv)
             {
-                if (!check_if_valid_command(cmd, shell))
-                {
-                    // if (cmd->redirs.len > 0)
-                    // {
-                    //     check_for_heredocs(cmd, shell);
-                    //     if (g_signal == SIGINT)
-                    //         return ;
-                    // }
-                    do_command_fork(cmd, shell);
-                }
+                if (handle_heredocs(cmd) != 0)
+				{
+                    shell->exitcode = 1;
+					shell->index++;
+					continue;
+				}
+                do_command_fork(cmd, shell);
             }
         shell->index++;
     }

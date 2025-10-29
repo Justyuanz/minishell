@@ -35,7 +35,7 @@ void    handle_builtin(int flag, t_cmd *command, t_shell *shell)
     //    builtin_unset(command, shell);
     if (flag == BUILTIN_ENV)
         builtin_env(shell);
-    //if (flag == BUILTIN_EXIT)
-    //    builtin_exit();
+    if (flag == BUILTIN_EXIT)
+        builtin_exit(command, shell);
     // need some error exit? 
 }

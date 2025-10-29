@@ -50,9 +50,12 @@ void    execute_single_command(t_shell *shell)
     exit(shell->exitcode);
 }
 
-void    handle_single_command(t_shell *shell)
+void    handle_single_command(t_cmd *cmd, t_shell *shell)
 {
-    //ignore signal
+    if (handle_heredocs(cmd) != 0)
+    {
+        shell->exitcode = 1;
+    }
     shell->pids[0] = fork();
     if (shell->pids[0] < 0)
         error_smt();
@@ -60,7 +63,6 @@ void    handle_single_command(t_shell *shell)
         execute_single_command(shell);
     else
         wait_for_all(shell);
-    //singal here
 }
 
 
@@ -68,6 +70,7 @@ void    single_command_case(t_shell *shell)
 {
     int flag;
     t_cmd   *cmd;
+    /*
     if (!shell) {
         printf("ERROR: shell is NULL\n");
         return;
@@ -77,15 +80,14 @@ void    single_command_case(t_shell *shell)
         printf("ERROR: shell->data is NULL\n");
         return;
     }
-
+    */
     cmd = get_cmd(shell->data, 0);
-    // can here be heredoc?
     if (cmd)
     {
         flag = check_if_builtin(cmd->argv[0]);
         if (flag != 0)
             handle_builtin(flag, cmd, shell);
         else // should i check here for valid command or not??
-            handle_single_command(shell);
+            handle_single_command(cmd, shell);
     }
 }
