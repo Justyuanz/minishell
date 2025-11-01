@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 void cleanup_line(t_data *d)
 {
 	t_cmd	*cmd;
@@ -10,6 +11,11 @@ void cleanup_line(t_data *d)
 	while( ++i < d->vec_cmds.len)
 	{
 		cmd = get_cmd(d, i);
+		if (cmd->argv)
+		{
+			free(cmd->argv);
+			cmd->argv = NULL;
+		}
 		vec_free(&cmd->redirs);
 	}
 	vec_free(&d->vec_cmds);

@@ -23,7 +23,7 @@ void shell_init(t_data *d,char **envp)
 		arena_free(&d->arena_env);
 		exit(EXIT_FAILURE);
 	}
-	if (vec_new(&d->vec_cmds, 1, sizeof(t_vec *)) == -1)
+	if (vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)) == -1)
 	{
 		arena_free(&d->arena_tok);
 		arena_free(&d->arena_env);

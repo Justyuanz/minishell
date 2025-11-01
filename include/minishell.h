@@ -51,7 +51,7 @@ typedef	struct s_redir
 
 typedef struct s_cmd
 {
-	char	**argv;
+	char    **argv;
 	t_vec	redirs;
 	bool	is_builtin;
 } 	t_cmd;
