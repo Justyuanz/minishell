@@ -161,6 +161,7 @@ void    builtin_cd(int i, char **command_array, t_shell *shell);
 void    builtin_echo(t_cmd *command, t_shell *shell);
 void    builtin_pwd(void);
 void    builtin_env(t_shell *shell);
+void	builtin_export(t_cmd *cmd, t_shell *shell);
 
 void	builtin_exit(t_cmd *cmd, t_shell *shell);
 
