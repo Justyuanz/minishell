@@ -29,7 +29,7 @@ void close_parent_pipes(t_shell *shell)
 void    do_command_fork(t_cmd *cmd, t_shell *shell)
 {
     int flag_builtin;
-    //printf("\n%i\n", shell->index);
+
     shell->pids[shell->index] = fork();
     if (shell->pids[shell->index ] < 0)
         return ;
@@ -91,13 +91,11 @@ int create_pids(t_shell *shell, int command_count)
 void    shell_execution(t_shell *shell)
 {
     int     command_count;
-   // printf("Here");
+
     shell->index = 0;
     command_count = shell->data->vec_cmds.len;
-    //printf("Here1");
     shell->pipes_count = command_count - 1;
     shell->command_index = command_count;
-    //printf("pipe count %i\n", shell->command_index);
     if (create_pids(shell, command_count))
     {
         printf("pids creation failed \n");
@@ -117,5 +115,4 @@ void    shell_execution(t_shell *shell)
     }
     //cleanup_parent(shell);
     shell->command_index = 0;
-    
 }

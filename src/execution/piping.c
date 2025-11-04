@@ -23,79 +23,46 @@ void handle_pipes(t_shell *shell)
     if (shell->index == 0)
     {
         if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
-            perror("dup2 failed for first command");
+            printf("dup2 failed for first command");
     }
     else if (shell->index > 0 && shell->index < shell->command_index - 1)
     {
         if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
-            perror("dup2 failed for middle command input");
+            printf("dup2 failed for middle command input");
         if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
-            perror("dup2 failed for middle command output");
+            printf("dup2 failed for middle command output");
     }
     else if (shell->index == shell->command_index - 1)
     {
         if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
-            perror("dup2 failed for last command");
+            printf("dup2 failed for last command");
     }
     close_pipes(shell);
 }
-
-// int create_pipes(t_shell *shell)
-// {
-//     int i;
-
-//     i = 0;
-//    // shell->pipes_count = shell->command_index - 1;
-//     shell->pipe_array = malloc(shell->pipes_count * sizeof(int *));
-//     if (!shell->pipe_array)
-//         return (-1);
-//     while (i < shell->pipes_count)
-//     {
-//         shell->pipe_array[i] = malloc(2 *sizeof(int));
-//         if (!shell->pipe_array[i])
-//         {
-//             free_pipes(shell);
-//             error_smt(); // some error handling;
-//             return (-1);
-//         }
-//         if (pipe(shell->pipe_array[i]) == -1)
-//         {
-//             free_pipes(shell);
-//             error_smt();
-//             return (-1);
-//         }
-//         i++;
-//     }
-//     return (0);
-// }
 
 int create_pipes(t_shell *shell)
 {
     int i;
 
     if (shell->pipes_count <= 0)
-        return 0;
-        
+        return (0);
     shell->pipe_array = malloc(shell->pipes_count * sizeof(int *));
     if (!shell->pipe_array)
         return (-1);
-    //either change to calloc or to while loop, will see    
-    for (i = 0; i < shell->pipes_count; i++)
+    i = -1;
+    while (++i < shell->pipes_count)
         shell->pipe_array[i] = NULL;
-    
     i = 0;
     while (i < shell->pipes_count)
     {
         shell->pipe_array[i] = malloc(2 * sizeof(int));
         if (!shell->pipe_array[i])
         {
-            free_pipes(shell);
-            return (-1);
+            return (free_pipes(shell), -1);
         }
         if (pipe(shell->pipe_array[i]) == -1)
         {
-            free_pipes(shell);
-            return (-1);
+            return (free_pipes(shell), -1);
         }
         i++;
     }

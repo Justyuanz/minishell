@@ -26,15 +26,8 @@ void    builtin_env(t_shell *shell)
 		i++;
 	}
 }
+
 /*
-void    builtin_export(t_cmd *command, t_shell *shell)
-{
-
-       has a lot of edge cases. 
-       Will do last
-
-}
-
 void    builtin_unset(t_cmd *command, t_shell *shell)
 {
 
@@ -44,6 +37,3 @@ void    builtin_unset(t_cmd *command, t_shell *shell)
 }
 
 */
-
-
-

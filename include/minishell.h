@@ -149,10 +149,8 @@ void    wait_for_all(t_shell *shell);
 
 //utils.c
 int ft_strcmp(const char *s1, const char *s2);
-void    error_smt(void);
 void    update_exitcode(int error_code, t_shell *shell);
 char *get_env_value(t_shell *shell, char *str);
-char	**convert_env_vec_to_array(t_shell *shell);
 
 //builtins
 void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
@@ -175,7 +173,8 @@ void	redirect_child(t_cmd *cmd, t_shell *shell);
 //heredoc.c
 int	handle_heredocs(t_cmd *cmd);
 
-
+//envp.c
+char **create_envp_from_data(t_data *data);
 #endif
 
 /*
