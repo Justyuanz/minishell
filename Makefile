@@ -3,12 +3,17 @@ GREEN = \033[0;92m
 NAME = minishell
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
+
+READLINE_INC = -I/usr/local/opt/readline/include -I/opt/homebrew/opt/readline/include
+READLINE_LIB = -L/usr/local/opt/readline/lib -L/opt/homebrew/opt/readline/lib
+
 DFLAGS = -MMD -MP \
 		-I include \
 		-I libft/include \
 		-I libft/ft_printf/include \
 		-I libft/get_next_line/include \
 		-I libft/c_vec/include \
+		$(READLINE_INC) \
 
 SRCDIR = src
 OBJDIR = obj
@@ -31,7 +36,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c \
 		execution/piping.c execution/redirection.c execution/heredoc.c builtin/builtin_exit.c builtin/builtin_export.c \
-		execution/envp.c\
+		execution/envp.c signals/signals.c\
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
@@ -46,7 +51,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 		@$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT_A) $(C_VEC_A)
-		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) -lreadline -o $(NAME)
+		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) $(READLINE_LIB) -lreadline -o $(NAME)
 		@echo "$(GREEN) Compiled!$(DEF_COLOR)"
 
 clean:

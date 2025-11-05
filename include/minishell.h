@@ -8,6 +8,9 @@
 #include <readline/history.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <signal.h>
 
 typedef enum e_token_type
 {
@@ -130,6 +133,7 @@ void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
 
 //execution.c
 void    shell_execution(t_shell *shell);
+t_shell *ft_shell(void);
 
 //checkers.c
 int	check_access(const char *full_path, int *found);
@@ -175,6 +179,10 @@ int	handle_heredocs(t_cmd *cmd);
 
 //envp.c
 char **create_envp_from_data(t_data *data);
+
+//signals.c
+void shell_sigint(void);
+
 #endif
 
 /*

@@ -12,7 +12,7 @@ void    wait_for_all(t_shell *shell)
         return ;
     while (shell->pids[i] != 0)
     {
-        if (shell->pids > 0)
+        if (shell->pids[i] > 0)
         {
             waitpid(shell->pids[i], &status, 0);
             if (WIFSIGNALED(status))
