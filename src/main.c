@@ -47,7 +47,7 @@ void cleanup_line_runtime(t_data *d)
 
 // 	i = 0;
 // 	while (i < d->vec_tok.len)
-// 	{
+//goog 	{
 // 		tok = get_tok(d, i);
 // 		pipe_misuse(d, tok, i);
 // 		i++;
@@ -93,8 +93,8 @@ void read_the_line(t_data *d)
         tokenizer(d, line);
 		//syntax_validation(d);
        // debug_print_tokens(d); //for testing
-       // if tok_validation(d) then:
 		build_vec_cmds(d);
+		//expand_all(d, line)
         executor(d); //leak from here
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);

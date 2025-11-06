@@ -50,6 +50,8 @@ size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 	}
 	return (i);
 }
+
+//need to move this function after build cmd
 size_t read_word(t_data *d, char *line, size_t i)
 {
 	char	buf[1024]; //guard here

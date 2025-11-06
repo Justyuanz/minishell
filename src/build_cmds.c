@@ -12,7 +12,7 @@ static void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
     else
         redir->file = NULL; // syntax error maybe
     vec_push(&cmd->redirs, redir);
-    (*i)++; 
+    (*i)++;
 }
 static void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd)
 {
@@ -68,7 +68,7 @@ void build_vec_cmds(t_data *d)
         else if (tok->type == PIPE)
 		{
 			handle_pipe(d, &argv, cmd);
-			init_new_cmd(d, &argv, &cmd); //leak from here
+			init_new_cmd(d, &argv, &cmd);
 		}
         i++;
     }
