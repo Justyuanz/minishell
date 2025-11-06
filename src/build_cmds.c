@@ -12,7 +12,7 @@ static void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
     else
         redir->file = NULL; // syntax error maybe
     vec_push(&cmd->redirs, redir);
-    (*i)++; // skip filename token
+    (*i)++; 
 }
 static void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd)
 {

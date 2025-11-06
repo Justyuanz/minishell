@@ -27,46 +27,45 @@ void cleanup_line_runtime(t_data *d)
     vec_reset(&d->vec_cmds);
     vec_reset(&d->vec_tok);
 }
-void pipe_misuse(t_data *d, t_token *tok, size_t i)
-{
-	if (i == 0 && tok->type == PIPE)
-	{
-		ft_putendl_fd("minishell: syntax error near unexpected token `|'\n", 2);
-		exit (EXIT_FAILURE);
-	}
-	else if ((get_tok(d, (i - 1))->type == PIPE))
-	{
-		ft_putendl_fd("minishell: syntax error near unexpected token `|'\n", 2);
-		exit (EXIT_FAILURE);
-	}
-}
-void syntax_validation(t_data *d)
-{
-	t_token *tok;
-	size_t i;
+// void pipe_misuse(t_data *d, t_token *tok, size_t i)
+// {
+// 	if (i == 0 && tok->type == PIPE)
+// 	{
+// 		ft_putendl_fd("minishell: syntax error near unexpected token `|'\n", 2);
+// 		exit (EXIT_FAILURE);
+// 	}
+// 	else if (get_tok(d, (i - 1))->type == PIPE)
+// 	{
+// 		ft_putendl_fd("minishell: syntax error near unexpected token `|'\n", 2);
+// 		exit (EXIT_FAILURE);
+// 	}
+// }
+// void syntax_validation(t_data *d)
+// {
+// 	t_token *tok;
+// 	size_t i;
 
-	i = 0;
-	while (i < d->vec_tok.len)
-	{
-		tok = get_tok(d, i);
-		pipe_misuse(d, tok, i);
-		i++;
-	}
-	pipe_misuse(d, tok, i);
+// 	i = 0;
+// 	while (i < d->vec_tok.len)
+// 	{
+// 		tok = get_tok(d, i);
+// 		pipe_misuse(d, tok, i);
+// 		i++;
+// 	}
+// 	pipe_misuse(d, tok, i);
 
-	/*
-	bash: syntax error near unexpected token `|'
-	1. Pipe Misuse (pipe found at the beginning or end)
-	2. Redirection Without Target
-	3. Consecutive Redirections Without Words
-	4. Double Pipes or Logical Operators
-	5. Unclosed Quotes
-	6. Heredoc Syntax Errors
-	7. Only Spaces / Empty Input
-	8. Random Forbidden Symbols
-
-	*/
-}
+// 	/*
+// 	bash: syntax error near unexpected token `|'
+// 	1. Pipe Misuse (pipe found at the beginning or end)
+// 	2. Redirection Without Target
+// 	3. Consecutive Redirections Without Words
+// 	4. Double Pipes or Logical Operators
+// 	5. Unclosed Quotes
+// 	6. Heredoc Syntax Errors
+// 	7. Only Spaces / Empty Input
+// 	8. Random Forbidden Symbols
+// 	*/
+// }
 
 void read_the_line(t_data *d)
 {
@@ -92,7 +91,7 @@ void read_the_line(t_data *d)
     {
         add_history(line);
         tokenizer(d, line);
-		syntax_validation(d);
+		//syntax_validation(d);
        // debug_print_tokens(d); //for testing
        // if tok_validation(d) then:
 		build_vec_cmds(d);

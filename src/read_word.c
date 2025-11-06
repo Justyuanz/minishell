@@ -37,18 +37,12 @@ size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 
 size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
-	while (line[i])
+	while (line[i] && !ft_isspace(line[i]))
 	{
-		if (line[i + 1])
+		if (line[i] == '$')
 		{
 			handle_expansion(d, buf, line, &i, off);
-			break;
-		}
-		else
-		{
-			buf[*off] = line[i];
-			(*off)++;
-			i++;
+			continue;;
 		}
 		buf[*off] = line[i];
 		(*off)++;
@@ -58,7 +52,7 @@ size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 }
 size_t read_word(t_data *d, char *line, size_t i)
 {
-	char	buf[1024];
+	char	buf[1024]; //guard here
 	size_t  off;
 	size_t quote_flag;
 
@@ -76,10 +70,10 @@ size_t read_word(t_data *d, char *line, size_t i)
 			quote_flag = 1;
 			i = handle_double_quote(d, buf, line, i, &off);
 		}
+		else if (line[i] == '$')
+			i = handle_no_quote(d, buf, line, i, &off);
 		else
-		{
 			buf[off++] = line[i++];
-		}
 	}
 	if (off > 0 || quote_flag == 1)
 		push_tok(d, buf, off, WORD);
