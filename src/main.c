@@ -99,7 +99,7 @@ void read_the_line(t_data *d)
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);
-		//vec_reset(&d->vec_cmds);
+		//vec_reset(&d->vec_cmds) ;
 
      }
     free(line);
