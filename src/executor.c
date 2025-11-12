@@ -5,7 +5,7 @@ if you need to get something (command, redir, env etc),
 just use the helper get_*() functions below with an index.
 
 Example usage:
-     
+
 t_cmd *cmd = get_cmd(d, index);
 t_redir *r = get_redir(cmd, index)
 t_env *env = get_env(d, index);
@@ -31,7 +31,7 @@ t_data
 │                 └── redirs[] → [{REDIR_OUT, "out.txt"}]
 └── vec_env   → [t_env*, t_env*, ...]
 |				  ├── key   ("PATH")
-|                 └── value ("/usr/bin:/bin")		
+|                 └── value ("/usr/bin:/bin")
 
 t_data
 - arena_tok:  stores token + argv strings (raw bytes)

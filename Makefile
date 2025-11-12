@@ -3,6 +3,7 @@ GREEN = \033[0;92m
 NAME = minishell
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
+VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
 
 READLINE_INC = -I/usr/local/opt/readline/include -I/opt/homebrew/opt/readline/include
 READLINE_LIB = -L/usr/local/opt/readline/lib -L/opt/homebrew/opt/readline/lib
@@ -37,6 +38,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c \
 		execution/piping.c execution/redirection.c execution/heredoc.c builtin/builtin_exit.c builtin/builtin_export.c \
 		execution/envp.c signals/signals.c\
+		cleanup.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
@@ -54,6 +56,9 @@ $(NAME): $(OBJS) $(LIBFT_A) $(C_VEC_A)
 		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) $(READLINE_LIB) -lreadline -o $(NAME)
 		@echo "$(GREEN) Compiled!$(DEF_COLOR)"
 
+valgrind:
+		$(VALGRIND) ./minishell
+
 clean:
 		rm -rf $(OBJDIR)
 		make clean -s -C $(LIBFT_DIR)
@@ -64,6 +69,6 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re valgrind
 .SECONDARY:$(OBJS)
 -include $(DEPS)

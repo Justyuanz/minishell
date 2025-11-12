@@ -12,19 +12,19 @@ static void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
     else
         redir->file = NULL; // syntax error maybe
     vec_push(&cmd->redirs, redir);
-    (*i)++; // skip filename token
+    (*i)++;
 }
 static void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd)
 {
 	//if (argv_is_empty(argv)) syntax error
     vec_push(argv, NULL);
-    cmd->argv = (char **)(*argv).memory;
+    cmd->argv = (char **)(*argv).memory; //leak from here
     vec_push(&d->vec_cmds, cmd);
+
 }
 
 static void init_cmd(t_data *d, t_cmd **cmd, t_vec *argv)
 {
-	vec_new(&d->vec_cmds, 1, sizeof(t_cmd *));
     vec_new(argv, 1, sizeof(char *));
     *cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *));
@@ -41,8 +41,9 @@ static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 static void handle_last_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 {
 	vec_push(argv, NULL);
-    (*cmd)->argv = (char **)(*argv).memory;
+    (*cmd)->argv = (char **)(*argv).memory; //leak from here
     vec_push(&d->vec_cmds, *cmd);
+
 }
 
 void build_vec_cmds(t_data *d)
@@ -73,4 +74,4 @@ void build_vec_cmds(t_data *d)
     }
     handle_last_cmd(d, &argv, &cmd);
 	//debug_print_cmds(d);
-}
+} //leak from here

@@ -56,7 +56,7 @@ typedef	struct s_redir
 
 typedef struct s_cmd
 {
-	char	**argv;
+	char    **argv;
 	t_vec	redirs;
 	bool	is_builtin;
 } 	t_cmd;
@@ -104,7 +104,6 @@ t_redir *get_redir(t_cmd *cmd, size_t index);
 //void debug_print_tokens(t_data *d); // for debugging
 //void debug_print_cmds(t_data *d); //for debugging
 t_token *get_tok(t_data *d, size_t index);
-//t_vec *get_vec_cmd(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
@@ -115,6 +114,9 @@ void build_vec_cmds(t_data *d);
 bool ft_isspace(char c);
 void shell_init(t_data *d, char **envp);
 bool str_cmp(char *s1, char *s2);
+
+void cleanup_line(t_data *d);
+void cleanup_shell(t_data *d);
 
 int	 arena_init(t_arena *arena, size_t capacity);
 void envp_init(t_data *d, char **envp);
