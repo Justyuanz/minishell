@@ -30,8 +30,8 @@ void    handle_builtin(int flag, t_cmd *command, t_shell *shell)
         builtin_pwd();
     if (flag == BUILTIN_EXPORT)
         builtin_export(command, shell);
-    //if (flag == BUILTIN_UNSET)
-    //    builtin_unset(command, shell);
+    if (flag == BUILTIN_UNSET)
+        builtin_unset(command, shell);
     if (flag == BUILTIN_ENV)
         builtin_env(shell);
     if (flag == BUILTIN_EXIT)
