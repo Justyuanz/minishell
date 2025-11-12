@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <signal.h>
 
 typedef enum e_token_type
 {
@@ -77,21 +82,18 @@ typedef struct s_data
 	t_vec	vec_cmds;
 }	t_data;
 
-typedef struct s_command
-{
-	char	**command_array;
-	t_token_type	type;
-	char *str;
-}	t_command;
-
 typedef struct	s_shell
 {
 	int exitcode;
 	int	input;
 	int	output;
 	int	command_index;
+	int	index;
 	int *pids;
-	struct t_command *commands;
+	int	**pipe_array;
+	int	pipes_count;
+	char **envp;
+	t_data *data;
 } t_shell;
 
 void executor(t_data *d);
@@ -105,7 +107,7 @@ t_token *get_tok(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
 void push_tok(t_data *d, char *line, size_t len, int type);
 void tokenizer(t_data *d, char *line);
-void read_the_line(t_data *d);
+void read_the_line(t_data *d, t_shell *shell);
 char *tok_type(t_token_type tok_type);
 void build_vec_cmds(t_data *d);
 
@@ -130,6 +132,60 @@ size_t read_redir_operator2(t_data *d, char *line, size_t i);
 size_t read_redir_operator(t_data *d, char *line, size_t i);
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
+
+//execution.c
+void    shell_execution(t_shell *shell);
+t_shell *ft_shell(void);
+
+//checkers.c
+int	check_access(const char *full_path, int *found);
+
+//cleaners.c
+void	free_array(char **array);
+void    error_smt(void);
+void    free_pipes(t_shell *shell);
+void    free_string(char *str);
+
+//path.c
+char	*get_command_path(const char *cmd, t_shell *shell);
+
+//single_command.c
+void    single_command_case(t_shell *shell);
+void    wait_for_all(t_shell *shell);
+
+//utils.c
+int ft_strcmp(const char *s1, const char *s2);
+void    update_exitcode(int error_code, t_shell *shell);
+char *get_env_value(t_shell *shell, char *str);
+
+//builtins
+void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
+int check_if_builtin(char *command);
+void    builtin_cd(int i, char **command_array, t_shell *shell);
+void    builtin_echo(t_cmd *command, t_shell *shell);
+void    builtin_pwd(void);
+void    builtin_env(t_shell *shell);
+void	builtin_export(t_cmd *cmd, t_shell *shell);
+void	builtin_unset(t_cmd *cmd, t_shell *shell);
+void	update_shell_envp(t_shell *shell);
+void	builtin_exit(t_cmd *cmd, t_shell *shell);
+
+//piping.c
+int create_pipes(t_shell *shell);
+void    handle_pipes(t_shell *shell);
+
+//redirection.c
+void	redirect_child(t_cmd *cmd, t_shell *shell);
+
+//heredoc.c
+int	handle_heredocs(t_cmd *cmd);
+
+//envp.c
+char **create_envp_from_data(t_data *data);
+
+//signals.c
+void shell_sigint(void);
+
 #endif
 
 /*

@@ -1,0 +1,70 @@
+#include "minishell.h"
+
+void    close_pipes(t_shell *shell)
+{
+    int i;
+
+    i = 0;
+    while (i < shell->command_index - 1)
+    {
+        if (shell->pipe_array[i])
+        {
+            if (shell->pipe_array[i][0] > 0)
+                close(shell->pipe_array[i][0]);
+            if (shell->pipe_array[i][1] > 1)
+                close(shell->pipe_array[i][1]);
+        }
+        i++;
+    }
+}
+
+void handle_pipes(t_shell *shell)
+{
+    if (shell->index == 0)
+    {
+        if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
+            printf("dup2 failed for first command");
+    }
+    else if (shell->index > 0 && shell->index < shell->command_index - 1)
+    {
+        if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
+            printf("dup2 failed for middle command input");
+        if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
+            printf("dup2 failed for middle command output");
+    }
+    else if (shell->index == shell->command_index - 1)
+    {
+        if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
+            printf("dup2 failed for last command");
+    }
+    close_pipes(shell);
+}
+
+int create_pipes(t_shell *shell)
+{
+    int i;
+
+    if (shell->pipes_count <= 0)
+        return (0);
+    shell->pipe_array = malloc(shell->pipes_count * sizeof(int *));
+    if (!shell->pipe_array)
+        return (-1);
+    i = -1;
+    while (++i < shell->pipes_count)
+        shell->pipe_array[i] = NULL;
+    i = 0;
+    while (i < shell->pipes_count)
+    {
+        shell->pipe_array[i] = malloc(2 * sizeof(int));
+        if (!shell->pipe_array[i])
+        {
+            return (free_pipes(shell), -1);
+        }
+        if (pipe(shell->pipe_array[i]) == -1)
+        {
+            return (free_pipes(shell), -1);
+        }
+        i++;
+    }
+    return (0);
+}

@@ -57,8 +57,8 @@ t_env
 - key / value pair for environment variables
 */
 
-/*
-static void read_env_example(t_data *d)
+
+void read_env_example(t_data *d)
 {
 	t_env *env;
 	size_t i;
@@ -80,7 +80,8 @@ static void read_env_example(t_data *d)
  	//    return (env->value);
 
 }
-*/
+
+
 
 void executor(t_data *d)
 {
@@ -89,7 +90,7 @@ void executor(t_data *d)
  	size_t i; // command index
 	size_t j; // argv index
 	size_t k; // redir index
-
+	
 	i = 0;
 	// loop through all parsed commands (one per pipe segment)
 	while (i < get_cmd_count(d))
@@ -124,7 +125,10 @@ void executor(t_data *d)
 		fprintf(stderr,"--------------------------------------\n");
 	}
 	//read_env_example(d);
+	printf("\n\n\n");
+
 }
+
 
 /* What’s next(parsing side):
 need to handle syntax errors and general error cases,

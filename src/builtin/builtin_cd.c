@@ -1,16 +1,5 @@
 #include "minishell.h"
 
-char *get_env_value(t_shell *shell, char *str)
-{
-    /*
-        will get env value based on "key"
-        if we look for PATH (PATH=/usr/local/bin:/usr/bin:/bin)
-        return will be  "/usr/local/bin:/usr/bin:/bin"
-
-        will work on this
-    */
-    return ("/home/user");
-}
 
 int cd_home(char *old_pwd, t_shell *shell)
 {
@@ -33,12 +22,30 @@ int cd_home(char *old_pwd, t_shell *shell)
     return (0);
 }
 
-int update_old_pwd(char *old_pwd)
+int update_old_pwd(t_vec *vec_env, char *old_pwd)
 {
-    /*
-        current pwd will become old
-        don't know yet how to do it
-    */
+    t_env   *env_var;
+    size_t  i;
+
+    i = 0;
+    if (!old_pwd || !vec_env)
+        return (1);
+    while (i < vec_env->len)
+    {
+        env_var = (t_env *)vec_get(vec_env, i);
+        if (env_var && env_var->key && ft_strcmp("OLDPWD", env_var->key) == 0)
+        {
+            env_var->value = ft_strdup(old_pwd);
+            free(old_pwd);
+            old_pwd = NULL;
+            return (0);
+        }
+        i++;
+    }
+    ft_putstr_fd("OLDPWD not found\n", 2);
+    free(old_pwd);
+    old_pwd = NULL;
+    return (1);
 }
 
 void    error_cd(int flag, t_shell *shell)
@@ -60,11 +67,13 @@ void    builtin_cd(int i, char **command_array, t_shell *shell)
         return (error_cd(1, shell));
     old_pwd = getcwd(NULL, 0);
     if (command_array[1] == NULL || (ft_strcmp(command_array[1], "--") == 0))
+    {
         if (cd_home(old_pwd, shell))
         {
             update_exitcode(1, shell);
             return ;
         }
+    }
     else
     {
         if (chdir(command_array[1]) == -1)
@@ -73,6 +82,5 @@ void    builtin_cd(int i, char **command_array, t_shell *shell)
             return (error_cd(2, shell));
         }
     }
-    update_old_pwd(old_pwd);
+    update_old_pwd(&shell->data->vec_env, old_pwd);
 }
-
