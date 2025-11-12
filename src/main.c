@@ -111,7 +111,7 @@ void read_the_line(t_data *d, t_shell *shell)
         shell_execution(shell);
         //read_env_example(shell->data);
 		//expand_all(d, line)
-        executor(d); //leak from here
+        //executor(d); //leak from here
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);
@@ -137,9 +137,6 @@ int main(int argc, char **argv, char **envp)
         read_the_line(d, shell);
     arena_free(&d->arena_tok);
     vec_free(&d->vec_tok);
-    return 0;
-    while (1) //leak from here
-        read_the_line(d);
     cleanup_shell(d);
     return (0);
 }
