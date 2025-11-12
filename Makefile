@@ -3,6 +3,7 @@ GREEN = \033[0;92m
 NAME = minishell
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
+VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
 DFLAGS = -MMD -MP \
 		-I include \
 		-I libft/include \
@@ -28,6 +29,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		get.c \
 		utils.c \
 		executor.c \
+		cleanup.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
@@ -45,6 +47,9 @@ $(NAME): $(OBJS) $(LIBFT_A) $(C_VEC_A)
 		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) -lreadline -o $(NAME)
 		@echo "$(GREEN) Compiled!$(DEF_COLOR)"
 
+valgrind:
+		$(VALGRIND) ./minishell
+
 clean:
 		rm -rf $(OBJDIR)
 		make clean -s -C $(LIBFT_DIR)
@@ -55,6 +60,6 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re valgrind
 .SECONDARY:$(OBJS)
 -include $(DEPS)

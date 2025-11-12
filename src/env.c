@@ -31,10 +31,4 @@ void envp_init(t_data *d, char **envp)
 		push_env(d, envp, i);
 		i++;
 	}
-// 	for (size_t j = 0; j < d->vec_env.len; j++)
-// 	{
-// 		t_env *env_back = get_env(d, j);
-// 		fprintf(stderr,"env->key:%s \nenv->value:%s \n", env_back->key, env_back->value);
-// 		fprintf(stderr,"--------------------------------------\n");
-// 	}
  }
