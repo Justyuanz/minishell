@@ -28,6 +28,7 @@ static void init_cmd(t_data *d, t_cmd **cmd, t_vec *argv)
     vec_new(argv, 1, sizeof(char *));
     *cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *));
+	vec_new(&(*cmd)->quotes, 1, sizeof(t_quote *));
 }
 
 static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
@@ -35,7 +36,7 @@ static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 	vec_new(argv, 1, sizeof(char *));
     *cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *));
-	(*cmd)->is_builtin = false;
+	vec_new(&(*cmd)->quotes, 1, sizeof(t_quote *));
 }
 
 static void handle_last_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
@@ -61,8 +62,11 @@ void build_vec_cmds(t_data *d)
         tok = get_tok(d, i);
 
         if (tok->type == WORD)
+		{
             vec_push(&argv, tok->str);
-        else if (tok->type == REDIR_IN || tok->type == REDIR_OUT
+			vev_push(&cmd->quotes, &tok->quote);
+		}
+		else if (tok->type == REDIR_IN || tok->type == REDIR_OUT
               || tok->type == APPEND || tok->type == HEREDOC)
 			handle_redir(d, cmd, tok, &i);
         else if (tok->type == PIPE)
@@ -74,4 +78,4 @@ void build_vec_cmds(t_data *d)
     }
     handle_last_cmd(d, &argv, &cmd);
 	//debug_print_cmds(d);
-} //leak from here
+}

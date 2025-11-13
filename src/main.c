@@ -105,6 +105,8 @@ void read_the_line(t_data *d, t_shell *shell)
 		//syntax_validation(d);
        // debug_print_tokens(d); //for testing
 		build_vec_cmds(d);
+		process_heredoc(d);
+		//expand_everything
         executor(d);
         shell->data = d;
         shell->envp = create_envp_from_data(d);
