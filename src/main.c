@@ -33,6 +33,7 @@ void cleanup_line_runtime(t_data *d)
 
         // Free the vector buffer for redirs (its elements are arena pointers)
         vec_free(&cmd->redirs);
+		vec_free(&cmd->quotes);
     }
 
     // Reset container lengths (forget elements) but keep their buffers for reuse.
@@ -79,6 +80,11 @@ void cleanup_line_runtime(t_data *d)
 // 	*/
 // }
 
+void process_heredoc(d)
+{
+	
+}
+
 void read_the_line(t_data *d, t_shell *shell)
 {
     char  *line;
@@ -103,7 +109,6 @@ void read_the_line(t_data *d, t_shell *shell)
         add_history(line);
         tokenizer(d, line);
 		//syntax_validation(d);
-       // debug_print_tokens(d); //for testing
 		build_vec_cmds(d);
 		process_heredoc(d);
 		//expand_everything
@@ -111,9 +116,7 @@ void read_the_line(t_data *d, t_shell *shell)
         shell->data = d;
         shell->envp = create_envp_from_data(d);
         shell_execution(shell);
-        //read_env_example(shell->data);
 		//expand_all(d, line)
-        //executor(d); //leak from here
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);

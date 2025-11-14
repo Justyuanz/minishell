@@ -28,3 +28,11 @@ t_env *get_env(t_data *d, size_t index)
 {
     return ((t_env *)vec_get(&d->vec_env, index));
 }
+
+t_quote	*get_quote(t_cmd *cmd, size_t index)
+{
+	return ((t_quote *)vec_get(&cmd->quotes, index));
+}
+
+
+

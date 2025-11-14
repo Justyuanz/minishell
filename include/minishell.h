@@ -52,6 +52,7 @@ typedef	struct s_redir
 {
 	t_token_type	type;
 	char			*file;
+	t_quote			quote;
 }	t_redir;
 
 typedef struct s_cmd
@@ -98,14 +99,15 @@ typedef struct	s_shell
 } t_shell;
 
 void executor(t_data *d);
+
 t_data *get_data(void);
 size_t get_cmd_count(t_data *d);
 t_cmd *get_cmd(t_data *d, size_t index);
 t_redir *get_redir(t_cmd *cmd, size_t index);
-//void debug_print_tokens(t_data *d); // for debugging
-//void debug_print_cmds(t_data *d); //for debugging
 t_token *get_tok(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
+t_quote	*get_quote(t_cmd *cmd, size_t index);
+
 void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d, t_shell *shell);
