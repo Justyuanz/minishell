@@ -53,6 +53,7 @@ typedef	struct s_redir
 	t_token_type	type;
 	char			*file;
 	t_quote			quote;
+	int      		expand_in_heredoc;
 }	t_redir;
 
 typedef struct s_cmd
