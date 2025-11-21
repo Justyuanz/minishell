@@ -63,6 +63,7 @@ void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 				(*off)++;
 				k++;
 			}
+			return ;
 		}
 		j++;
 	}

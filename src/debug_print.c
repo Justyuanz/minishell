@@ -2,28 +2,48 @@
 
 void debug_print_cmds(t_data *d)
 {
-	size_t cmd_count;
-	t_cmd	*cmd;
+	t_cmd	*cmd; // one command node(argv + redirs)
+	t_redir *redir; // single redirection
+	t_quote *q; //quotes
+ 	size_t i; // command index
+	size_t j; // argv index
+	size_t k; // redir index
 
-	cmd_count = get_cmd_count(d);
-	fprintf(stderr,"cmd_count: %zu\n", cmd_count);
-	fprintf(stderr, "\n===============CMD INFO==============\n");
-    for (size_t i = 0; i < cmd_count; i++)
-    {
-        cmd = get_cmd(d, i);
+	i = 0;
+	// loop through all parsed commands (one per pipe segment)
+	while (i < get_cmd_count(d))
+	{
+		cmd = get_cmd(d, i); // get current command from vec_cmds
         fprintf(stderr, "cmd[%zu]:\n", i);
 
-        for (size_t j = 0; cmd->argv[j]; j++)
+		//Print argv for this command
+		// cmd->argv is a NULL-terminated array of char*
+		// Example: ["echo", "hi", NULL]
+		j = 0;
+        while (cmd->argv && cmd->argv[j])
+		{
             fprintf(stderr, "  argv[%zu]: %s\n", j, cmd->argv[j]);
+			q = get_quote(cmd, j);
+			fprintf(stderr, "        quote: single=%d double=%d\n", q->single_ON, q->double_ON);
+			j++;
+		}
 
-        for (size_t k = 0; k < cmd->redirs.len; k++)
-        {
-            t_redir *r = (t_redir *)vec_get(&cmd->redirs, k);
-            fprintf(stderr, "  redir[%zu]: type=%s file=%s\n", k, tok_type(r->type), r->file);
-        }
+		// Print redirections belonging to this command
+		// each t_redir contains:
+		// type: (REDIR_IN, REDIR_OUT, APPEND, HEREDOC)
+		// file: filename or limiter string
+		k = 0;
+		while (k < cmd->redirs.len)
+		{
+			redir = get_redir(cmd, k); // helper to fetch one redir
+			fprintf(stderr, "  redir[%zu]: type=%s file='%s'\n" "        redir quote: single=%d double=%d\n", k, tok_type(redir->type), redir->file, redir->quote.single_ON, redir->quote.double_ON);
+			k++;
+		}
+		i++;
 		fprintf(stderr,"--------------------------------------\n");
-    }
-	fprintf(stderr, "\n===============END INFO==============\n");
+	}
+	//read_env_example(d);
+	printf("\n\n\n");
 }
 
 void debug_print_tokens(t_data *d)
