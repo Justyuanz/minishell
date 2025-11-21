@@ -83,6 +83,7 @@ typedef struct s_data
 	t_vec	vec_tok;
 	t_vec	vec_env;
 	t_vec	vec_cmds;
+	int		heredoc_skip;
 }	t_data;
 
 typedef struct	s_shell
@@ -100,6 +101,8 @@ typedef struct	s_shell
 } t_shell;
 
 void executor(t_data *d);
+void debug_print_cmds(t_data *d);
+void debug_print_tokens(t_data *d);
 
 t_data *get_data(void);
 size_t get_cmd_count(t_data *d);

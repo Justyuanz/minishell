@@ -80,20 +80,6 @@ void cleanup_line_runtime(t_data *d)
 // 	*/
 // }
 
-void process_heredoc(t_data *d)
-{
-	// t_cmd   *cmd;
-    // t_redir *r;
-    // t_quote *q;
-    // size_t i;
-    // size_t j;
-
-    // i = 0;
-    // j = 0;
-
-    fprintf(stderr,"vec_cmd_len:%zu\n cmd_count:%zu", d->vec_cmds.len, get_cmd_count(d));
-}
-
 void read_the_line(t_data *d, t_shell *shell)
 {
     char  *line;
@@ -117,13 +103,14 @@ void read_the_line(t_data *d, t_shell *shell)
     {
         add_history(line);
         tokenizer(d, line);
+        debug_print_tokens(d);
 		//syntax_validation(d);
 		build_vec_cmds(d);
-		process_heredoc(d);
-        executor(d);
-        shell->data = d;
-        shell->envp = create_envp_from_data(d);
-        shell_execution(shell);
+        debug_print_cmds(d);
+        //executor(d);
+        //shell->data = d;
+       // shell->envp = create_envp_from_data(d);
+       // shell_execution(shell);
 		//expand_all(d, line)
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
