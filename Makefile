@@ -5,8 +5,8 @@ CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
 
-READLINE_INC = -I/usr/local/opt/readline/include -I/opt/homebrew/opt/readline/include
-READLINE_LIB = -L/usr/local/opt/readline/lib -L/opt/homebrew/opt/readline/lib
+READLINE_INC = -I/opt/homebrew/opt/readline/include
+READLINE_LIB = -L/opt/homebrew/opt/readline/lib
 
 DFLAGS = -MMD -MP \
 		-I include \

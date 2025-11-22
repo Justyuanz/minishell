@@ -8,6 +8,8 @@ bool ft_isspace(char c)
 
 void shell_init(t_data *d,char **envp)
 {
+	d->heredoc_skip = 0;
+	
 	//perhaps more things to init here
 	if (arena_init(&d->arena_tok, 10000) == -1)
 		exit(EXIT_FAILURE);

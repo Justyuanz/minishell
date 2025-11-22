@@ -1,7 +1,12 @@
 #include "minishell.h"
 
-int check_if_builtin(char *command)
+int check_if_builtin(t_shell *shell, char *command)
 {
+	if (!command)
+	{
+    	shell->exitcode = 0;
+    	return(0);
+	}
     if (ft_strcmp(command, "cd") == 0)
         return (BUILTIN_CD);
     if (ft_strcmp(command, "echo") == 0)

@@ -52,19 +52,21 @@ typedef	struct s_redir
 {
 	t_token_type	type;
 	char			*file;
+	t_quote			quote;
 }	t_redir;
 
 typedef struct s_cmd
 {
 	char    **argv;
-	t_vec	redirs;
-	bool	is_builtin;
+	t_vec	redirs; //element t_redir*
+	t_vec	quotes; //elemenr t_quote*
 } 	t_cmd;
 
 typedef struct s_token
 {
 	char	*str;
 	t_token_type type;
+	t_quote			quote;
 }	t_token;
 
 typedef struct s_env
@@ -80,6 +82,7 @@ typedef struct s_data
 	t_vec	vec_tok;
 	t_vec	vec_env;
 	t_vec	vec_cmds;
+	int		heredoc_skip;
 }	t_data;
 
 typedef struct	s_shell
@@ -97,15 +100,19 @@ typedef struct	s_shell
 } t_shell;
 
 void executor(t_data *d);
+void debug_print_cmds(t_data *d);
+void debug_print_tokens(t_data *d);
+
+bool expand_in_heredoc(t_redir *redir);
 t_data *get_data(void);
 size_t get_cmd_count(t_data *d);
 t_cmd *get_cmd(t_data *d, size_t index);
 t_redir *get_redir(t_cmd *cmd, size_t index);
-//void debug_print_tokens(t_data *d); // for debugging
-//void debug_print_cmds(t_data *d); //for debugging
 t_token *get_tok(t_data *d, size_t index);
 t_env *get_env(t_data *d, size_t index);
-void push_tok(t_data *d, char *line, size_t len, int type);
+t_quote	*get_quote(t_cmd *cmd, size_t index);
+
+void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
 void tokenizer(t_data *d, char *line);
 void read_the_line(t_data *d, t_shell *shell);
 char *tok_type(t_token_type tok_type);
@@ -125,11 +132,10 @@ void *arena_alloc(t_arena *arena, size_t elem_size);
 void arena_reset(t_arena *arena);
 void arena_free(t_arena *arena);
 
-size_t read_pipe(t_data *d, char *line, size_t i);
-size_t read_word(t_data *d, char *line, size_t i);
-size_t read_env_operator(t_data *d, char *line, size_t i);
-size_t read_redir_operator2(t_data *d, char *line, size_t i);
-size_t read_redir_operator(t_data *d, char *line, size_t i);
+size_t read_pipe(t_data *d, char *line, size_t i, t_quote quote);
+size_t read_word(t_data *d, char *line, size_t i, t_quote quote);
+size_t read_redir_operator2(t_data *d, char *line, size_t i, t_quote quote);
+size_t read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
 
@@ -160,7 +166,7 @@ char *get_env_value(t_shell *shell, char *str);
 
 //builtins
 void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
-int check_if_builtin(char *command);
+int 	check_if_builtin(t_shell *shell, char *command);
 void    builtin_cd(int i, char **command_array, t_shell *shell);
 void    builtin_echo(t_cmd *command, t_shell *shell);
 void    builtin_pwd(void);

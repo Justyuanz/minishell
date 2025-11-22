@@ -36,7 +36,7 @@ void    do_command_fork(t_cmd *cmd, t_shell *shell)
     if (shell->pids[shell->index] == 0)
     {
         handle_pipes(shell); 
-        flag_builtin = check_if_builtin(cmd->argv[0]);
+        flag_builtin = check_if_builtin(shell, cmd->argv[0]);
         if (flag_builtin != 0)
             handle_builtin(flag_builtin, cmd, shell);
         else

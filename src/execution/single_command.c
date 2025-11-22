@@ -84,7 +84,7 @@ void    single_command_case(t_shell *shell)
     cmd = get_cmd(shell->data, 0);
     if (cmd)
     {
-        flag = check_if_builtin(cmd->argv[0]);
+        flag = check_if_builtin(shell, cmd->argv[0]);
         if (flag != 0)
             handle_builtin(flag, cmd, shell);
         else // should i check here for valid command or not??

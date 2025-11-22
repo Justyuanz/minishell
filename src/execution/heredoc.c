@@ -22,7 +22,7 @@ int	read_heredoc_input(const char *delimiter, const char *filename)
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		return (-1);
-	
+
 	while (1)
 	{
 		line = readline("> ");
@@ -66,6 +66,8 @@ int	handle_heredocs(t_cmd *cmd)
 				return (1);
 			}
             free(delim);
+			// if (expand_in_heredoc(redir) == true)
+				//expand_heredoc_file -> can use handle_expansion()?
 		}
 		i++;
 	}
