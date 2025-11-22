@@ -106,11 +106,11 @@ void read_the_line(t_data *d, t_shell *shell)
         //debug_print_tokens(d);
 		//syntax_validation(d);
 		build_vec_cmds(d);
-        debug_print_cmds(d);
+        //debug_print_cmds(d);
         //executor(d);
         shell->data = d;
         shell->envp = create_envp_from_data(d);
-        shell_execution(shell);
+        shell_execution(d, shell);
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);

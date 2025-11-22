@@ -50,9 +50,9 @@ void    execute_single_command(t_shell *shell)
     exit(shell->exitcode);
 }
 
-void    handle_single_command(t_cmd *cmd, t_shell *shell)
+void    handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 {
-    if (handle_heredocs(cmd) != 0)
+    if (handle_heredocs(d, cmd) != 0)
     {
         shell->exitcode = 1;
     }
@@ -66,7 +66,7 @@ void    handle_single_command(t_cmd *cmd, t_shell *shell)
 }
 
 
-void    single_command_case(t_shell *shell)
+void    single_command_case(t_data *d, t_shell *shell)
 {
     int flag;
     t_cmd   *cmd;
@@ -88,6 +88,6 @@ void    single_command_case(t_shell *shell)
         if (flag != 0)
             handle_builtin(flag, cmd, shell);
         else // should i check here for valid command or not??
-            handle_single_command(cmd, shell);
+            handle_single_command(d, cmd, shell);
     }
 }

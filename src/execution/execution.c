@@ -47,7 +47,7 @@ void    do_command_fork(t_cmd *cmd, t_shell *shell)
 
 }
 
-void    handle_command(t_shell *shell, int command_count)
+void    handle_command(t_data *d, t_shell *shell, int command_count)
 {
     t_cmd   *cmd;
     shell->index = 0;
@@ -57,7 +57,7 @@ void    handle_command(t_shell *shell, int command_count)
         cmd = get_cmd(shell->data, shell->index);
             if (cmd->argv)
             {
-                if (handle_heredocs(cmd) != 0)
+                if (handle_heredocs(d, cmd) != 0)
 				{
                     shell->exitcode = 1;
 					shell->index++;
@@ -88,7 +88,7 @@ int create_pids(t_shell *shell, int command_count)
     return (0);
 }
 
-void    shell_execution(t_shell *shell)
+void    shell_execution(t_data *d, t_shell *shell)
 {
     int     command_count;
 
@@ -103,13 +103,13 @@ void    shell_execution(t_shell *shell)
     }
     if (command_count == 1)
     {
-        single_command_case(shell);
+        single_command_case(d, shell);
     }
     else
     {
         if (create_pipes(shell) == -1) 
             printf("pipe creation failed \n");  
-        handle_command(shell, command_count);
+        handle_command(d, shell, command_count);
         wait_for_all(shell);
         free_pipes(shell);
     }
