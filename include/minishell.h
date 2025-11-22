@@ -166,7 +166,7 @@ char *get_env_value(t_shell *shell, char *str);
 
 //builtins
 void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
-int 	check_if_builtin(char *command);
+int 	check_if_builtin(t_shell *shell, char *command);
 void    builtin_cd(int i, char **command_array, t_shell *shell);
 void    builtin_echo(t_cmd *command, t_shell *shell);
 void    builtin_pwd(void);

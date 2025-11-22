@@ -9,10 +9,26 @@ bool expand_in_heredoc(t_redir *redir)
     return(redir && redir->type == HEREDOC && redir->quote.single_ON == false && redir->quote.double_ON == false);
 }
 
-bool exit_status(void)
+bool exit_status(char *line, size_t *i, char *buf, size_t *off)
 {
-	fprintf(stderr,"exit_status");
-	return(true);
+    if (line[*i] == '?')
+    {
+        int code;
+		char *num;
+		size_t k;
+
+		k= 0;
+		code = ft_shell()->exitcode;
+		num = ft_itoa(code);
+
+        while (num[k])
+            buf[(*off)++] = num[k++];
+
+        free(num);
+        (*i)++; // skip '?'
+        return(true);
+    }
+	return (false);
 }
 
 bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
@@ -79,8 +95,8 @@ void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 {
 	(*i)++; //skip $
 
-	//	exit_status()
-
+	if (exit_status(line, i, buf, off))
+		return;
 	if (bare_dollar(line, buf, off, i))
 		return;
 	//normal var

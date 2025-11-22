@@ -103,22 +103,20 @@ void read_the_line(t_data *d, t_shell *shell)
     {
         add_history(line);
         tokenizer(d, line);
-        debug_print_tokens(d);
+        //debug_print_tokens(d);
 		//syntax_validation(d);
 		build_vec_cmds(d);
         debug_print_cmds(d);
         //executor(d);
-        //shell->data = d;
-       // shell->envp = create_envp_from_data(d);
-       // shell_execution(shell);
-		//expand_all(d, line)
+        shell->data = d;
+        shell->envp = create_envp_from_data(d);
+        shell_execution(shell);
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);
 		//vec_reset(&d->vec_cmds) ;
 
         vec_reset(&d->vec_tok);
-        shell->exitcode = 0;
      }
     free(line);
 }
