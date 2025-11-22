@@ -3,6 +3,12 @@
 // $$
 //$?
 //$variable
+
+bool expand_in_heredoc(t_redir *redir)
+{
+    return(redir && redir->type == HEREDOC && redir->quote.single_ON == false && redir->quote.double_ON == false);
+}
+
 bool exit_status(void)
 {
 	fprintf(stderr,"exit_status");

@@ -36,7 +36,7 @@ void debug_print_cmds(t_data *d)
 		while (k < cmd->redirs.len)
 		{
 			redir = get_redir(cmd, k); // helper to fetch one redir
-			fprintf(stderr, "  redir[%zu]: type=%s file='%s'\n" "        redir quote: single=%d double=%d\n", k, tok_type(redir->type), redir->file, redir->quote.single_ON, redir->quote.double_ON);
+			fprintf(stderr, "  redir[%zu]: type=%s file='%s'\n" "        redir quote: single= %d double= %d expand_in_heredoc= %d\n", k, tok_type(redir->type), redir->file, redir->quote.single_ON, redir->quote.double_ON, expand_in_heredoc(redir));
 			k++;
 		}
 		i++;

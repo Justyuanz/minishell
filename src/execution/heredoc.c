@@ -66,6 +66,8 @@ int	handle_heredocs(t_cmd *cmd)
 				return (1);
 			}
             free(delim);
+			// if (expand_in_heredoc(redir) == true)
+				//expand_heredoc_file -> can use handle_expansion()?
 		}
 		i++;
 	}

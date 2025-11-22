@@ -53,7 +53,6 @@ typedef	struct s_redir
 	t_token_type	type;
 	char			*file;
 	t_quote			quote;
-	int      		expand_in_heredoc;
 }	t_redir;
 
 typedef struct s_cmd
@@ -104,6 +103,7 @@ void executor(t_data *d);
 void debug_print_cmds(t_data *d);
 void debug_print_tokens(t_data *d);
 
+bool expand_in_heredoc(t_redir *redir);
 t_data *get_data(void);
 size_t get_cmd_count(t_data *d);
 t_cmd *get_cmd(t_data *d, size_t index);
