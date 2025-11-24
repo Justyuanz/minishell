@@ -79,7 +79,31 @@ void cleanup_line_runtime(t_data *d)
 // 	8. Random Forbidden Symbols
 // 	*/
 // }
+bool check_start_and_end_pipe(t_data *d)
+{
+    if (get_tok(d, 0)->type == PIPE || get_tok(d, (d->vec_tok.len - 1))->type == PIPE)
+    {
+        fprintf(stderr,"mini: syntax error near unexpected token `|'\n");
+        return (false); //exitcode 258
+    }
+    return (true);
+}
+bool syntax_validation(t_data *d)
+{
+    t_token *tok;
+    size_t  i;
 
+    i = 0;
+    if (!check_start_and_end_pipe(d))
+        return (false);
+    while (i < d->vec_tok.len)
+    {
+        tok = get_tok(d, i);
+
+        i++;
+    }
+    return (true);
+}
 void read_the_line(t_data *d, t_shell *shell)
 {
     char  *line;
@@ -103,14 +127,13 @@ void read_the_line(t_data *d, t_shell *shell)
     {
         add_history(line);
         tokenizer(d, line);
-        //debug_print_tokens(d);
-		//syntax_validation(d);
-		build_vec_cmds(d);
-        //debug_print_cmds(d);
-        //executor(d);
-        shell->data = d;
-        shell->envp = create_envp_from_data(d);
-        shell_execution(d, shell);
+		if (syntax_validation(d))
+		{
+            build_vec_cmds(d);
+            shell->data = d;
+            shell->envp = create_envp_from_data(d);
+            shell_execution(d, shell);
+        }
 		cleanup_line_runtime(d);
         arena_reset(&d->arena_tok);
         //vec_reset(&d->vec_tok);
