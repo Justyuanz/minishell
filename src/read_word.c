@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-size_t handle_single_quote(char *buf, char *line, size_t i, size_t *off)
+size_t handle_single_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
 	i++;
 	while (line[i] && line[i] != '\'')
@@ -12,7 +12,7 @@ size_t handle_single_quote(char *buf, char *line, size_t i, size_t *off)
 	if (line[i] == '\'')
 		i++;
 	else
-		fprintf(stderr, "unclosed single quote\n"); // unclosed quote error handle
+		d->unclosed_quote = 1;
 	return (i);
 }
 
@@ -32,6 +32,8 @@ size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 	}
 	if(line[i] == '"')
 		i++;
+	else
+		d->unclosed_quote = 1;
 	return (i);
 }
 
@@ -77,7 +79,7 @@ size_t read_word(t_data *d, char *line, size_t i, t_quote quote)
 				if(line[i] == '"')
 					i++;
 				else
-				fprintf(stderr, "unclosed double quote\n");
+					d->unclosed_quote = 1;
 			}
 			else if (line[i] == '\'')
 			{
@@ -92,7 +94,7 @@ size_t read_word(t_data *d, char *line, size_t i, t_quote quote)
 				if (line[i] == '\'')
 					i++;
 				else
-					fprintf(stderr, "unclosed single quote\n");
+					d->unclosed_quote = 1;
 			}
 			else
 				buf[off++] = line[i++];
@@ -100,7 +102,7 @@ size_t read_word(t_data *d, char *line, size_t i, t_quote quote)
 		else if (line[i] == '\'')
 		{
 			quote.single_ON = true;
-			i = handle_single_quote(buf, line, i, &off);
+			i = handle_single_quote(d, buf, line, i, &off);
 		}
 		else if (line[i] == '"')
 		{

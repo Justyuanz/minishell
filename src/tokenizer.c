@@ -43,6 +43,7 @@ void tokenizer(t_data *d, char *line)
     i = 0;
 	quote.single_ON = false;
 	quote.double_ON = false;
+	d->unclosed_quote = 0;
     while (line[i])
     {
         while(ft_isspace(line[i]))
@@ -55,5 +56,7 @@ void tokenizer(t_data *d, char *line)
             i = read_pipe(d, line, i, quote);
         else
             i = read_word(d, line, i, quote);
+		if (d->unclosed_quote == 1)
+			break;
     }
 }

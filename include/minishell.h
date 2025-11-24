@@ -83,6 +83,7 @@ typedef struct s_data
 	t_vec	vec_env;
 	t_vec	vec_cmds;
 	int		heredoc_skip;
+	int		unclosed_quote;
 }	t_data;
 
 typedef struct	s_shell

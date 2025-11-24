@@ -53,7 +53,6 @@ void    handle_command(t_data *d, t_shell *shell, int command_count)
     shell->index = 0;
     while (shell->index < command_count)
     {
-        
         cmd = get_cmd(shell->data, shell->index);
             if (cmd->argv)
             {

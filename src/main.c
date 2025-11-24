@@ -14,7 +14,7 @@ t_shell *ft_shell(void)
 // Fix t_cmd to own t_vec argv
 //Remove vec_new(&d->vec_cmds, ...) from init_cmd
 //In shell_init, use sizeof(t_cmd *) for vec_cmds
-//Add vec_free(&cmd->argv) in 
+//Add vec_free(&cmd->argv) in
 //??Call cleanup_line(d) before arena_reset(&d->arena_tok)
 //Keep your arena alignment fix
 
@@ -79,7 +79,7 @@ void cleanup_line_runtime(t_data *d)
 // 	8. Random Forbidden Symbols
 // 	*/
 // }
-bool check_start_and_end_pipe(t_data *d)
+bool check_start_or_end_pipe(t_data *d)
 {
     if (get_tok(d, 0)->type == PIPE || get_tok(d, (d->vec_tok.len - 1))->type == PIPE)
     {
@@ -88,22 +88,81 @@ bool check_start_and_end_pipe(t_data *d)
     }
     return (true);
 }
+bool check_end_with_redirs(t_data *d, size_t i)
+{
+	t_token *tok;
+
+	tok = get_tok(d, i);
+	if ((tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND
+			|| tok->type == HEREDOC))
+		{
+			fprintf(stderr,"mini: syntax error near unexpected token `newline'\n");
+			return (false);
+		}
+	return (true);
+}
+
+bool check_redir_sequence(t_data *d)
+{
+	t_token *tok;
+	t_token *next_tok;
+	size_t	i;
+
+	i = 0;
+	while (i < d->vec_tok.len - 1)
+	{
+		tok = get_tok(d, i);
+		next_tok = get_tok(d, i + 1);
+		if (tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND
+			|| tok->type == HEREDOC)
+			if (next_tok->type != WORD)
+			{
+				fprintf(stderr,"mini: syntax error near unexpected token `%s'\n", next_tok->str);
+				return (false);
+			}
+		i++;
+	}
+	if(!check_end_with_redirs(d, i))
+		return (false);
+
+	return (true);
+}
+bool check_pipe_sequence(t_data *d)
+{
+	t_token *tok;
+	t_token *next_tok;
+	size_t	i;
+
+	i = 0;
+	while (i < d->vec_tok.len - 1)
+	{
+		tok = get_tok(d, i);
+		next_tok = get_tok(d, i + 1);
+		if (tok->type == PIPE)
+			if (next_tok->type == PIPE)
+			{
+				fprintf(stderr,"mini: syntax error near unexpected token `|'\n");
+				return (false);
+			}
+		i++;
+	}
+	return (true);
+}
 bool syntax_validation(t_data *d)
 {
-    t_token *tok;
-    size_t  i;
-
-    i = 0;
-    if (!check_start_and_end_pipe(d))
+	if (d->vec_tok.len == 0)
+		return(true);
+	if (d->unclosed_quote == 1)
+	{
+		fprintf(stderr,"mini: unclosed quote\n");
+		return (false);
+	}
+	if (!check_start_or_end_pipe(d) || !check_redir_sequence(d) || !check_pipe_sequence(d))
         return (false);
-    while (i < d->vec_tok.len)
-    {
-        tok = get_tok(d, i);
 
-        i++;
-    }
     return (true);
 }
+
 void read_the_line(t_data *d, t_shell *shell)
 {
     char  *line;
