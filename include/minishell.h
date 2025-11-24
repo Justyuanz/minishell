@@ -12,6 +12,11 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+# define SYNTAX_ERROR_PIPE "mini: syntax error near unexpected token `|'"
+# define SYNTAX_ERROR_NEWLINE "mini: syntax error near unexpected token `newline'"
+# define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token after redirection"
+# define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
+
 typedef enum e_token_type
 {
 	WORD,
@@ -58,6 +63,7 @@ typedef	struct s_redir
 typedef struct s_cmd
 {
 	char    **argv;
+	bool	is_ambiguous;
 	t_vec	redirs; //element t_redir*
 	t_vec	quotes; //elemenr t_quote*
 } 	t_cmd;
@@ -115,6 +121,7 @@ t_quote	*get_quote(t_cmd *cmd, size_t index);
 
 void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
 void tokenizer(t_data *d, char *line);
+bool syntax_validation(t_data *d);
 void read_the_line(t_data *d, t_shell *shell);
 char *tok_type(t_token_type tok_type);
 void build_vec_cmds(t_data *d);
@@ -139,6 +146,9 @@ size_t read_redir_operator2(t_data *d, char *line, size_t i, t_quote quote);
 size_t read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
+
+bool syntax_error_msg(char *msg, int exitcode);
+void cleanup_line_runtime(t_data *d);
 
 //execution.c
 void    shell_execution(t_data *d, t_shell *shell);

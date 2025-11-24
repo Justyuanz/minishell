@@ -2,15 +2,17 @@
 
 static void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
 {
+	t_token *next_tok;
 	t_redir *redir;
     // allocate redir in arena
 
+	next_tok = get_tok(d, (*i) + 1);
 	redir = (t_redir *)arena_alloc(&d->arena_tok, sizeof(t_redir));
     redir->type = tok->type;
     if ((*i) + 1 < d->vec_tok.len)
 	{
-    	redir->file = get_tok(d, (*i) + 1)->str;
-		redir->quote = get_tok(d, (*i) + 1)->quote;
+    	redir->file = next_tok->str;
+		redir->quote = next_tok->quote;
 	}
 	else
 	redir->file = NULL; // syntax error maybe
@@ -32,6 +34,7 @@ static void init_cmd(t_data *d, t_cmd **cmd, t_vec *argv)
     *cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *));
 	vec_new(&(*cmd)->quotes, 1, sizeof(t_quote *));
+	(*cmd)->is_ambiguous = false;
 }
 
 static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)

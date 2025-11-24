@@ -51,7 +51,6 @@ size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 		(*off)++;
 		i++;
 	}
-	printf("i: %zu\n", i);
 	return (i);
 }
 
