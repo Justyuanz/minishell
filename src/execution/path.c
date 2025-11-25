@@ -1,4 +1,32 @@
 #include "minishell.h"
+char	*check_command(const char *cmd, t_shell *shell)
+{
+	struct stat	path_stat; 
+
+	if (stat(cmd, &path_stat) != 0) // This function retrieves information about cmd
+	{
+		update_exitcode(127, shell);
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		return (NULL);
+	}
+	if (S_ISDIR(path_stat.st_mode)) // Macro that checks if the file is a directory
+	{
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		update_exitcode(126, shell);
+		return (NULL);
+	}
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
+	if (access(cmd, F_OK) == 0)
+	{
+		update_exitcode(126, shell);
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+	}
+	return (NULL);
+}
 
 char	*join_paths(const char *dir, const char *cmd)
 {
@@ -52,11 +80,16 @@ static char	*search_in_path(const char *cmd, char **dirs, t_shell *shell)
 	free_array(dirs);
 	if (found)
 	{
-		shell->exitcode = 127;
-		printf("search in path1\n");
+		shell->exitcode = 126;
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
 	}
 	else
-		printf("search in path2\n");
+	{
+		shell->exitcode = 127;
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
 	return (NULL);
 }
 
@@ -93,8 +126,8 @@ char	*get_command_path(const char *cmd, t_shell *shell)
 	char	*cmd_path;
 	char	**directories;
 
-	//if (ft_strchr(cmd, '/'))
-	//	return (check_command(cmd, shell));
+	if (ft_strchr(cmd, '/'))
+		return (check_command(cmd, shell));
 	env_path = get_env_value(shell, "PATH");
 	if (!env_path)
 	{
