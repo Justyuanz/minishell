@@ -5,10 +5,10 @@ void cleanup_line(t_data *d)
 	t_cmd	*cmd;
 	size_t	i;
 
-	i = -1;
+	i = 0;
 	if (!d)
 		return;
-	while( ++i < d->vec_cmds.len)
+	while( i < d->vec_cmds.len)
 	{
 		cmd = get_cmd(d, i);
 		if (cmd->argv)
@@ -17,6 +17,7 @@ void cleanup_line(t_data *d)
 			cmd->argv = NULL;
 		}
 		vec_free(&cmd->redirs);
+		i++;
 	}
 	vec_free(&d->vec_cmds);
 	vec_free(&d->vec_tok);
@@ -33,28 +34,31 @@ void cleanup_shell(t_data *d)
 	vec_free(&d->vec_env);
 	arena_free(&d->arena_env);
 	arena_free(&d->arena_tok);
+	rl_clear_history();
 }
 
 
 void cleanup_line_runtime(t_data *d)
 {
-    if (!d) return;
+	size_t	i;
+	t_cmd *cmd;
 
-    for (size_t i = 0; i < d->vec_cmds.len; i++) {
-        t_cmd *cmd = get_cmd(d, i);
-
-        // Free ONLY the argv array (heap). Do NOT free argv[i] strings (arena-owned).
-        if (cmd->argv) {
+    if (!d)
+		return;
+	i = 0;
+    while (i < d->vec_cmds.len)
+	{
+       cmd = get_cmd(d, i);
+		if (cmd->argv)
+		{
             free(cmd->argv);
             cmd->argv = NULL;
         }
-
-        // Free the vector buffer for redirs (its elements are arena pointers)
         vec_free(&cmd->redirs);
 		vec_free(&cmd->quotes);
+		i++;
     }
-
-    // Reset container lengths (forget elements) but keep their buffers for reuse.
     vec_reset(&d->vec_cmds);
     vec_reset(&d->vec_tok);
+	arena_reset(&d->arena_tok);
 }

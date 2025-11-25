@@ -12,11 +12,13 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+# define WORD_BUF_SIZE 2048
+
 # define SYNTAX_ERROR_PIPE "mini: syntax error near unexpected token `|'"
 # define SYNTAX_ERROR_NEWLINE "mini: syntax error near unexpected token `newline'"
-# define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token after redirection"
+# define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token "
 # define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
-# define ERROR_MSG_AMBIGUOUS_REDIR "mini: ambiguous redirection"
+# define ERROR_MSG_AMBIGUOUS "mini: ambiguous redirection : "
 
 typedef enum e_token_type
 {
@@ -107,49 +109,61 @@ typedef struct	s_shell
 	t_data *data;
 } t_shell;
 
-void executor(t_data *d);
-void debug_print_cmds(t_data *d);
-void debug_print_tokens(t_data *d);
 
-bool expand_in_heredoc(t_redir *redir);
-t_data *get_data(void);
-size_t get_cmd_count(t_data *d);
-t_cmd *get_cmd(t_data *d, size_t index);
+//debug
+void     debug_print_cmds(t_data *d);
+void     debug_print_tokens(t_data *d);
+void     executor(t_data *d);
+
+//getters
+t_data  *get_data(void);
+size_t   get_cmd_count(t_data *d);
+t_cmd   *get_cmd(t_data *d, size_t index);
 t_redir *get_redir(t_cmd *cmd, size_t index);
 t_token *get_tok(t_data *d, size_t index);
-t_env *get_env(t_data *d, size_t index);
-t_quote	*get_quote(t_cmd *cmd, size_t index);
+t_env   *get_env(t_data *d, size_t index);
+t_quote *get_quote(t_cmd *cmd, size_t index);
 
-void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
-void tokenizer(t_data *d, char *line);
-bool syntax_validation(t_data *d);
-void read_the_line(t_data *d, t_shell *shell);
-char *tok_type(t_token_type tok_type);
-void build_vec_cmds(t_data *d);
+//utilities
+bool     ft_isspace(char c);
+bool     str_cmp(char *s1, char *s2);
+char    *tok_type(t_token_type tok_type);
 
-bool ft_isspace(char c);
-void shell_init(t_data *d, char **envp);
-bool str_cmp(char *s1, char *s2);
+//arena & memory management
+int      arena_init(t_arena *arena, size_t capacity);
+void    *arena_alloc(t_arena *arena, size_t elem_size);
+char    *arena_push(t_arena *arena, char *s, size_t len);
+void     arena_reset(t_arena *arena);
+void     arena_free(t_arena *arena);
 
-void cleanup_line(t_data *d);
-void cleanup_shell(t_data *d);
+void     envp_init(t_data *d, char **envp);
 
-int	 arena_init(t_arena *arena, size_t capacity);
-void envp_init(t_data *d, char **envp);
-char *arena_push(t_arena *arena, char *s, size_t len);
-void *arena_alloc(t_arena *arena, size_t elem_size);
-void arena_reset(t_arena *arena);
-void arena_free(t_arena *arena);
+//tokenizer
+void     push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
+size_t   read_word(t_data *d, char *line, size_t i, t_quote quote);
+size_t   read_pipe(t_data *d, char *line, size_t i, t_quote quote);
+size_t   read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
+size_t   read_redir_operator2(t_data *d, char *line, size_t i, t_quote quote);
+bool     tokenizer(t_data *d, char *line);
 
-size_t read_pipe(t_data *d, char *line, size_t i, t_quote quote);
-size_t read_word(t_data *d, char *line, size_t i, t_quote quote);
-size_t read_redir_operator2(t_data *d, char *line, size_t i, t_quote quote);
-size_t read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
+//syntax & parser
+bool     parse_error_msg(char *msg, char *var, int exitcode);
+bool     syntax_validation(t_data *d);
+void     build_vec_cmds(t_data *d);
 
-void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
+//expansion
+void     handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
+bool     expand_in_heredoc(t_redir *redir);
 
-bool syntax_error_msg(char *msg, int exitcode);
-void cleanup_line_runtime(t_data *d);
+//shell loop
+void     read_the_line(t_data *d, t_shell *shell);
+void     shell_init(t_data *d, t_shell *shell, char **envp);
+
+//clean up
+void     cleanup_line(t_data *d);
+void     cleanup_line_runtime(t_data *d);
+void     cleanup_shell(t_data *d);
+bool     destroy_and_exit(t_data *d, char *msg, int exitcode);
 
 //execution.c
 void    shell_execution(t_data *d, t_shell *shell);

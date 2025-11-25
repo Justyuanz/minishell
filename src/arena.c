@@ -11,6 +11,7 @@ int	arena_init(t_arena *arena, size_t capacity)
 	arena->offset = 0;
 	return (1);
 }
+
 void *arena_alloc(t_arena *arena, size_t elem_size)
 {
 	char *current_start;
@@ -31,6 +32,7 @@ void *arena_alloc(t_arena *arena, size_t elem_size)
 	arena->offset += elem_size;
 	return (current_start);
 }
+
 char *arena_push(t_arena *arena, char *s, size_t len)
 {
 	char	*current_start;
@@ -48,10 +50,12 @@ char *arena_push(t_arena *arena, char *s, size_t len)
 	arena->offset += len;
 	return (current_start);
 }
+
 void arena_reset(t_arena *arena)
 {
 	arena->offset = 0;
 }
+
 void arena_free(t_arena *arena)
 {
 	free(arena->data);
@@ -59,3 +63,4 @@ void arena_free(t_arena *arena)
 	arena->capacity = 0;
 	arena->offset = 0;
 }
+

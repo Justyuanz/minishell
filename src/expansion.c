@@ -51,10 +51,14 @@ bool bare_dollar(char *line, char *buf, size_t *off, size_t *i)
 
 void store_var_name(char *line, char *tmp, size_t *i, size_t *j)
 {
-	//a-zA-Z0-9_
 	while (line[*i] && ((line[*i] >= 'a' && line[*i] <= 'z') || (line[*i] >= 'A' && line[*i] <= 'Z')
 		|| (line[*i] >= '0' && line[*i] <= '9') || line[*i] == '_' ))
 	{
+		if((*j) >= 1028)
+		{
+			tmp[*j] = '\0';
+			return;
+		}
 		tmp[*j] = line[*i]; //writes the var name
 		(*j)++;
 		(*i)++;
@@ -72,7 +76,6 @@ void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 	j = 0;
 	store_var_name(line, tmp, i, &j);
 	k = 0;
-	//jinzhang@c2r6p8:~/Github/minishell$ echo $> bash: syntax error near unexpected token `newline'
 	j = 0;
 	while(j < d->vec_env.len)
 	{
@@ -93,13 +96,12 @@ void handle_variable(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off)
 {
-	(*i)++; //skip $
+	(*i)++;
 
 	if (exit_status(line, i, buf, off))
 		return;
 	if (bare_dollar(line, buf, off, i))
 		return;
-	//normal var
 	handle_variable(d, buf,line, i ,off);
 }
 

@@ -13,3 +13,9 @@
     fun:readline_internal_char
 }
 
+{
+    suppress_add_history_anywhere
+    Memcheck:Leak
+    ...
+    fun:add_history
+}

@@ -28,21 +28,27 @@ void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote)
     t_token *tok;
 
     tok = (t_token *)arena_alloc(&d->arena_tok, sizeof(t_token));
+	if(!tok)
+		destroy_and_exit(d, "Arena alloc tok fail", 1);
     tok->str = arena_push(&d->arena_tok, line, len + 1);
+	if(!tok->str)
+		destroy_and_exit(d, "Arena push tok fail", 1);
     tok->str[len] = '\0';
     tok->type = type;
 	tok->quote.single_ON = quote.single_ON;
 	tok->quote.double_ON = quote.double_ON;
     if (vec_push(&d->vec_tok, tok) == -1)//only push the address of the pointer
-		exit (EXIT_FAILURE); //ERROR HANDLING
+		destroy_and_exit(d, "Vec push tok fail\n", 1);
 }
 
-void tokenizer(t_data *d, char *line)
+bool tokenizer(t_data *d, char *line)
 {
     size_t i;
 	t_quote	quote;
 
-    i = 0;
+	if (!line)
+		return(false);
+	i = 0;
 	quote.single_ON = false;
 	quote.double_ON = false;
 	d->unclosed_quote = 0;
@@ -57,8 +63,13 @@ void tokenizer(t_data *d, char *line)
         else if (line[i] == '|')
             i = read_pipe(d, line, i, quote);
         else
+		{
+			if (ft_strlen(line + i) > WORD_BUF_SIZE)
+				return(parse_error_msg("mini: line too long", NULL, 1));
             i = read_word(d, line, i, quote);
+		}
 		if (d->unclosed_quote == 1)
 			break;
     }
+	return (true);
 }

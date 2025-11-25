@@ -129,12 +129,3 @@ void executor(t_data *d)
 	printf("\n\n\n");
 
 }
-
-
-/* What’s next(parsing side):
-need to handle syntax errors and general error cases,
-test more edge inputs (weird pipes, quotes, missing filenames),
-add cleanup & free,
-implement env set, unset, export,
-maybe start signal handling then?
-*/

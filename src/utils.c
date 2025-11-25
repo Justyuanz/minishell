@@ -6,31 +6,22 @@ bool ft_isspace(char c)
 		|| c == ' ');
 }
 
-void shell_init(t_data *d,char **envp)
+void shell_init(t_data *d,t_shell *shell, char **envp)
 {
 	d->heredoc_skip = 0;
-	
-	//perhaps more things to init here
-	if (arena_init(&d->arena_tok, 10000) == -1)
-		exit(EXIT_FAILURE);
+	shell->data = d;
+    shell->envp = create_envp_from_data(d);
+
+	if (arena_init(&d->arena_tok, 100000) == -1)
+		destroy_and_exit(d, "Arena init fail\n", 1);
 	if (vec_new(&d->vec_tok, 1, sizeof(t_token *)) == -1)
-	{
-		arena_free(&d->arena_tok);
-		exit(EXIT_FAILURE);
-	}
-	if (arena_init(&d->arena_env, 10000) == -1)
-		exit(EXIT_FAILURE);
+		destroy_and_exit(d, "Vec init fail\n", 1);
+	if (arena_init(&d->arena_env, 100000) == -1)
+		destroy_and_exit(d, "Arena init fail\n", 1);
 	if (vec_new(&d->vec_env, 1, sizeof(t_env *)) == -1)
-	{
-		arena_free(&d->arena_env);
-		exit(EXIT_FAILURE);
-	}
+		destroy_and_exit(d, "Vec init fail\n", 1);
 	if (vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)) == -1)
-	{
-		arena_free(&d->arena_tok);
-		arena_free(&d->arena_env);
-		exit(EXIT_FAILURE);
-	}
+		destroy_and_exit(d, "Arena init fail\n", 1);
 	envp_init(d, envp);
 }
 

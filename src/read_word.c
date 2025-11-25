@@ -2,6 +2,9 @@
 
 size_t handle_single_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
+	if (!line[i])
+		return(i);
+
 	i++;
 	while (line[i] && line[i] != '\'')
 	{
@@ -18,6 +21,9 @@ size_t handle_single_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 
 size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
+	if (!line[i])
+		return(i);
+
 	i++; //skip first ""
 	while (line[i] && line[i] != '"')
 	{
@@ -39,6 +45,8 @@ size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *o
 
 size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 {
+	if(!line[i])
+		return(i);
 	while (line[i] && !ft_isspace(line[i]) && line[i] != '<' && line[i] != '>'
 			&&line[i] != '|' && line[i] != '\'' && line[i] != '"' )
 	{
@@ -54,12 +62,13 @@ size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
 	return (i);
 }
 
-//need to move this function after build cmd
 size_t read_word(t_data *d, char *line, size_t i, t_quote quote)
 {
-	char	buf[1024]; //guard here
+	char	buf[WORD_BUF_SIZE]; //guard here
 	size_t  off;
 
+	if (!line || !line[i])
+		return(i);
 	off = 0;
 	while (line[i] && line[i] != '>' && line[i] != '<' && line[i] != '|' && !ft_isspace(line[i]))
 	{
