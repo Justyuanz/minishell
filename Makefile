@@ -24,6 +24,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 SRCS = $(addprefix $(SRCDIR)/,\
 		main.c \
 		tokenizer.c \
+		check_syntax.c \
 		debug_print.c \
 		arena.c \
 		read_operators.c \
@@ -33,6 +34,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		build_cmds.c \
 		get.c \
 		utils.c \
+		error_msg.c \
 		executor.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c \

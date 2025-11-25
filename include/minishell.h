@@ -12,6 +12,12 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+# define SYNTAX_ERROR_PIPE "mini: syntax error near unexpected token `|'"
+# define SYNTAX_ERROR_NEWLINE "mini: syntax error near unexpected token `newline'"
+# define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token after redirection"
+# define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
+# define ERROR_MSG_AMBIGUOUS_REDIR "mini: ambiguous redirection"
+
 typedef enum e_token_type
 {
 	WORD,
@@ -53,6 +59,7 @@ typedef	struct s_redir
 	t_token_type	type;
 	char			*file;
 	t_quote			quote;
+	bool	is_ambiguous;
 }	t_redir;
 
 typedef struct s_cmd
@@ -83,6 +90,7 @@ typedef struct s_data
 	t_vec	vec_env;
 	t_vec	vec_cmds;
 	int		heredoc_skip;
+	int		unclosed_quote;
 }	t_data;
 
 typedef struct	s_shell
@@ -114,6 +122,7 @@ t_quote	*get_quote(t_cmd *cmd, size_t index);
 
 void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
 void tokenizer(t_data *d, char *line);
+bool syntax_validation(t_data *d);
 void read_the_line(t_data *d, t_shell *shell);
 char *tok_type(t_token_type tok_type);
 void build_vec_cmds(t_data *d);
@@ -139,8 +148,11 @@ size_t read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
 
 void handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
 
+bool syntax_error_msg(char *msg, int exitcode);
+void cleanup_line_runtime(t_data *d);
+
 //execution.c
-void    shell_execution(t_shell *shell);
+void    shell_execution(t_data *d, t_shell *shell);
 t_shell *ft_shell(void);
 
 //checkers.c
@@ -156,7 +168,7 @@ void    free_string(char *str);
 char	*get_command_path(const char *cmd, t_shell *shell);
 
 //single_command.c
-void    single_command_case(t_shell *shell);
+void    single_command_case(t_data *d, t_shell *shell);
 void    wait_for_all(t_shell *shell);
 
 //utils.c
@@ -184,7 +196,7 @@ void    handle_pipes(t_shell *shell);
 void	redirect_child(t_cmd *cmd, t_shell *shell);
 
 //heredoc.c
-int	handle_heredocs(t_cmd *cmd);
+int	handle_heredocs(t_data *d, t_cmd *cmd);
 
 //envp.c
 char **create_envp_from_data(t_data *data);
@@ -193,7 +205,6 @@ char **create_envp_from_data(t_data *data);
 void shell_sigint(void);
 
 #endif
-
 /*
 
 Stack (t_data)
