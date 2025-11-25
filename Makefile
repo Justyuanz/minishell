@@ -34,7 +34,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		build_cmds.c \
 		get.c \
 		utils.c \
-		clean_and_free.c \
 		error_msg.c \
 		executor.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \

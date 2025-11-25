@@ -1,22 +1,6 @@
 #include "minishell.h"
 
-// static size_t	count_words(char const *s)
-// {
-// 	size_t	len;
-// 	size_t	i;
-// 	size_t	word;
 
-// 	i = 0;
-// 	word = 0;
-// 	len = ft_strlen(s);
-// 	while (i < len)
-// 	{
-// 		if ((ft_isspace(s[i]) && ft_isspace(s[i + 1])) || s[i + 1] == '\0')
-// 			word++;
-// 		i++;
-// 	}
-// 	return (word);
-// }
 
 char *tok_type(t_token_type tok_type)
 {

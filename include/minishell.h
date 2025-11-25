@@ -16,6 +16,7 @@
 # define SYNTAX_ERROR_NEWLINE "mini: syntax error near unexpected token `newline'"
 # define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token after redirection"
 # define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
+# define ERROR_MSG_AMBIGUOUS_REDIR "mini: ambiguous redirection"
 
 typedef enum e_token_type
 {
@@ -58,12 +59,12 @@ typedef	struct s_redir
 	t_token_type	type;
 	char			*file;
 	t_quote			quote;
+	bool	is_ambiguous;
 }	t_redir;
 
 typedef struct s_cmd
 {
 	char    **argv;
-	bool	is_ambiguous;
 	t_vec	redirs; //element t_redir*
 	t_vec	quotes; //elemenr t_quote*
 } 	t_cmd;

@@ -30,9 +30,11 @@ void read_the_line(t_data *d, t_shell *shell)
     {
         add_history(line);
         tokenizer(d, line);
+       // debug_print_tokens(d);
 		if (syntax_validation(d))
 		{
             build_vec_cmds(d);
+            //debug_print_cmds(d);
             shell->data = d;
             shell->envp = create_envp_from_data(d);
             shell_execution(d, shell);

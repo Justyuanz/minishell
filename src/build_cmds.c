@@ -1,21 +1,58 @@
 #include"minishell.h"
 
+static size_t	count_words(char const *s)
+{
+	size_t	len;
+	size_t	i;
+	size_t	word;
+
+	i = 0;
+	word = 0;
+	len = ft_strlen(s);
+	while (i < len)
+	{
+		if ((ft_isspace(s[i]) && !ft_isspace(s[i + 1])) || s[i + 1] == '\0')
+			word++;
+		i++;
+	}
+	return (word);
+}
+static void is_ambigurous_redir(t_redir *redir)
+{
+	if (!redir->quote.single_ON && !redir->quote.double_ON)
+    {
+        if (count_words(redir->file) > 1)
+		{
+            redir->is_ambiguous = true;
+			ft_putendl_fd("mini: ambiguous redirection", 2);
+			ft_shell()->exitcode = 1;
+		}
+    }
+        if (!redir->file || redir->file[0] == '\0')
+		{
+            redir->is_ambiguous = true;
+			ft_putendl_fd("mini: ambiguous redirection", 2);
+			ft_shell()->exitcode = 1;
+		}
+	}
+
 static void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
 {
 	t_token *next_tok;
 	t_redir *redir;
-    // allocate redir in arena
 
 	next_tok = get_tok(d, (*i) + 1);
 	redir = (t_redir *)arena_alloc(&d->arena_tok, sizeof(t_redir));
     redir->type = tok->type;
+	redir->is_ambiguous = false;
     if ((*i) + 1 < d->vec_tok.len)
 	{
     	redir->file = next_tok->str;
 		redir->quote = next_tok->quote;
+		is_ambigurous_redir(redir);
 	}
 	else
-	redir->file = NULL; // syntax error maybe
+		redir->file = NULL; // syntax error maybe
     vec_push(&cmd->redirs, redir);
     (*i)++;
 }
@@ -34,7 +71,6 @@ static void init_cmd(t_data *d, t_cmd **cmd, t_vec *argv)
     *cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
     vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *));
 	vec_new(&(*cmd)->quotes, 1, sizeof(t_quote *));
-	(*cmd)->is_ambiguous = false;
 }
 
 static void init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
