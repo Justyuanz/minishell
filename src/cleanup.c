@@ -25,9 +25,9 @@ void cleanup_line(t_data *d)
 
 void cleanup_shell(t_data *d)
 {
-	size_t	i;
+	// size_t	i;
 
-	i = -1;
+	// i = -1;
 	if (!d)
 		return;
 	cleanup_line(d);
