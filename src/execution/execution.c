@@ -35,7 +35,7 @@ void    do_command_fork(t_cmd *cmd, t_shell *shell)
         return ;
     if (shell->pids[shell->index] == 0)
     {
-        handle_pipes(shell); 
+        handle_pipes(shell);
         flag_builtin = check_if_builtin(shell, cmd->argv[0]);
         if (flag_builtin != 0)
             handle_builtin(flag_builtin, cmd, shell);
@@ -75,7 +75,7 @@ int create_pids(t_shell *shell, int command_count)
 
     i = 0;
     shell->pids = NULL;
-    shell->pids = malloc(command_count * sizeof(int));
+    shell->pids = malloc((command_count + 1) * sizeof(int)); //cmd_count + 1
     if (!shell->pids)
         return (1);
     while (i < command_count)
@@ -83,7 +83,7 @@ int create_pids(t_shell *shell, int command_count)
         shell->pids[i] = -1;
         i++;
     }
-    shell->pids[command_count] = 0;
+    shell->pids[command_count] = 0; //out of bound
     return (0);
 }
 

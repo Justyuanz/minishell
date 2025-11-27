@@ -3,7 +3,7 @@ GREEN = \033[0;92m
 NAME = minishell
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
-VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
+VALGRIND = valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp  --track-fds=yes
 
 READLINE_INC = -I/opt/homebrew/opt/readline/include
 READLINE_LIB = -L/opt/homebrew/opt/readline/lib
