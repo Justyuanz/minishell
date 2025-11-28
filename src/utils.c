@@ -25,10 +25,26 @@ void shell_init(t_data *d,t_shell *shell, char **envp)
 	envp_init(d, envp);
 }
 
+t_data *get_data(void)
+{
+	static t_data d;
+
+	return &d;
+}
+
+t_shell *ft_shell(void)
+{
+	static t_shell shell;
+
+	return (&shell);
+}
+
 bool str_cmp(char *s1, char *s2)
 {
 	size_t	i;
 
+	if (!s1|| !s2)
+		return(false);
 	i = 0;
 	while (s1[i] || s2[i])
 	{

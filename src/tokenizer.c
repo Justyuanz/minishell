@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 char *tok_type(t_token_type tok_type)
 {
     if (tok_type == WORD)
@@ -23,14 +21,14 @@ char *tok_type(t_token_type tok_type)
     return ("no type");
 }
 
-void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote)
+void push_tok(t_data *d, char *buf, size_t len, int type, t_quote quote)
 {
     t_token *tok;
 
     tok = (t_token *)arena_alloc(&d->arena_tok, sizeof(t_token));
 	if(!tok)
 		destroy_and_exit(d, "Arena alloc tok fail", 1);
-    tok->str = arena_push(&d->arena_tok, line, len + 1);
+    tok->str = arena_push(&d->arena_tok, buf, len + 1);
 	if(!tok->str)
 		destroy_and_exit(d, "Arena push tok fail", 1);
     tok->str[len] = '\0';
@@ -41,35 +39,40 @@ void push_tok(t_data *d, char *line, size_t len, int type, t_quote quote)
 		destroy_and_exit(d, "Vec push tok fail\n", 1);
 }
 
-bool tokenizer(t_data *d, char *line)
+static bool token_loop(t_data *d, t_buffer buffer)
 {
-    size_t i;
-	t_quote	quote;
+	size_t i;
 
-	if (!line)
-		return(false);
+	buffer.tokquote =(t_quote) {false, false};
 	i = 0;
-	quote.single_ON = false;
-	quote.double_ON = false;
-	d->unclosed_quote = 0;
-    while (line[i])
+	while (d->line[i])
     {
-        while(ft_isspace(line[i]))
+        while(ft_isspace(d->line[i]))
             i++;
-        if(line[i] == '>')
-            i = read_redir_operator(d, line, i, quote);
-        else if (line[i] == '<')
-            i = read_redir_operator2(d, line, i, quote);
-        else if (line[i] == '|')
-            i = read_pipe(d, line, i, quote);
+        if(d->line[i] == '>')
+            i = read_redir_operator(d, i, buffer.tokquote);
+        else if (d->line[i] == '<')
+            i = read_redir_operator2(d, i, buffer.tokquote);
+        else if (d->line[i] == '|')
+            i = read_pipe(d, i, buffer.tokquote);
         else
 		{
-			if (ft_strlen(line + i) > WORD_BUF_SIZE)
+			if (ft_strlen(d->line + i) > WORD_BUF_SIZE)
 				return(parse_error_msg("mini: line too long", NULL, 1));
-            i = read_word(d, line, i, quote);
+            i = read_word(d, i, buffer);
 		}
 		if (d->unclosed_quote == 1)
 			break;
     }
 	return (true);
+}
+
+bool tokenizer(t_data *d)
+{
+	t_buffer buffer;
+
+	if (!d->line)
+		return(false);
+	d->unclosed_quote = 0;
+	return(token_loop(d, buffer));
 }

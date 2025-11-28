@@ -1,130 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_word.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/28 20:57:16 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-size_t handle_single_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
+size_t	read_word(t_data *d, t_buffer buffer, size_t i)
 {
-	if (!line[i])
-		return(i);
+	size_t	off;
 
-	i++;
-	while (line[i] && line[i] != '\'')
-	{
-		buf[*off] = line[i];
-		(*off)++;
-		i++;
-	}
-	if (line[i] == '\'')
-		i++;
-	else
-		d->unclosed_quote = 1;
-	return (i);
-}
-
-size_t handle_double_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
-{
-	if (!line[i])
-		return(i);
-
-	i++; //skip first ""
-	while (line[i] && line[i] != '"')
-	{
-		if (line[i] == '$')
-		{
-			handle_expansion(d, buf, line, &i, off);
-			continue;
-		}
-		buf[*off] = line[i];
-		(*off)++;
-		i++;
-	}
-	if(line[i] == '"')
-		i++;
-	else
-		d->unclosed_quote = 1;
-	return (i);
-}
-
-size_t handle_no_quote(t_data *d, char *buf, char *line, size_t i, size_t *off)
-{
-	if(!line[i])
-		return(i);
-	while (line[i] && !ft_isspace(line[i]) && line[i] != '<' && line[i] != '>'
-			&&line[i] != '|' && line[i] != '\'' && line[i] != '"' )
-	{
-		if (line[i] == '$')
-		{
-			handle_expansion(d, buf, line, &i, off);
-			continue;;
-		}
-		buf[*off] = line[i];
-		(*off)++;
-		i++;
-	}
-	return (i);
-}
-
-size_t read_word(t_data *d, char *line, size_t i, t_quote quote)
-{
-	char	buf[WORD_BUF_SIZE]; //guard here
-	size_t  off;
-
-	if (!line || !line[i])
-		return(i);
+	if (!d->line || !d->line[i])
+		return (i);
 	off = 0;
-	while (line[i] && line[i] != '>' && line[i] != '<' && line[i] != '|' && !ft_isspace(line[i]))
+	while (d->line[i] && d->line[i] != '>' && d->line[i] != '<'
+		&& d->line[i] != '|' && !ft_isspace(d->line[i]))
 	{
-		if(d->heredoc_skip == 1)
-		{
-			if (line[i] == '"')
-			{
-				quote.double_ON = true;
-				i++; //skip first ""
-				while (line[i] && line[i] != '"')
-				{
-					buf[off] = line[i];
-					(off)++;
-					i++;
-				}
-				if(line[i] == '"')
-					i++;
-				else
-					d->unclosed_quote = 1;
-			}
-			else if (line[i] == '\'')
-			{
-				quote.single_ON = true;
-				i++;
-				while (line[i] && line[i] != '\'')
-				{
-					buf[off] = line[i];
-					(off)++;
-					i++;
-				}
-				if (line[i] == '\'')
-					i++;
-				else
-					d->unclosed_quote = 1;
-			}
-			else
-				buf[off++] = line[i++];
-		}
-		else if (line[i] == '\'')
-		{
-			quote.single_ON = true;
-			i = handle_single_quote(d, buf, line, i, &off);
-		}
-		else if (line[i] == '"')
-		{
-			quote.double_ON = true;
-			i = handle_double_quote(d, buf, line, i, &off);
-		}
-		else if (line[i] == '$')
-			i = handle_no_quote(d, buf, line, i, &off);
+		if (d->heredoc_skip == 1)
+			read_heredoc_mode(d, &i, &off, &buffer);
+		else if (d->line[i] == '\'')
+			i = handle_single_quote(d, i, &off, &buffer);
+		else if (d->line[i] == '"')
+			i = handle_double_quote(d, i, &off, &buffer);
+		else if (d->line[i] == '$')
+			i = handle_no_quote(d, i, &off, &buffer);
 		else
-			buf[off++] = line[i++];
+			buffer.buf[off++] = d->line[i++];
 	}
-	if (off > 0 || quote.single_ON == true || quote.double_ON == true)
+	if (off > 0 || buffer.tokquote.single_ON == true || buffer.tokquote.double_ON == true)
 		push_tok(d, buf, off, WORD, quote);
 	d->heredoc_skip = 0;
 	return (i);
 }
-

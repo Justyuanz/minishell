@@ -14,7 +14,7 @@ void    wait_for_all(t_shell *shell)
     {
         if (shell->pids[i] > 0)
         {
-            waitpid(shell->pids[i], &status, 0);
+            waitpid(-1, &status, 0);
             if (WIFSIGNALED(status))
             {
                 signal = WTERMSIG(status);

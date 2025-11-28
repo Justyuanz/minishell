@@ -13,7 +13,8 @@ char	*create_heredoc_filename(int heredoc_num)
 	free(num_str);
 	return (filename);
 }
-char	*expanded_line_heredoc(t_data *d, char *line)
+
+char	*expanded_line_heredoc(t_data *d)
 {
 	char 	tmp[1024];
 	size_t	i;
@@ -21,19 +22,19 @@ char	*expanded_line_heredoc(t_data *d, char *line)
 
 	i = 0;
 	j = 0;
-	while (line[i])
+	while (d->line[i])
 	{
-		if (line[i] == '$')
-			handle_expansion(d, tmp, line, &i, &j);
-		tmp[j++] = line[i++];
+		if (d->line[i] == '$')
+			handle_expansion(d, tmp, &i, &j);
+		tmp[j++] = d->line[i++];
 	}
 	tmp[j] = '\0';
 	return (ft_strdup(tmp));
 }
+
 int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename, t_redir *redir)
 {
 	int		fd;
-	char	*line;
 	char	*expanded;
 
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -42,25 +43,25 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename, t
 
 	while (1)
 	{
-		line = readline("> ");
-		if (ft_strcmp(line, delimiter) == 0)
+		d->line = readline("> ");
+		if (ft_strcmp(d->line, delimiter) == 0)
 		{
-			free(line);
+			free(d->line);
 			break;
 		}
 		if (expand_in_heredoc(redir))
 		{
-			expanded = expanded_line_heredoc(d, line);
+			expanded = expanded_line_heredoc(d);
 			write(fd, expanded, ft_strlen(expanded));
 			write(fd, "\n", 1);
 			free(expanded);
 		}
 		else
 		{
-			write(fd, line, ft_strlen(line));
+			write(fd, d->line, ft_strlen(d->line));
 			write(fd, "\n", 1);
 		}
-		free(line);
+		free(d->line);
 	}
 	close(fd);
 	return (0);

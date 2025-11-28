@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   arena.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 18:49:41 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/28 18:52:15 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	arena_init(t_arena *arena, size_t capacity)
@@ -12,30 +24,31 @@ int	arena_init(t_arena *arena, size_t capacity)
 	return (1);
 }
 
-void *arena_alloc(t_arena *arena, size_t elem_size)
+void	*arena_alloc(t_arena *arena, size_t elem_size)
 {
-	char *current_start;
-	size_t alignment; // typically 8 or 16
-    size_t misalign;
+	char	*current_start;
+	size_t	misalign;
+	size_t	alignment;
 
 	if (!arena || !arena->data || elem_size == 0)
-		return (NULL); //maybe add safe exit here?
+		return (NULL); // maybe add safe exit here?
 	if (arena->offset + elem_size > arena->capacity)
-        return NULL; // out of memory, perhaps link to next arena
+		return (NULL); // out of memory, perhaps link to next arena
 	alignment = 8;
 	misalign = arena->offset % alignment;
-    if (misalign != 0)
+	if (misalign != 0)
 	{
-        arena->offset = arena->offset +(alignment - misalign);
+		arena->offset = arena->offset + (alignment - misalign);
 	}
 	current_start = &arena->data[arena->offset];
 	arena->offset += elem_size;
 	return (current_start);
 }
 
-char *arena_push(t_arena *arena, char *s, size_t len)
+char	*arena_push(t_arena *arena, char *s, size_t len)
 {
 	char	*current_start;
+
 	if (!arena || !s)
 		return (NULL);
 	if (!arena->data && arena_init(arena, len) == -1)
@@ -51,16 +64,15 @@ char *arena_push(t_arena *arena, char *s, size_t len)
 	return (current_start);
 }
 
-void arena_reset(t_arena *arena)
+void	arena_reset(t_arena *arena)
 {
 	arena->offset = 0;
 }
 
-void arena_free(t_arena *arena)
+void	arena_free(t_arena *arena)
 {
 	free(arena->data);
 	arena->data = NULL;
 	arena->capacity = 0;
 	arena->offset = 0;
 }
-

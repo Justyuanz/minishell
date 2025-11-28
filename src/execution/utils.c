@@ -39,3 +39,18 @@ char *get_env_value(t_shell *shell, char *str)
     }
     return (NULL);
 }
+void handle_path_error(const char *cmd, t_shell *shell, int found)
+{
+	if (found)
+	{
+		shell->exitcode = 126;
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+	}
+	else
+	{
+		shell->exitcode = 127;
+		ft_putstr_fd((char *)cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
+}

@@ -84,13 +84,24 @@ typedef struct s_env
 	char	*value;
 }	t_env;
 
+typedef struct s_buffer
+{
+
+	char	buf[WORD_BUF_SIZE];
+	char	tmp[1024];
+	t_quote	tokquote;
+
+}	t_buffer;
+
 typedef struct s_data
 {
+	char	*line;
 	t_arena	arena_tok;
 	t_arena arena_env;
 	t_vec	vec_tok;
 	t_vec	vec_env;
 	t_vec	vec_cmds;
+	t_quote	quote;
 	int		heredoc_skip;
 	int		unclosed_quote;
 }	t_data;
@@ -139,21 +150,39 @@ void     arena_free(t_arena *arena);
 void     envp_init(t_data *d, char **envp);
 
 //tokenizer
-void     push_tok(t_data *d, char *line, size_t len, int type, t_quote quote);
-size_t   read_word(t_data *d, char *line, size_t i, t_quote quote);
-size_t   read_pipe(t_data *d, char *line, size_t i, t_quote quote);
-size_t   read_redir_operator(t_data *d, char *line, size_t i, t_quote quote);
-size_t   read_redir_operator2(t_data *d, char *line, size_t i, t_quote quote);
-bool     tokenizer(t_data *d, char *line);
+void     push_tok(t_data *d, char *buf, size_t len, int type, t_quote quote);
+size_t   read_word(t_data *d,  size_t i, t_quote quote);
+size_t   read_pipe(t_data *d, size_t i, t_quote quote);
+size_t   read_redir_operator(t_data *d,  size_t i, t_quote quote);
+size_t   read_redir_operator2(t_data *d,  size_t i, t_quote quote);
+bool     tokenizer(t_data *d);
+
+//input reading
+void read_heredoc_mode(t_data *d, size_t *i, size_t *off,  char *buf, t_quote *quote);
+size_t handle_no_quote(t_data *d, char *buf, size_t i, size_t *off);
+size_t handle_double_quote(t_data *d, char *buf,  size_t i, size_t *off, t_quote *quote);
+size_t handle_single_quote(t_data *d, char *buf, size_t i, size_t *off, t_quote *quote);
 
 //syntax & parser
 bool     parse_error_msg(char *msg, char *var, int exitcode);
 bool     syntax_validation(t_data *d);
 void     build_vec_cmds(t_data *d);
 
+//parser helper
+void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd);
+void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i);
+void is_ambigurous_redir(t_redir *redir);
+void track_quotes(t_data *d, t_token *tok, t_cmd *cmd);
+size_t	count_words(char const *s);
+
 //expansion
-void     handle_expansion(t_data *d, char *buf, char *line, size_t *i, size_t *off);
+void     handle_expansion(t_data *d, char *buf, size_t *i, size_t *off);
 bool     expand_in_heredoc(t_redir *redir);
+void handle_variable(t_data *d, char *buf,  size_t *i, size_t *off);
+void store_var_name(t_data *d, char *tmp, size_t *i, size_t *j);
+bool bare_dollar( t_data *d, char *buf, size_t *off, size_t *i);
+bool exit_status(t_data *d, size_t *i, char *buf, size_t *off);
+
 
 //shell loop
 void     read_the_line(t_data *d, t_shell *shell);
@@ -178,8 +207,12 @@ void    error_smt(void);
 void    free_pipes(t_shell *shell);
 void    free_string(char *str);
 
-//path.c
+//path1.c
 char	*get_command_path(const char *cmd, t_shell *shell);
+
+//path.c
+char	*join_paths(const char *dir, const char *cmd);
+char	*search_in_cwd(const char *cmd, t_shell *shell);
 
 //single_command.c
 void    single_command_case(t_data *d, t_shell *shell);
@@ -189,6 +222,7 @@ void    wait_for_all(t_shell *shell);
 int ft_strcmp(const char *s1, const char *s2);
 void    update_exitcode(int error_code, t_shell *shell);
 char *get_env_value(t_shell *shell, char *str);
+void handle_path_error(const char *cmd, t_shell *shell, int found);
 
 //builtins
 void    handle_builtin(int flag, t_cmd *command, t_shell *shell);

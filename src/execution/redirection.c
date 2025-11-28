@@ -16,6 +16,7 @@ int	redir_in(t_redir *redir, t_shell *shell)
 	close (shell->input);
 	return (0);
 }
+
 int	redir_out(t_redir *redir, t_shell *shell)
 {
 	if (redir->type == REDIR_OUT)

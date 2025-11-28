@@ -18,6 +18,7 @@ void    handle_execution(t_cmd *cmd, t_shell *shell)
 	//cleanup_child(shell);
 	exit(shell->exitcode);
 }
+
 void close_parent_pipes(t_shell *shell)
 {
     if (shell->index > 0 && shell->pipe_array[shell->index - 1])
@@ -40,7 +41,7 @@ void    do_command_fork(t_cmd *cmd, t_shell *shell)
         if (flag_builtin != 0)
             handle_builtin(flag_builtin, cmd, shell);
         else
-            handle_execution(cmd, shell); 
+            handle_execution(cmd, shell);
     }
     else
         close_parent_pipes(shell);
