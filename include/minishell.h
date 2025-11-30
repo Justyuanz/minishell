@@ -89,7 +89,7 @@ typedef struct s_buffer
 
 	char	buf[WORD_BUF_SIZE];
 	char	tmp[1024];
-	t_quote	tokquote;
+	t_quote	quotes;
 
 }	t_buffer;
 
@@ -150,18 +150,18 @@ void     arena_free(t_arena *arena);
 void     envp_init(t_data *d, char **envp);
 
 //tokenizer
-void     push_tok(t_data *d, char *buf, size_t len, int type, t_quote quote);
-size_t   read_word(t_data *d,  size_t i, t_quote quote);
-size_t   read_pipe(t_data *d, size_t i, t_quote quote);
-size_t   read_redir_operator(t_data *d,  size_t i, t_quote quote);
-size_t   read_redir_operator2(t_data *d,  size_t i, t_quote quote);
+void     push_word_tok(t_data *d, size_t len, int type, t_buffer *buffer);
+size_t	read_word(t_data *d, t_buffer *buffer, size_t i);
+size_t   read_pipe(t_data *d, size_t i);
+size_t   read_redir_operator(t_data *d,  size_t i);
+size_t   read_redir_operator2(t_data *d,  size_t i);
 bool     tokenizer(t_data *d);
 
 //input reading
-void read_heredoc_mode(t_data *d, size_t *i, size_t *off,  char *buf, t_quote *quote);
+void read_heredoc_mode(t_data *d, size_t *i, size_t *off, t_buffer *buffer);
 size_t handle_no_quote(t_data *d, char *buf, size_t i, size_t *off);
-size_t handle_double_quote(t_data *d, char *buf,  size_t i, size_t *off, t_quote *quote);
-size_t handle_single_quote(t_data *d, char *buf, size_t i, size_t *off, t_quote *quote);
+size_t handle_double_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer);
+size_t handle_single_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer);
 
 //syntax & parser
 bool     parse_error_msg(char *msg, char *var, int exitcode);

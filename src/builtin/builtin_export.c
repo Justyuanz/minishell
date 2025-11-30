@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:29:05 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:29:07 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_valid_identifier(const char *str)
@@ -60,7 +72,6 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 		key = ft_strdup(arg);
 		value = NULL;
 	}
-	
 	if (!key)
 		return (1);
 	i = 0;
@@ -75,7 +86,6 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 		}
 		i++;
 	}
-	
 	env_var = malloc(sizeof(t_env));
 	if (!env_var)
 	{
@@ -85,7 +95,6 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 	}
 	env_var->key = key;
 	env_var->value = value;
-	
 	if (!vec_push(&shell->data->vec_env, env_var))
 	{
 		free(key);
@@ -93,7 +102,6 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 		free(env_var);
 		return (1);
 	}
-	
 	return (0);
 }
 
@@ -102,7 +110,7 @@ void	update_shell_envp(t_shell *shell)
 	size_t	i;
 	t_env	*env_var;
 	char	*env_str;
-	
+
 	if (shell->envp)
 	{
 		i = 0;
@@ -112,20 +120,21 @@ void	update_shell_envp(t_shell *shell)
 	}
 	shell->envp = malloc((shell->data->vec_env.len + 1) * sizeof(char *));
 	if (!shell->envp)
-		return;
-	
+		return ;
 	i = 0;
 	while (i < shell->data->vec_env.len)
 	{
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
 		if (env_var->value)
 		{
-			env_str = malloc(ft_strlen(env_var->key) + ft_strlen(env_var->value) + 2);
+			env_str = malloc(ft_strlen(env_var->key) + ft_strlen(env_var->value)
+					+ 2);
 			if (env_str)
 			{
 				ft_strlcpy(env_str, env_var->key, ft_strlen(env_var->key) + 1);
 				ft_strlcat(env_str, "=", ft_strlen(env_var->key) + 2);
-				ft_strlcat(env_str, env_var->value, ft_strlen(env_var->key) + ft_strlen(env_var->value) + 2);
+				ft_strlcat(env_str, env_var->value, ft_strlen(env_var->key)
+					+ ft_strlen(env_var->value) + 2);
 			}
 			shell->envp[i] = env_str;
 		}
@@ -144,9 +153,8 @@ void	builtin_export(t_cmd *cmd, t_shell *shell)
 	{
 		print_exported_vars(shell);
 		shell->exitcode = 0;
-		return;
+		return ;
 	}
-	
 	i = 1;
 	while (cmd->argv[i])
 	{
@@ -161,7 +169,8 @@ void	builtin_export(t_cmd *cmd, t_shell *shell)
 		{
 			if (update_or_add_env_var(shell, cmd->argv[i]) != 0)
 			{
-				ft_putstr_fd("minishell: export: memory allocation failed\n", STDERR_FILENO);
+				ft_putstr_fd("minishell: export: memory allocation failed\n",
+					STDERR_FILENO);
 				shell->exitcode = 1;
 			}
 			else

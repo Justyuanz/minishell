@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:30:51 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:30:53 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*join_paths(const char *dir, const char *cmd)
@@ -43,5 +55,3 @@ char	*search_in_cwd(const char *cmd, t_shell *shell)
 	}
 	return (NULL);
 }
-
-

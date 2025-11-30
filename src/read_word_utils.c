@@ -6,22 +6,21 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:20:53 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 20:22:28 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/11/30 16:25:56 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	handle_single_quote(t_data *d, char *buf, size_t i, size_t *off,
-		t_quote *quote)
+size_t	handle_single_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer)
 {
 	if (!d->line[i])
 		return (i);
-	(*quote).single_ON = true;
+	buffer->quotes.single_ON = true;
 	i++;
 	while (d->line[i] && d->line[i] != '\'')
 	{
-		buf[*off] = d->line[i];
+		buffer->buf[*off] = d->line[i];
 		(*off)++;
 		i++;
 	}
@@ -32,21 +31,20 @@ size_t	handle_single_quote(t_data *d, char *buf, size_t i, size_t *off,
 	return (i);
 }
 
-size_t	handle_double_quote(t_data *d, char *buf, size_t i, size_t *off,
-		t_quote *quote)
+size_t	handle_double_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer)
 {
 	if (!d->line[i])
 		return (i);
-	(*quote).double_ON = true;
+	buffer->quotes.double_ON = true;
 	i++;
 	while (d->line[i] && d->line[i] != '"')
 	{
 		if (d->line[i] == '$')
 		{
-			handle_expansion(d, buf, &i, off);
+			handle_expansion(d, buffer->buf, &i, off);
 			continue ;
 		}
-		buf[*off] = d->line[i];
+		buffer->buf[*off] = d->line[i];
 		(*off)++;
 		i++;
 	}
@@ -77,16 +75,15 @@ size_t	handle_no_quote(t_data *d, char *buf, size_t i, size_t *off)
 	return (i);
 }
 
-void	read_heredoc_mode(t_data *d, size_t *i, size_t *off, char *buf,
-		t_quote *quote)
+void	read_heredoc_mode(t_data *d, size_t *i, size_t *off, t_buffer *buffer)
 {
 	if (d->line[*i] == '"')
 	{
-		(*quote).double_ON = true;
-		(*i)++; // skip first ""
+		buffer->quotes.double_ON = true;
+		(*i)++;
 		while (d->line[*i] && d->line[*i] != '"')
 		{
-			buf[*off] = d->line[*i];
+			buffer->buf[*off] = d->line[*i];
 			(*off)++;
 			(*i)++;
 		}
@@ -96,7 +93,7 @@ void	read_heredoc_mode(t_data *d, size_t *i, size_t *off, char *buf,
 			d->unclosed_quote = 1;
 	}
 	else if (d->line[*i] == '\'')
-		(*i) = handle_single_quote(d, buf, (*i), off, quote);
+		(*i) = handle_single_quote(d, (*i), off, buffer);
 	else
-		buf[(*off)++] = d->line[(*i)++];
+		buffer->buf[(*off)++] = d->line[(*i)++];
 }

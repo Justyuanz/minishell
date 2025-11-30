@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:31:06 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:31:09 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	redir_in(t_redir *redir, t_shell *shell)
@@ -13,7 +25,7 @@ int	redir_in(t_redir *redir, t_shell *shell)
 		close(shell->input);
 		return (1);
 	}
-	close (shell->input);
+	close(shell->input);
 	return (0);
 }
 
@@ -30,7 +42,7 @@ int	redir_out(t_redir *redir, t_shell *shell)
 		close(shell->output);
 		return (1);
 	}
-	close (shell->output);
+	close(shell->output);
 	return (0);
 }
 
@@ -53,7 +65,7 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		}
 		if (redir->type == REDIR_OUT || redir->type == APPEND)
 		{
-			if(redir_out(redir, shell))
+			if (redir_out(redir, shell))
 			{
 				printf("file out error\n");
 				exit(EXIT_FAILURE);
@@ -62,4 +74,3 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		i++;
 	}
 }
-

@@ -1,45 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:31:24 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:31:56 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (s1[i] == s2[i] && (s1[i] != '\0' || s2[i] != '\0'))
-        i++;
-    return (s1[i] - s2[i]);
-}
-void    error_smt(void)
-{
-    printf("\n\nHello world!");
-}
-void    update_exitcode(int error_code, t_shell *shell)
-{
-    /*
-        That will be final exit code after all execution happened.
-    */
-    if (shell->command_index < 2 || shell->index == shell->command_index)
-        shell->exitcode = error_code;
+	i = 0;
+	while (s1[i] == s2[i] && (s1[i] != '\0' || s2[i] != '\0'))
+		i++;
+	return (s1[i] - s2[i]);
 }
 
-char *get_env_value(t_shell *shell, char *str)
+void	error_smt(void)
 {
-    t_env   *env_var;
-    size_t  i;
-
-    i = 0;
-    if (!shell || !shell->data || !str)
-        return (NULL);
-    while(i < shell->data->vec_env.len)
-    {
-        env_var = (t_env *)vec_get(&shell->data->vec_env, i);
-        if (env_var && env_var->key && ft_strcmp(env_var->key, str) == 0)
-            return (env_var->value);
-        i++;
-    }
-    return (NULL);
+	printf("\n\nHello world!");
 }
-void handle_path_error(const char *cmd, t_shell *shell, int found)
+
+void	update_exitcode(int error_code, t_shell *shell)
+{
+	/*
+		That will be final exit code after all execution happened.
+	*/
+	if (shell->command_index < 2 || shell->index == shell->command_index)
+		shell->exitcode = error_code;
+}
+
+char	*get_env_value(t_shell *shell, char *str)
+{
+	t_env	*env_var;
+	size_t	i;
+
+	i = 0;
+	if (!shell || !shell->data || !str)
+		return (NULL);
+	while (i < shell->data->vec_env.len)
+	{
+		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
+		if (env_var && env_var->key && ft_strcmp(env_var->key, str) == 0)
+			return (env_var->value);
+		i++;
+	}
+	return (NULL);
+}
+
+void	handle_path_error(const char *cmd, t_shell *shell, int found)
 {
 	if (found)
 	{

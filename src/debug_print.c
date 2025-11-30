@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:48 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:07:01 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/11/30 16:12:09 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,16 @@ void	debug_print_cmds(t_data *d)
 		// type: (REDIR_IN, REDIR_OUT, APPEND, HEREDOC)
 		// file: filename or limiter string
 		k = 0;
-		while (k < cmd->redirs.len)
+while (k < cmd->redirs.len)
 		{
 			redir = get_redir(cmd, k); // helper to fetch one redir
-			fprintf(stderr,
-					"  redir[%zu]: type=%s file='%s'\n"
-					"       ambiguous= %d redir quote: single= %d double=
-						% d expand_in_heredoc = %
-						d\n ",
-						k,
-					tok_type(redir->type),
-					redir->file,
-					redir->is_ambiguous,
-					redir->quote.single_ON,
-					redir->quote.double_ON,
-					expand_in_heredoc(redir));
+			fprintf(stderr, "  redir[%zu]: type=%s file='%s'\n" "       ambiguous= %d redir quote: single= %d double= %d expand_in_heredoc= %d\n", k, tok_type(redir->type), redir->file, redir->is_ambiguous, redir->quote.single_ON, redir->quote.double_ON, expand_in_heredoc(redir));
 			k++;
 		}
 		i++;
-		fprintf(stderr, "--------------------------------------\n");
+		fprintf(stderr,"--------------------------------------\n");
 	}
-	// read_env_example(d);
+	//read_env_example(d);
 	printf("\n\n\n");
 }
 
