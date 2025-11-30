@@ -29,15 +29,18 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		arena.c \
 		read_operators.c \
 		read_word.c \
+		read_word_utils.c \
 		env.c \
 		expansion.c \
+		expansion_helpers.c \
 		build_cmds.c \
+		build_cmds_helpers.c \
 		get.c \
 		utils.c \
 		error_msg.c \
 		executor.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
-		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path.c execution/checkers.c execution/cleaners.c \
+		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path1.c execution/path.c execution/checkers.c execution/cleaners.c \
 		execution/piping.c execution/redirection.c execution/heredoc.c builtin/builtin_exit.c builtin/builtin_export.c \
 		execution/envp.c signals/signals.c\
 		cleanup.c \

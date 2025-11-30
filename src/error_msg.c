@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_msg.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 19:07:44 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/28 19:07:48 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-bool destroy_and_exit(t_data *d, char *msg, int exitcode)
+bool	destroy_and_exit(t_data *d, char *msg, int exitcode)
 {
-	parse_error_msg(msg, NULL,  exitcode);
+	parse_error_msg(msg, NULL, exitcode);
 	cleanup_shell(d);
-	exit (EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
 
-bool parse_error_msg(char *msg, char *var, int exitcode)
+bool	parse_error_msg(char *msg, char *var, int exitcode)
 {
-	if(msg)
+	if (msg)
 		ft_putstr_fd(msg, 2);
-	if(var)
+	if (var)
 	{
 		ft_putstr_fd(" `", 2);
 		ft_putstr_fd(var, 2);
