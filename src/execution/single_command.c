@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:31:17 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/01 14:45:44 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ void	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	if (shell->pids[0] < 0)
 		error_smt();
 	if (shell->pids[0] == 0)
+	{
+
 		execute_single_command(shell);
+	}
 	else
 		wait_for_all(shell);
 }

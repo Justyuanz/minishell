@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 20:18:57 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/01 14:16:25 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	main(int argc, char **argv, char **envp)
 	d = get_data();
 	shell = ft_shell();
 	shell_init(d, shell, envp);
+	shell_sigint();
 	while (1)
 		read_the_line(d, shell);
 	cleanup_shell(d);

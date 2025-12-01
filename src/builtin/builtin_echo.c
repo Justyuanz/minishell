@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:28:40 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:28:45 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/01 14:24:54 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,5 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 	if (new_line)
 		write(1, "\n", 1);
 	shell->exitcode = 0;
-	exit(42); // fix leaks.
+	//exit(42); // fix leaks.
 }
