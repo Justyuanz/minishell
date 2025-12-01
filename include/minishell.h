@@ -229,7 +229,7 @@ void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
 int 	check_if_builtin(t_shell *shell, char *command);
 void    builtin_cd(int i, char **command_array, t_shell *shell);
 void    builtin_echo(t_cmd *command, t_shell *shell);
-void    builtin_pwd(void);
+void    builtin_pwd(t_shell *shell);
 void    builtin_env(t_shell *shell);
 void	builtin_export(t_cmd *cmd, t_shell *shell);
 void	builtin_unset(t_cmd *cmd, t_shell *shell);
