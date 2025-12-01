@@ -44,7 +44,7 @@ void	handle_builtin(int flag, t_cmd *command, t_shell *shell)
 	if (flag == BUILTIN_ECHO)
 		builtin_echo(command, shell);
 	if (flag == BUILTIN_PWD)
-		builtin_pwd();
+		builtin_pwd(shell);
 	if (flag == BUILTIN_EXPORT)
 		builtin_export(command, shell);
 	if (flag == BUILTIN_UNSET)

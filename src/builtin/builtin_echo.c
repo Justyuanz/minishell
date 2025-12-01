@@ -43,6 +43,5 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 	print_echo(command->argv, i);
 	if (new_line)
 		write(1, "\n", 1);
-	shell->exitcode = 0;
-	exit(42); // fix leaks.
+	update_exitcode(0, shell);
 }
