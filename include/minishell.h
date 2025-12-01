@@ -251,6 +251,8 @@ char **create_envp_from_data(t_data *data);
 
 //signals.c
 void shell_sigint(void);
+void	ft_sigignore(void);
+void ft_resetsignal(void);
 
 #endif
 /*

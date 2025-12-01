@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:30:23 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:24:51 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		return ;
 	if (shell->pids[shell->index] == 0)
 	{
+		//handle_signal for child
 		handle_pipes(shell);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
@@ -60,7 +61,10 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 			handle_execution(cmd, shell);
 	}
 	else
+	{
+		
 		close_parent_pipes(shell);
+	}
 }
 
 void	handle_command(t_data *d, t_shell *shell, int command_count)
