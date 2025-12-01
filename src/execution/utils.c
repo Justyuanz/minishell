@@ -29,9 +29,6 @@ void	error_smt(void)
 
 void	update_exitcode(int error_code, t_shell *shell)
 {
-	/*
-		That will be final exit code after all execution happened.
-	*/
 	if (shell->command_index < 2 || shell->index == shell->command_index)
 		shell->exitcode = error_code;
 }

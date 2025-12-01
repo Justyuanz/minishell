@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	builtin_pwd(void)
+void	builtin_pwd(t_shell *shell)
 {
 	char	cwd[1000000];
 
@@ -24,6 +24,7 @@ void	builtin_pwd(void)
 		return ;
 	}
 	printf("%s\n", cwd);
+	update_exitcode(0, shell);
 }
 
 void	builtin_env(t_shell *shell)
@@ -38,6 +39,7 @@ void	builtin_env(t_shell *shell)
 		printf("%s=%s\n", env->key, env->value);
 		i++;
 	}
+	update_exitcode(0, shell);
 }
 
 static int	is_valid_unset_identifier(const char *str)
@@ -119,5 +121,6 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 		i++;
 	}
 	update_shell_envp(shell);
-	shell->exitcode = exit_code;
+	update_exitcode(exit_code, shell);
+	//shell->exitcode = exit_code;
 }

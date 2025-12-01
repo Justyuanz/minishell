@@ -81,10 +81,10 @@ void	single_command_case(t_data *d, t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
-	t_redir	*redir;
+	//t_redir	*redir;
 	int		savestdout;
 	int		savestdin;
-	int		fd;
+	//int		fd;
 	size_t	i;
 
 	savestdout = dup(STDOUT_FILENO);
@@ -103,38 +103,43 @@ void	single_command_case(t_data *d, t_shell *shell)
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
-		while (i < cmd->redirs.len)
-		{
-			redir = get_redir(cmd, i);
-			if (redir->type == REDIR_OUT)
-			{
-				fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				// if (fd = -1)
-				dup2(fd, STDOUT_FILENO);
-				// if(dup2) == -1
-				close(fd);
-			}
-			else if (redir->type == APPEND)
-			{
-				fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				// if (fd = -1)
-				dup2(fd, STDOUT_FILENO);
-				// if(dup2) == -1
-				close(fd);
-			}
-			else if (redir->type == REDIR_IN)
-			{
-				fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				// if (fd = -1)
-				dup2(fd, STDIN_FILENO);
-				// if(dup2) == -1
-				close(fd);
-			}
-			i++;
-		}
+		//redirect_child(shell->)
+		// while (i < cmd->redirs.len)
+		// {
+		// 	redir = get_redir(cmd, i);
+		// 	if (redir->type == REDIR_OUT)
+		// 	{
+		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		// 		// if (fd = -1)
+		// 		dup2(fd, STDOUT_FILENO);
+		// 		// if(dup2) == -1
+		// 		close(fd);
+		// 	}
+		// 	else if (redir->type == APPEND)
+		// 	{
+		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		// 		// if (fd = -1)
+		// 		dup2(fd, STDOUT_FILENO);
+		// 		// if(dup2) == -1
+		// 		close(fd);
+		// 	}
+		// 	else if (redir->type == REDIR_IN)
+		// 	{
+		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		// 		// if (fd = -1)
+		// 		dup2(fd, STDIN_FILENO);
+		// 		// if(dup2) == -1
+		// 		close(fd);
+		// 	}
+		// 	i++;
+		// }
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
+		{
+			if (cmd->redirs.len > 0)
+				redirect_child(cmd, shell);
 			handle_builtin(flag, cmd, shell);
+		}
 		else // should i check here for valid command or not??
 			handle_single_command(d, cmd, shell);
 	}

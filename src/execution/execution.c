@@ -52,7 +52,10 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		handle_pipes(shell);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
+		{
 			handle_builtin(flag_builtin, cmd, shell);
+			exit(shell->exitcode);
+		}
 		else
 			handle_execution(cmd, shell);
 	}
