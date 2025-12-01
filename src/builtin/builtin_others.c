@@ -1,28 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_others.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:29:15 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:29:18 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void    builtin_pwd(void)
+void	builtin_pwd(void)
 {
-    //not sure if it's perfect but seems to be working
-    // error handling?
-    char cwd[1000000];
-    if (getcwd(cwd, sizeof(cwd)) == NULL)
-    {
-        printf("error, cwd");
-        return ;
-    }
-    printf("%s\n", cwd);
+	char	cwd[1000000];
+
+	// not sure if it's perfect but seems to be working
+	// error handling?
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		printf("error, cwd");
+		return ;
+	}
+	printf("%s\n", cwd);
 }
 
-void    builtin_env(t_shell *shell)
+void	builtin_env(t_shell *shell)
 {
-	t_env *env;
-	size_t i;
+	t_env	*env;
+	size_t	i;
 
 	i = 0;
 	while (i < shell->data->vec_env.len)
 	{
 		env = get_env(shell->data, i);
-		printf("%s=%s\n",env->key, env->value);
+		printf("%s=%s\n", env->key, env->value);
 		i++;
 	}
 }
@@ -47,6 +60,7 @@ static void	remove_env_var(t_shell *shell, const char *key)
 {
 	t_env	*env_var;
 	size_t	i;
+	t_env	*last;
 
 	i = 0;
 	while (i < shell->data->vec_env.len)
@@ -54,14 +68,14 @@ static void	remove_env_var(t_shell *shell, const char *key)
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
 		if (env_var && ft_strcmp(env_var->key, key) == 0)
 		{
-			//free(env_var->key);
-			//free(env_var->value);
+			// free(env_var->key);
+			// free(env_var->value);
 			if (i < shell->data->vec_env.len - 1)
 			{
-				t_env *last = (t_env *)vec_get(&shell->data->vec_env, shell->data->vec_env.len - 1);
+				last = (t_env *)vec_get(&shell->data->vec_env,
+						shell->data->vec_env.len - 1);
 				env_var->key = last->key;
 				env_var->value = last->value;
-
 				last->key = NULL;
 				last->value = NULL;
 			}
@@ -71,7 +85,7 @@ static void	remove_env_var(t_shell *shell, const char *key)
 				env_var->value = NULL;
 			}
 			shell->data->vec_env.len--;
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -85,9 +99,8 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 	if (!cmd->argv[1])
 	{
 		shell->exitcode = 0;
-		return;
+		return ;
 	}
-	
 	exit_code = 0;
 	i = 1;
 	while (cmd->argv[i])

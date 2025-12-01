@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:32:25 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/11/30 16:32:28 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_handle_sigint(int sig)
@@ -41,4 +53,3 @@ void	ft_resetsignal(void)
 	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
 }
-

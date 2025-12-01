@@ -8,7 +8,7 @@
             "program": "${workspaceFolder}/minishell",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "terminal": "integrated"
-        }
-    ]
+            "terminal": "integrated",
+		}
+	]
 }
