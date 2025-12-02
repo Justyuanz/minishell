@@ -253,6 +253,7 @@ char **create_envp_from_data(t_data *data);
 void	set_prompt_signals(void);
 void	set_parent_wait_signals(void);
 void	set_child_signals(void);
+void set_heredoc_signal(void);
 
 #endif
 /*

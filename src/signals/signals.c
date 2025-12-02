@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:32:25 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/02 16:59:32 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:54:17 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,33 @@ void	set_child_signals(void)
 		ft_putstr_fd("Failed to set signal\n", 2);
 //	else
 //		fprintf(stderr,"ctrl \\ defalt behaviour on\n");
+}
+void	heredoc_signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		rl_done = 1;
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		(ft_shell()->exitcode) = 130;
+	}
+}
+void set_heredoc_signal(void)
+{
+	struct sigaction	sa;
+	//fprintf(stderr, "installing PROMPT MODE handler\n");
+	if (sigemptyset(&sa.sa_mask) == -1)
+		ft_putstr_fd("Failed to set signal\n", 2);
+	sa.sa_handler = heredoc_signal_handler;
+	sa.sa_flags = SA_RESTART;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		ft_putstr_fd("Failed to set signal\n", 2);
+	//else
+	//	fprintf(stderr,"handling ctrl c\n");
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		ft_putstr_fd("Failed to set signal\n", 2);
+	//else
+	//	fprintf(stderr,"handling ctrl \\\n");
 }

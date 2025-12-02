@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:30:34 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:52:00 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 		redir = get_redir(cmd, i);
 		if (redir->type == HEREDOC)
 		{
+			fprintf(stderr,"calling signal in handle heredoc \n");
+			set_heredoc_signal();
 			heredoc_count++;
 			filename = create_heredoc_filename(heredoc_count);
 			if (!filename)
@@ -105,6 +107,7 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 				perror("heredoc");
 				return (1);
 			}
+			set_prompt_signals();
 			free(delim);
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/02 16:58:54 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:39:32 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,7 @@ void	wait_for_all(t_shell *shell)
 				signal = WTERMSIG(status);
 				shell->exitcode = signal + 128;
 				if (signal != 13)
-				{
-					//fprintf(stderr,"signal in wait for all:%d\n", signal);
 					return ;
-				}
 			}
 			if (WIFEXITED(status))
 				update_exitcode(WEXITSTATUS(status), shell);
@@ -73,21 +70,22 @@ void	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	{
 		shell->exitcode = 1;
 	}
+
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
 		error_smt();
 	if (shell->pids[0] == 0)
 	{
-		//fprintf(stderr,"calling signal in child process, pid:%d\n", shell->pids[0]);
+		fprintf(stderr,"calling signal in child process, pid:%d\n", shell->pids[0]);
 		set_child_signals();
 		execute_single_command(shell);
 	}
 	else
 	{
-		//fprintf(stderr,"calling wait signal in parent process, pid:%d\n", shell->pids[0]);
+		fprintf(stderr,"calling wait signal in parent process, pid:%d\n", shell->pids[0]);
 		set_parent_wait_signals();
 		wait_for_all(shell);
-		//fprintf(stderr,"calling prompt signal in parent process, pid:%d\n", shell->pids[0]);
+		fprintf(stderr,"calling prompt signal in parent process, pid:%d\n", shell->pids[0]);
 		set_prompt_signals();
 	}
 }
