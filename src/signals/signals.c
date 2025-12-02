@@ -6,13 +6,13 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:32:25 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/01 14:01:17 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:25:49 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_handle_sigint(int sig)
+void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -22,34 +22,49 @@ void	ft_handle_sigint(int sig)
 		rl_redisplay();
 		(ft_shell()->exitcode) = 130;
 	}
+	fprintf(stderr,"sighandler set, sig:%d", sig);
 }
 
-void	shell_sigint(void)
+void	set_prompt_signals(void)
 {
 	struct sigaction	act;
-
+	fprintf(stderr, "installing PROMPT MODE handler\n");
 	if (sigemptyset(&act.sa_mask) == -1)
 		ft_putstr_fd("Failed to set signal\n", 2);
-	act.sa_handler = ft_handle_sigint;
+	act.sa_handler = signal_handler;
 	act.sa_flags = SA_RESTART;
 	if (sigaction(SIGINT, &act, NULL) == -1)
 		ft_putstr_fd("Failed to set signal\n", 2);
+	else
+		fprintf(stderr,"handling ctrl c\n");
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
+	else
+		fprintf(stderr,"handling ctrl \\\n");
 }
 
-void	ft_sigignore(void)
+void	set_parent_wait_signals(void)
 {
+	fprintf(stderr, "installing PARENT MODE handler\n");
 	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
+	else
+		fprintf(stderr,"ignoring ctrl c\n");
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
+	else
+		fprintf(stderr,"ignoring ctrl \\\n");
 }
 
-void	ft_resetsignal(void)
+void	set_child_signals(void)
 {
+	fprintf(stderr, "installing CHILD MODE handler (shell_sigint)\n");
 	if (signal(SIGINT, SIG_DFL) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
-	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+	else
+		fprintf(stderr,"ctrl c defalt behaviour on\n");
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
+	else
+		fprintf(stderr,"ctrl \\ defalt behaviour on\n");
 }

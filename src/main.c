@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/01 14:16:25 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:03:00 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@ void	read_the_line(t_data *d, t_shell *shell)
 		destroy_and_exit(d, "exit", 0);
 	if (*d->line)
 	{
+		//set_prompt_signals(); 
 		add_history(d->line);
 		if (tokenizer(d))
 		{
-			debug_print_tokens(d);
+			//debug_print_tokens(d);
 			if (syntax_validation(d))
 			{
 				build_vec_cmds(d);
-				debug_print_cmds(d);
+				//debug_print_cmds(d);
 				shell_execution(d, shell);
 			}
 		}
@@ -45,7 +46,8 @@ int	main(int argc, char **argv, char **envp)
 	d = get_data();
 	shell = ft_shell();
 	shell_init(d, shell, envp);
-	shell_sigint();
+	fprintf(stderr,"calling sigint in main\n");
+	set_prompt_signals();
 	while (1)
 		read_the_line(d, shell);
 	cleanup_shell(d);

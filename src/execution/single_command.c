@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/01 16:23:14 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:16:27 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ void	wait_for_all(t_shell *shell)
 		if (shell->pids[i] > 0)
 		{
 			waitpid(-1, &status, 0);
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+    			write(1, "\n", 1);
 			if (WIFSIGNALED(status))
 			{
-
 				signal = WTERMSIG(status);
 				shell->exitcode = signal + 128;
 				if (signal != 13)
@@ -73,9 +74,19 @@ void	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	if (shell->pids[0] < 0)
 		error_smt();
 	if (shell->pids[0] == 0)
+	{
+		//fprintf(stderr,"calling signal in child process, pid:%d\n", shell->pids[0]);
+		set_child_signals();
 		execute_single_command(shell);
+	}
 	else
+	{
+		//fprintf(stderr,"calling wait signal in parent process, pid:%d\n", shell->pids[0]);
+		set_parent_wait_signals();
 		wait_for_all(shell);
+		//fprintf(stderr,"calling prompt signal in parent process, pid:%d\n", shell->pids[0]);
+		set_prompt_signals();
+	}
 }
 
 void	single_command_case(t_data *d, t_shell *shell)

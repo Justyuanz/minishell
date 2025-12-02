@@ -250,9 +250,9 @@ int	handle_heredocs(t_data *d, t_cmd *cmd);
 char **create_envp_from_data(t_data *data);
 
 //signals.c
-void shell_sigint(void);
-void	ft_sigignore(void);
-void ft_resetsignal(void);
+void	set_prompt_signals(void);
+void	set_parent_wait_signals(void);
+void	set_child_signals(void);
 
 #endif
 /*

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/01 16:24:51 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:27:23 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		return ;
 	if (shell->pids[shell->index] == 0)
 	{
-		//handle_signal for child
+		fprintf(stderr,"calling signal in child process, pid:%d\n", shell->pids[0]);
+		set_child_signals();
 		handle_pipes(shell);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
@@ -62,7 +63,8 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 	}
 	else
 	{
-		
+		fprintf(stderr,"calling wait signal in parent process, pid:%d\n", shell->pids[0]);
+		set_parent_wait_signals();
 		close_parent_pipes(shell);
 	}
 }
@@ -130,6 +132,8 @@ void	shell_execution(t_data *d, t_shell *shell)
 			printf("pipe creation failed \n");
 		handle_command(d, shell, command_count);
 		wait_for_all(shell);
+		fprintf(stderr,"calling prompt signal in parent process, pid:%d\n", shell->pids[0]);
+		set_prompt_signals();
 		free_pipes(shell);
 	}
 	// cleanup_parent(shell);
