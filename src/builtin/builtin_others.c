@@ -31,15 +31,27 @@ void	builtin_env(t_shell *shell)
 {
 	t_env	*env;
 	size_t	i;
+	t_cmd *cmd;
 
 	i = 0;
-	while (i < shell->data->vec_env.len)
+	cmd = get_cmd(shell->data, shell->index);
+	if (shell->data->vec_tok.len > 1)
 	{
-		env = get_env(shell->data, i);
-		printf("%s=%s\n", env->key, env->value);
-		i++;
+		ft_putstr_fd("env: ", 2);
+		ft_putstr_fd((char *)cmd->argv[1], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		shell->exitcode = 127;
 	}
-	update_exitcode(0, shell);
+	else
+	{
+		while (i < shell->data->vec_env.len)
+		{
+			env = get_env(shell->data, i);
+			printf("%s=%s\n", env->key, env->value);
+			i++;
+		}
+		shell->exitcode = 0;
+	}
 }
 
 static int	is_valid_unset_identifier(const char *str)
