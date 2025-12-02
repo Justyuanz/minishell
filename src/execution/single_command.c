@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/02 15:16:27 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:58:54 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	wait_for_all(t_shell *shell)
 	{
 		if (shell->pids[i] > 0)
 		{
-			waitpid(-1, &status, 0);
+			waitpid(shell->pids[i], &status, 0);
 			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
     			write(1, "\n", 1);
 			if (WIFSIGNALED(status))
@@ -34,7 +34,10 @@ void	wait_for_all(t_shell *shell)
 				signal = WTERMSIG(status);
 				shell->exitcode = signal + 128;
 				if (signal != 13)
+				{
+					//fprintf(stderr,"signal in wait for all:%d\n", signal);
 					return ;
+				}
 			}
 			if (WIFEXITED(status))
 				update_exitcode(WEXITSTATUS(status), shell);
