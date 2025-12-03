@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:06 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:31:09 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:02:27 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	redir_out(t_redir *redir, t_shell *shell)
 		shell->output = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (redir->type == APPEND)
 		shell->output = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (shell->input < 0)
+	if (shell->output < 0) // fixed typo
 		return (1);
 	if (dup2(shell->output, STDOUT_FILENO) == -1)
 	{
