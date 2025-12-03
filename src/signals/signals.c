@@ -6,14 +6,17 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:32:25 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/02 18:54:17 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:47:47 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	g_signal;
+
 void	signal_handler(int sig)
 {
+	g_signal = sig;
 	if (sig == SIGINT)
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
@@ -24,10 +27,21 @@ void	signal_handler(int sig)
 	}
 }
 
+void hd_signal_handler(int sig)
+{
+	g_signal = sig;
+	if (sig == SIGINT)
+		(ft_shell()->exitcode) = 130;
+}
+
 void	set_prompt_signals(void)
 {
 	struct sigaction	act;
 	//fprintf(stderr, "installing PROMPT MODE handler\n");
+
+	g_signal = 0;
+	rl_done = 0;
+	rl_event_hook = NULL;
 	if (sigemptyset(&act.sa_mask) == -1)
 		ft_putstr_fd("Failed to set signal\n", 2);
 	act.sa_handler = signal_handler;
@@ -67,25 +81,27 @@ void	set_child_signals(void)
 //	else
 //		fprintf(stderr,"ctrl \\ defalt behaviour on\n");
 }
-void	heredoc_signal_handler(int sig)
+int	heredoc_event_hook(void)
 {
-	if (sig == SIGINT)
+	if (g_signal == SIGINT)
 	{
 		rl_done = 1;
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
 		(ft_shell()->exitcode) = 130;
+		return (1);
 	}
+	return (0);
 }
 void set_heredoc_signal(void)
 {
 	struct sigaction	sa;
 	//fprintf(stderr, "installing PROMPT MODE handler\n");
+
+	g_signal = 0;
+	rl_done = 0;
 	if (sigemptyset(&sa.sa_mask) == -1)
 		ft_putstr_fd("Failed to set signal\n", 2);
-	sa.sa_handler = heredoc_signal_handler;
+	rl_event_hook = heredoc_event_hook;
+	sa.sa_handler = hd_signal_handler;
 	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 		ft_putstr_fd("Failed to set signal\n", 2);

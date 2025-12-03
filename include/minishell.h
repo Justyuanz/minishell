@@ -20,6 +20,8 @@
 # define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
 # define ERROR_MSG_AMBIGUOUS "mini: ambiguous redirection : "
 
+extern int g_signal;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -192,7 +194,7 @@ void     shell_init(t_data *d, t_shell *shell, char **envp);
 void     cleanup_line(t_data *d);
 void     cleanup_line_runtime(t_data *d);
 void     cleanup_shell(t_data *d);
-bool     destroy_and_exit(t_data *d, char *msg, int exitcode);
+void     destroy_and_exit(t_data *d, char *msg, int exitcode);
 
 //execution.c
 void    shell_execution(t_data *d, t_shell *shell);
@@ -254,6 +256,7 @@ void	set_prompt_signals(void);
 void	set_parent_wait_signals(void);
 void	set_child_signals(void);
 void set_heredoc_signal(void);
+void	heredoc_signal_handler(int g_signal);
 
 #endif
 /*
