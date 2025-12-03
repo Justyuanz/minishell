@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:05:27 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:05:45 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:09:13 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	track_quotes(t_data *d, t_token *tok, t_cmd *cmd)
 {
 	t_quote	*q;
 
-	q = arena_alloc(&d->arena_tok, sizeof(t_quote));
+	q = arena_alloc(d, &d->arena_tok, sizeof(t_quote));
 	if (!q)
 		destroy_and_exit(d, "Arena alloc tok fail", 1);
 	*q = tok->quote;
@@ -65,7 +65,7 @@ void	handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)
 	t_redir	*redir;
 
 	next_tok = get_tok(d, (*i) + 1);
-	redir = (t_redir *)arena_alloc(&d->arena_tok, sizeof(t_redir));
+	redir = (t_redir *)arena_alloc(d, &d->arena_tok, sizeof(t_redir));
 	if (!redir)
 		destroy_and_exit(d, "Arena alloc redir fail", 1);
 	redir->type = tok->type;

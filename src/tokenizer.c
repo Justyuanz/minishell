@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:26:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:26:22 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:26:41 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	push_word_tok(t_data *d, size_t len, int type, t_buffer *buffer)
 {
 	t_token	*tok;
 
-	tok = (t_token *)arena_alloc(&d->arena_tok, sizeof(t_token));
+	tok = (t_token *)arena_alloc(d, &d->arena_tok, sizeof(t_token));
 	if (!tok)
 		destroy_and_exit(d, "Arena alloc tok fail", 1);
 	tok->str = arena_push(&d->arena_tok, buffer->buf, len + 1);

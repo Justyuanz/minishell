@@ -69,8 +69,8 @@ typedef	struct s_redir
 typedef struct s_cmd
 {
 	char    **argv;
-	t_vec	redirs; //element t_redir*
-	t_vec	quotes; //elemenr t_quote*
+	t_vec	redirs;
+	t_vec	quotes;
 } 	t_cmd;
 
 typedef struct s_token
@@ -144,7 +144,7 @@ char    *tok_type(t_token_type tok_type);
 
 //arena & memory management
 int      arena_init(t_arena *arena, size_t capacity);
-void    *arena_alloc(t_arena *arena, size_t elem_size);
+void    *arena_alloc(t_data *d, t_arena *arena, size_t elem_size);
 char    *arena_push(t_arena *arena, char *s, size_t len);
 void     arena_reset(t_arena *arena);
 void     arena_free(t_arena *arena);
@@ -255,7 +255,7 @@ char **create_envp_from_data(t_data *data);
 void	set_prompt_signals(void);
 void	set_parent_wait_signals(void);
 void	set_child_signals(void);
-void set_heredoc_signal(void);
+void 	set_heredoc_signal(void);
 void	heredoc_signal_handler(int g_signal);
 
 #endif

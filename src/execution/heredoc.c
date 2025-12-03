@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 16:33:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 01:22:44 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,10 @@ char	*create_heredoc_filename(int heredoc_num)
 	return (filename);
 }
 
-// char	*expanded_line_heredoc(t_data *d)
-// {
-// 	char	tmp[1024];
-// 	size_t	i;
-// 	size_t	j;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (d->line[i])
-// 	{
-// 		if (d->line[i] == '$')
-// 			handle_expansion(d, tmp, &i, &j);
-// 		tmp[j++] = d->line[i++];
-// 	}
-// 	tmp[j] = '\0';
-// 	return (ft_strdup(tmp));
-// }
-
 int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 		t_redir *redir)
 {
 	int		fd;
-	//char	*expanded;
 	char	buf[1024];
 	size_t	j;
 	size_t	i;
@@ -60,12 +41,20 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 		return (-1);
 	while (1)
 	{
+		i = 0;
+		j = 0;
+		
 		d->line = readline("> ");
-		if (!d->line || ft_strcmp(d->line, delimiter) == 0)
+		if (g_signal == SIGINT)
 		{
-			//free
-			break ;
+			rl_done = 0;
+			g_signal = 0;
+			close (fd);
+			unlink(filename);
+			return (130);
 		}
+		if (!d->line || ft_strcmp(d->line, delimiter) == 0)
+			break ;
 		if (expand_in_heredoc(redir))
 		{
 			while (d->line[i])
@@ -75,9 +64,6 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 				buf[j++] = d->line[i++];
 			}
 			buf[j] = '\0';
-			//write(fd, expanded, ft_strlen(expanded));
-			//write(fd, "\n", 1);
-			//free(expanded);
 		}
 		else
 		{
@@ -86,19 +72,12 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 				buf[j++] = d->line[i++];
 			}
 			buf[j] = '\0';
-			//write(fd, d->line, ft_strlen(d->line));
-			//write(fd, "\n", 1);
 		}
-		if (g_signal == SIGINT)
-		{
-			rl_done = 0;
-			close (fd);
-			return (130);
-		}
+		write(fd, buf, ft_strlen(buf));
+	    write(fd, "\n", 1);
 		free(d->line);
 	}
-	write(fd, buf, ft_strlen(buf));
-	write(fd, "\n", 1);
+	g_signal = 0;
 	rl_done = 0;
 	close(fd);
 	return (0);
@@ -111,6 +90,7 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 	char		*delim;
 	size_t		i;
 	static int	heredoc_count;
+	int			hd_ret;
 
 	heredoc_count = 0;
 	i = 0;
@@ -119,7 +99,6 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 		redir = get_redir(cmd, i);
 		if (redir->type == HEREDOC)
 		{
-			//fprintf(stderr,"calling signal in handle heredoc \n");
 			set_heredoc_signal();
 			heredoc_count++;
 			filename = create_heredoc_filename(heredoc_count);
@@ -127,13 +106,18 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 				return (1);
 			delim = ft_strdup(redir->file);
 			redir->file = filename;
-			if (read_heredoc_input(d, delim, redir->file, redir) == -1)
+			hd_ret = read_heredoc_input(d, delim, redir->file, redir);
+			free(delim);
+			set_prompt_signals();
+			if ( hd_ret == -1)
 			{
 				perror("heredoc");
 				return (1);
 			}
-			set_prompt_signals();
-			free(delim);
+			else if (hd_ret == 130)
+			{
+				return (130);
+			}
 		}
 		i++;
 	}

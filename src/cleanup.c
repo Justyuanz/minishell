@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:06:29 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:02:10 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	cleanup_line(t_data *d)
 
 void	cleanup_shell(t_data *d)
 {
-	// size_t	i;
-	// i = -1;
 	if (!d)
 		return ;
 	cleanup_line(d);

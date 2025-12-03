@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:08:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:08:29 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:01:26 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	exit_status(t_data *d, size_t *i, char *buf, size_t *off)
 		while (num[k])
 			buf[(*off)++] = num[k++];
 		free(num);
-		(*i)++; // skip '?'
+		(*i)++;
 		return (true);
 	}
 	return (false);
@@ -40,7 +40,7 @@ bool	exit_status(t_data *d, size_t *i, char *buf, size_t *off)
 
 bool	bare_dollar(t_data *d, char *buf, size_t *off, size_t *i)
 {
-	if (d->line[*i] == '$') //$$
+	if (d->line[*i] == '$')
 	{
 		buf[*off] = '$';
 		(*off)++;
@@ -68,7 +68,7 @@ void	store_var_name(t_data *d, char *tmp, size_t *i, size_t *j)
 			tmp[*j] = '\0';
 			return ;
 		}
-		tmp[*j] = d->line[*i]; // writes the var name
+		tmp[*j] = d->line[*i];
 		(*j)++;
 		(*i)++;
 	}
