@@ -98,11 +98,11 @@ void	single_command_case(t_data *d, t_shell *shell)
 	int		savestdout;
 	int		savestdin;
 	//int		fd;
-	size_t	i;
+	//size_t	i;
 
 	savestdout = dup(STDOUT_FILENO);
 	savestdin = dup(STDIN_FILENO);
-	i = 0;
+	//i = 0;
 	/*
 	if (!shell) {
 		printf("ERROR: shell is NULL\n");

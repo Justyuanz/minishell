@@ -58,7 +58,7 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 		d->line = readline("> ");
 		if (ft_strcmp(d->line, delimiter) == 0)
 		{
-			free(d->line);
+			//free(d->line);
 			break ;
 		}
 		if (expand_in_heredoc(redir))
