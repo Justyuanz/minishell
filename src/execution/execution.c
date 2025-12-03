@@ -16,8 +16,6 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
-	if (cmd->redirs.len > 0)
-		redirect_child(cmd, shell);
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)
 	{
@@ -50,6 +48,8 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 	if (shell->pids[shell->index] == 0)
 	{
 		handle_pipes(shell);
+		if (cmd->redirs.len > 0) // moved this from handle_execution
+			redirect_child(cmd, shell);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
 		{
