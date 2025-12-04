@@ -6,20 +6,20 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 19:40:05 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:29:54 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "libft.h"
 # include "vec.h"
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -217,6 +217,10 @@ void				destroy_and_exit(t_data *d, char *msg, int exitcode);
 void				shell_execution(t_data *d, t_shell *shell);
 t_shell				*ft_shell(void);
 
+// execution_fork.c
+int					handle_command(t_data *d, t_shell *shell,
+						int command_count);
+
 // checkers.c
 int					check_access(const char *full_path, int *found);
 
@@ -267,7 +271,8 @@ void				redirect_child(t_cmd *cmd, t_shell *shell);
 int					handle_heredocs(t_data *d, t_cmd *cmd);
 
 // heredoc_input.c
-int					read_heredoc_input(t_data *d, const char *delimiter, const char *filename, t_redir *redir);
+int					read_heredoc_input(t_data *d, const char *delimiter,
+						const char *filename, t_redir *redir);
 
 // envp.c
 char				**create_envp_from_data(t_data *data);

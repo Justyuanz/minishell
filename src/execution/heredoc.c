@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 19:20:15 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:10:50 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,43 +26,49 @@ char	*create_heredoc_filename(int heredoc_num)
 	return (filename);
 }
 
+static int	handle_single_heredoc(t_data *d, t_redir *redir, int count)
+{
+	int		hd_ret;
+	char	*filename;
+	char	*delim;
 
+	set_heredoc_signal();
+	filename = create_heredoc_filename(count);
+	if (!filename)
+		return (1);
+	delim = ft_strdup(redir->file);
+	redir->file = filename;
+	hd_ret = read_heredoc_input(d, delim, redir->file, redir);
+	free(delim);
+	set_prompt_signals();
+	if (hd_ret == -1)
+	{
+		perror("heredoc");
+		return (1);
+	}
+	else if (hd_ret == 130)
+		return (130);
+	return (0);
+}
 
 int	handle_heredocs(t_data *d, t_cmd *cmd)
 {
-	t_redir		*redir;
-	char		*filename;
-	char		*delim;
-	size_t		i;
 	static int	heredoc_count;
-	int			hd_ret;
+	t_redir		*redir;
+	size_t		i;
+	int			ret;
 
-	heredoc_count = 0;
 	i = 0;
+	heredoc_count = 0;
 	while (i < cmd->redirs.len)
 	{
 		redir = get_redir(cmd, i);
 		if (redir->type == HEREDOC)
 		{
-			set_heredoc_signal();
 			heredoc_count++;
-			filename = create_heredoc_filename(heredoc_count);
-			if (!filename)
-				return (1);
-			delim = ft_strdup(redir->file);
-			redir->file = filename;
-			hd_ret = read_heredoc_input(d, delim, redir->file, redir);
-			free(delim);
-			set_prompt_signals();
-			if (hd_ret == -1)
-			{
-				perror("heredoc");
-				return (1);
-			}
-			else if (hd_ret == 130)
-			{
-				return (130);
-			}
+			ret = handle_single_heredoc(d, redir, heredoc_count);
+			if (ret != 0)
+				return (ret);
 		}
 		i++;
 	}

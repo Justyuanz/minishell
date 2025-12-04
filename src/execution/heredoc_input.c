@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_input.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 19:48:42 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/12/04 19:48:44 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	write_heredoc_line(t_data *d, t_redir *redir, int fd)
@@ -27,7 +39,7 @@ static void	write_heredoc_line(t_data *d, t_redir *redir, int fd)
 int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 		t_redir *redir)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
