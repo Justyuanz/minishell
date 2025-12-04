@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:26:48 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:26:53 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:40:17 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	shell_init(t_data *d, t_shell *shell, char **envp)
 	if (vec_new(&d->vec_cmds, 1, sizeof(t_cmd *)) == -1)
 		destroy_and_exit(d, "Arena init fail\n", 1);
 	envp_init(d, envp);
-	shell->envp = create_envp_from_data(d); // moved this from top to bottom
+	shell->envp = create_envp_from_data(d);
 }
 
 t_data	*get_data(void)

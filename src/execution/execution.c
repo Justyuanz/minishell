@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:30:23 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:42:07 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		return ;
 	if (shell->pids[shell->index] == 0)
 	{
+		set_child_signals();
 		handle_pipes(shell);
 		if (cmd->redirs.len > 0) // moved this from handle_execution
 			redirect_child(cmd, shell);
@@ -60,12 +61,16 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 			handle_execution(cmd, shell);
 	}
 	else
+	{
+		set_parent_wait_signals();
 		close_parent_pipes(shell);
+	}
 }
 
-void	handle_command(t_data *d, t_shell *shell, int command_count)
+int	handle_command(t_data *d, t_shell *shell, int command_count)
 {
 	t_cmd	*cmd;
+	int		hd_ret;
 
 	shell->index = 0;
 	while (shell->index < command_count)
@@ -73,16 +78,20 @@ void	handle_command(t_data *d, t_shell *shell, int command_count)
 		cmd = get_cmd(shell->data, shell->index);
 		if (cmd->argv)
 		{
-			if (handle_heredocs(d, cmd) != 0)
+			hd_ret = handle_heredocs(d, cmd);
+			if (hd_ret == 1)
 			{
 				shell->exitcode = 1;
 				shell->index++;
 				continue ;
 			}
+			else if (hd_ret == 130)
+				return (130);
 			do_command_fork(cmd, shell);
 		}
 		shell->index++;
 	}
+	return (0);
 }
 
 int	create_pids(t_shell *shell, int command_count)
@@ -91,7 +100,7 @@ int	create_pids(t_shell *shell, int command_count)
 
 	i = 0;
 	shell->pids = NULL;
-	shell->pids = malloc((command_count + 1) * sizeof(int)); // cmd_count + 1
+	shell->pids = malloc((command_count + 1) * sizeof(int));
 	if (!shell->pids)
 		return (1);
 	while (i < command_count)
@@ -99,7 +108,7 @@ int	create_pids(t_shell *shell, int command_count)
 		shell->pids[i] = -1;
 		i++;
 	}
-	shell->pids[command_count] = 0; // out of bound
+	shell->pids[command_count] = 0;
 	return (0);
 }
 
@@ -124,9 +133,14 @@ void	shell_execution(t_data *d, t_shell *shell)
 	{
 		if (create_pipes(shell) == -1)
 			printf("pipe creation failed \n");
-		handle_command(d, shell, command_count);
+		if (handle_command(d, shell, command_count) == 130)
+		{
+			wait_for_all(shell);
+			shell->exitcode = 130;
+			free_pipes(shell);
+			return ;
+		}
 		wait_for_all(shell);
-		free_pipes(shell);
 	}
 	// cleanup_parent(shell);
 	shell->command_index = 0;

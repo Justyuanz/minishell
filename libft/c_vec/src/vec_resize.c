@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_resize.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 15:37:10 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/12/04 15:37:13 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vec.h"
 
 int	vec_resize(t_vec *src, size_t target_len)
@@ -6,9 +18,9 @@ int	vec_resize(t_vec *src, size_t target_len)
 	size_t	i;
 
 	i = 0;
-	if(!src)
+	if (!src)
 		return (-1);
-	if(!src->memory)
+	if (!src->memory)
 		return (vec_new(src, target_len, src->size_element));
 	else
 	{
@@ -17,10 +29,10 @@ int	vec_resize(t_vec *src, size_t target_len)
 		else
 		{
 			while (i < src->len)
-    		{
-        		tmp.memory[i] = src->memory[i];
-        		i++;
-    		}
+			{
+				tmp.memory[i] = src->memory[i];
+				i++;
+			}
 			tmp.len = src->len;
 			vec_free(src);
 			*src = tmp;

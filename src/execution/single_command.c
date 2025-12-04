@@ -6,37 +6,49 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:31:17 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:42:30 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_for_all(t_shell *shell)
+void	check_wait_status(t_shell *shell, int *nl_flag)
 {
 	int	status;
-	int	i;
 	int	signal;
 
-	i = 0;
 	status = 127;
+	waitpid(-1, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		signal = WTERMSIG(status);
+		shell->exitcode = signal + 128;
+		if (WTERMSIG(status) == SIGINT)
+		{
+			if (*nl_flag == 0)
+				write(1, "\n", 1);
+			*nl_flag = 1;
+		}
+		// if (signal != SIGPIPE)
+		//	return ;  //should not return here
+	}
+	if (WIFEXITED(status))
+		update_exitcode(WEXITSTATUS(status), shell);
+}
+
+void	wait_for_all(t_shell *shell)
+{
+	int	i;
+	int	nl_flag;
+
+	nl_flag = 0;
+	i = 0;
 	if (!shell->pids)
 		return ;
 	while (shell->pids[i] != 0)
 	{
 		if (shell->pids[i] > 0)
-		{
-			waitpid(-1, &status, 0);
-			if (WIFSIGNALED(status))
-			{
-				signal = WTERMSIG(status);
-				shell->exitcode = signal + 128;
-				if (signal != 13)
-					return ;
-			}
-			if (WIFEXITED(status))
-				update_exitcode(WEXITSTATUS(status), shell);
-		}
+			check_wait_status(shell, &nl_flag);
 		i++;
 	}
 }
@@ -62,77 +74,44 @@ void	execute_single_command(t_shell *shell)
 	exit(shell->exitcode);
 }
 
-void	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
+int	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 {
-	if (handle_heredocs(d, cmd) != 0)
-	{
+	int	hd_ret;
+
+	hd_ret = handle_heredocs(d, cmd);
+	if (hd_ret == 1)
 		shell->exitcode = 1;
-	}
+	else if (hd_ret == 130)
+		return (130);
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
 		error_smt();
 	if (shell->pids[0] == 0)
+	{
+		set_child_signals();
 		execute_single_command(shell);
+	}
 	else
+	{
+		set_parent_wait_signals();
 		wait_for_all(shell);
+		set_prompt_signals();
+	}
+	return (0);
 }
 
 void	single_command_case(t_data *d, t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
-	//t_redir	*redir;
 	int		savestdout;
 	int		savestdin;
-	//int		fd;
-	//size_t	i;
 
 	savestdout = dup(STDOUT_FILENO);
 	savestdin = dup(STDIN_FILENO);
-	//i = 0;
-	/*
-	if (!shell) {
-		printf("ERROR: shell is NULL\n");
-		return ;
-	}
-	if (!shell->data) {
-		printf("ERROR: shell->data is NULL\n");
-		return ;
-	}
-	*/
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
-		//redirect_child(shell->)
-		// while (i < cmd->redirs.len)
-		// {
-		// 	redir = get_redir(cmd, i);
-		// 	if (redir->type == REDIR_OUT)
-		// 	{
-		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		// 		// if (fd = -1)
-		// 		dup2(fd, STDOUT_FILENO);
-		// 		// if(dup2) == -1
-		// 		close(fd);
-		// 	}
-		// 	else if (redir->type == APPEND)
-		// 	{
-		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		// 		// if (fd = -1)
-		// 		dup2(fd, STDOUT_FILENO);
-		// 		// if(dup2) == -1
-		// 		close(fd);
-		// 	}
-		// 	else if (redir->type == REDIR_IN)
-		// 	{
-		// 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		// 		// if (fd = -1)
-		// 		dup2(fd, STDIN_FILENO);
-		// 		// if(dup2) == -1
-		// 		close(fd);
-		// 	}
-		// 	i++;
-		// }
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
@@ -140,8 +119,11 @@ void	single_command_case(t_data *d, t_shell *shell)
 				redirect_child(cmd, shell);
 			handle_builtin(flag, cmd, shell);
 		}
-		else // should i check here for valid command or not??
-			handle_single_command(d, cmd, shell);
+		else if (handle_single_command(d, cmd, shell) == 130)
+		{
+			shell->exitcode = 130;
+			return ;
+		}
 	}
 	dup2(savestdout, STDOUT_FILENO);
 	dup2(savestdin, STDIN_FILENO);

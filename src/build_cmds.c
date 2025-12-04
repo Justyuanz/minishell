@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:52:45 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:04:51 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:29:31 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	init_cmd(t_data *d, t_cmd **cmd, t_vec *argv)
 {
 	if (vec_new(argv, 1, sizeof(char *)) == -1)
 		destroy_and_exit(d, "Vec init cmd fail", 1);
-	*cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+	*cmd = (t_cmd *)arena_alloc(d, &d->arena_tok, sizeof(t_cmd));
 	if (!cmd)
 		destroy_and_exit(d, "Arena alloc cmd fail", 1);
 	if (vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *)) == -1)
@@ -29,7 +29,7 @@ static void	init_new_cmd(t_data *d, t_vec *argv, t_cmd **cmd)
 {
 	if (vec_new(argv, 1, sizeof(char *)) == -1)
 		destroy_and_exit(d, "Vec init cmd fail", 1);
-	*cmd = (t_cmd *)arena_alloc(&d->arena_tok, sizeof(t_cmd));
+	*cmd = (t_cmd *)arena_alloc(d, &d->arena_tok, sizeof(t_cmd));
 	if (!cmd)
 		destroy_and_exit(d, "Arena alloc cmd fail", 1);
 	if (vec_new(&(*cmd)->redirs, 1, sizeof(t_redir *)) == -1)

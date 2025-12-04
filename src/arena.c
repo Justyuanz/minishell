@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:49:41 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:23:09 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:28:28 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,20 @@ int	arena_init(t_arena *arena, size_t capacity)
 	return (1);
 }
 
-void	*arena_alloc(t_arena *arena, size_t elem_size)
+void	*arena_alloc(t_data *d, t_arena *arena, size_t elem_size)
 {
 	char	*current_start;
 	size_t	misalign;
 	size_t	alignment;
 
 	if (!arena || !arena->data || elem_size == 0)
-		return (NULL); // maybe add safe exit here?
+		destroy_and_exit(d, "arena fails", 1);
 	if (arena->offset + elem_size > arena->capacity)
-		return (NULL); // out of memory, perhaps link to next arena
+		destroy_and_exit(d, "not enough memory for you", 1);
 	alignment = 8;
 	misalign = arena->offset % alignment;
 	if (misalign != 0)
-	{
 		arena->offset = arena->offset + (alignment - misalign);
-	}
 	current_start = &arena->data[arena->offset];
 	arena->offset += elem_size;
 	return (current_start);

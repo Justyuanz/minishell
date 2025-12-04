@@ -25,7 +25,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		main.c \
 		tokenizer.c \
 		check_syntax.c \
-		debug_print.c \
 		arena.c \
 		read_operators.c \
 		read_word.c \
@@ -38,11 +37,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		get.c \
 		utils.c \
 		error_msg.c \
-		executor.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/single_command.c \
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path1.c execution/path.c execution/checkers.c execution/cleaners.c \
 		execution/piping.c execution/redirection.c execution/heredoc.c builtin/builtin_exit.c builtin/builtin_export.c \
-		execution/envp.c signals/signals.c\
+		execution/envp.c signals/signals.c signals/heredoc_signals.c \
 		cleanup.c \
 )
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

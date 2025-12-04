@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 20:18:57 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/03 22:56:36 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,16 @@ void	read_the_line(t_data *d, t_shell *shell)
 {
 	d->line = readline("minishell$ ");
 	if (!d->line)
-		destroy_and_exit(d, "exit", 0);
+		destroy_and_exit(d, NULL, 0);
 	if (*d->line)
 	{
 		add_history(d->line);
+		set_prompt_signals();
 		if (tokenizer(d))
 		{
-			debug_print_tokens(d);
 			if (syntax_validation(d))
 			{
 				build_vec_cmds(d);
-				debug_print_cmds(d);
 				shell_execution(d, shell);
 			}
 		}
