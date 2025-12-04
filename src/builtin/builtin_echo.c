@@ -32,7 +32,7 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 
 	new_line = 0;
 	index = 1;
-	if (command->argv[1] != NULL && ft_strcmp(command->argv[1], "-n") == 0)
+	if (command->argv[1] != NULL && ft_strncmp(command->argv[1], "-n", 2) == 0)
 		index++;
 	else
 		new_line = 1;

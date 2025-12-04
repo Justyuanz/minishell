@@ -15,14 +15,15 @@
 void	check_wait_status(t_shell *shell, int *nl_flag)
 {
 	int	status;
-	int	signal;
+	//int	signal;
 
 	status = 127;
 	waitpid(-1, &status, 0);
 	if (WIFSIGNALED(status))
 	{
-		signal = WTERMSIG(status);
-		shell->exitcode = signal + 128;
+		//signal = WTERMSIG(status);
+		//shell->exitcode = signal + 128;
+		shell->exitcode = 0;
 		if (WTERMSIG(status) == SIGINT)
 		{
 			if (*nl_flag == 0)

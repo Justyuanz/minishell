@@ -61,7 +61,7 @@ void	builtin_exit(t_cmd *cmd, t_shell *shell)
 		final_exit(shell, shell->exitcode);
 	if (is_exit_digit(cmd->argv[1]))
 	{
-		exit_number = 2;
+		exit_number = 255;
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(cmd->argv[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);

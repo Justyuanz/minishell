@@ -37,7 +37,8 @@ char	*search_in_cwd(const char *cmd, t_shell *shell)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
-		ft_putstr_fd("cwd failed", 2);
+		update_exitcode(1, shell);
+		ft_putstr_fd("cwd call failed", 2);
 		return (NULL);
 	}
 	cmd_path = join_paths(cwd, cmd);

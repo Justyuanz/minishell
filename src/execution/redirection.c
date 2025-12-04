@@ -59,7 +59,7 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		{
 			if (redir_in(redir, shell))
 			{
-				printf("file error\n");
+				//printf("file error\n");
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -67,7 +67,7 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		{
 			if (redir_out(redir, shell))
 			{
-				printf("file out error\n");
+				//printf("file out error\n");
 				exit(EXIT_FAILURE);
 			}
 		}
