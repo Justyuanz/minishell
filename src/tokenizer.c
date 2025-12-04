@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:26:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:26:41 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:40:56 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,9 @@ void	push_word_tok(t_data *d, size_t len, int type, t_buffer *buffer)
 		destroy_and_exit(d, "Arena push tok fail", 1);
 	tok->str[len] = '\0';
 	tok->type = type;
-	tok->quote.single_ON = buffer->quotes.single_ON;
-	tok->quote.double_ON = buffer->quotes.double_ON;
+	tok->quote.single_on = buffer->quotes.single_on;
+	tok->quote.double_on = buffer->quotes.double_on;
 	if (vec_push(&d->vec_tok, tok) == -1)
-		// only push the address of the pointer
 		destroy_and_exit(d, "Vec push tok fail\n", 1);
 }
 

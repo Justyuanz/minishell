@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 00:47:15 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:42:07 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 {
 	t_cmd	*cmd;
 	int		hd_ret;
+
 	shell->index = 0;
 	while (shell->index < command_count)
 	{
@@ -78,14 +79,14 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 		if (cmd->argv)
 		{
 			hd_ret = handle_heredocs(d, cmd);
-			if ( hd_ret== 1)
+			if (hd_ret == 1)
 			{
 				shell->exitcode = 1;
 				shell->index++;
 				continue ;
 			}
 			else if (hd_ret == 130)
-				return 130;
+				return (130);
 			do_command_fork(cmd, shell);
 		}
 		shell->index++;
@@ -134,9 +135,10 @@ void	shell_execution(t_data *d, t_shell *shell)
 			printf("pipe creation failed \n");
 		if (handle_command(d, shell, command_count) == 130)
 		{
+			wait_for_all(shell);
 			shell->exitcode = 130;
 			free_pipes(shell);
-			return;
+			return ;
 		}
 		wait_for_all(shell);
 	}

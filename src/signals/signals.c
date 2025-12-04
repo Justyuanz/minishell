@@ -6,13 +6,13 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:32:25 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:15:16 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:43:35 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_signal;
+int		g_signal;
 
 void	signal_handler(int sig)
 {
@@ -26,7 +26,6 @@ void	signal_handler(int sig)
 		(ft_shell()->exitcode) = 130;
 	}
 }
-
 
 void	set_prompt_signals(void)
 {
@@ -60,4 +59,3 @@ void	set_child_signals(void)
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		ft_putstr_fd("Failed to set signal\n", 2);
 }
-

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:08:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:01:26 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:32:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	expand_in_heredoc(t_redir *redir)
 {
-	return (redir && redir->type == HEREDOC && redir->quote.single_ON == false
-		&& redir->quote.double_ON == false);
+	return (redir && redir->type == HEREDOC && redir->quote.single_on == false
+		&& redir->quote.double_on == false);
 }
 
 bool	exit_status(t_data *d, size_t *i, char *buf, size_t *off)

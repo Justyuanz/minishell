@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 20:21:36 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/09/11 21:03:42 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:38:28 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int	ft_putchar_fd(char c, int fd)
 {
-	return(write(fd, &c, 1));
+	return (write(fd, &c, 1));
 }

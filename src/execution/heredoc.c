@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 01:22:44 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:42:21 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,12 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 	{
 		i = 0;
 		j = 0;
-		
 		d->line = readline("> ");
 		if (g_signal == SIGINT)
 		{
 			rl_done = 0;
 			g_signal = 0;
-			close (fd);
+			close(fd);
 			unlink(filename);
 			return (130);
 		}
@@ -74,7 +73,7 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 			buf[j] = '\0';
 		}
 		write(fd, buf, ft_strlen(buf));
-	    write(fd, "\n", 1);
+		write(fd, "\n", 1);
 		free(d->line);
 	}
 	g_signal = 0;
@@ -109,7 +108,7 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 			hd_ret = read_heredoc_input(d, delim, redir->file, redir);
 			free(delim);
 			set_prompt_signals();
-			if ( hd_ret == -1)
+			if (hd_ret == -1)
 			{
 				perror("heredoc");
 				return (1);

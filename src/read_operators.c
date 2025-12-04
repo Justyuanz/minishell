@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:14 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:28:52 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:32:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static void	push_operator_tok(t_data *d, char *line, size_t len, int type)
 		destroy_and_exit(d, "Arena push tok fail", 1);
 	tok->str[len] = '\0';
 	tok->type = type;
-	tok->quote.single_ON = false;
-	tok->quote.double_ON = false;
+	tok->quote.single_on = false;
+	tok->quote.double_on = false;
 	if (vec_push(&d->vec_tok, tok) == -1)
 		destroy_and_exit(d, "Vec push tok fail\n", 1);
 }

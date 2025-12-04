@@ -1,26 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/12/04 15:34:19 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "vec.h"
-#include "libft.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <signal.h>
+# include "libft.h"
+# include "vec.h"
+# include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdio.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <unistd.h>
 
 # define WORD_BUF_SIZE 2048
 
 # define SYNTAX_ERROR_PIPE "mini: syntax error near unexpected token `|'"
-# define SYNTAX_ERROR_NEWLINE "mini: syntax error near unexpected token `newline'"
+# define SYNTAX_ERROR_NEWLINE "syntax error near unexpected token `newline'"
 # define SYNTAX_ERROR_REDIR "mini: syntax error near unexpected token "
 # define SYNTAX_ERROR_QUOTE "mini: unclosed quote"
 # define ERROR_MSG_AMBIGUOUS "mini: ambiguous redirection : "
 
-extern int g_signal;
+extern int			g_signal;
 
 typedef enum e_token_type
 {
@@ -32,7 +44,7 @@ typedef enum e_token_type
 	HEREDOC,
 	ENV,
 	EXPAND
-}	t_token_type;
+}					t_token_type;
 
 typedef enum e_builtin_type
 {
@@ -43,222 +55,229 @@ typedef enum e_builtin_type
 	BUILTIN_UNSET,
 	BUILTIN_ENV,
 	BUILTIN_EXIT
-}	t_builtin_type;
+}					t_builtin_type;
 
 typedef struct s_quote
 {
-	bool single_ON;
-	bool double_ON;
-}	t_quote;
+	bool			single_on;
+	bool			double_on;
+}					t_quote;
 
 typedef struct s_arena
 {
-	char	*data;
-	size_t	capacity;
-	size_t	offset;
-}	t_arena;
+	char			*data;
+	size_t			capacity;
+	size_t			offset;
+}					t_arena;
 
-typedef	struct s_redir
+typedef struct s_redir
 {
 	t_token_type	type;
 	char			*file;
 	t_quote			quote;
-	bool	is_ambiguous;
-}	t_redir;
+	bool			is_ambiguous;
+}					t_redir;
 
 typedef struct s_cmd
 {
-	char    **argv;
-	t_vec	redirs;
-	t_vec	quotes;
-} 	t_cmd;
+	char			**argv;
+	t_vec			redirs;
+	t_vec			quotes;
+}					t_cmd;
 
 typedef struct s_token
 {
-	char	*str;
-	t_token_type type;
+	char			*str;
+	t_token_type	type;
 	t_quote			quote;
-}	t_token;
+}					t_token;
 
 typedef struct s_env
 {
-	char	*key;
-	char	*value;
-}	t_env;
+	char			*key;
+	char			*value;
+}					t_env;
 
 typedef struct s_buffer
 {
+	char			buf[WORD_BUF_SIZE];
+	char			tmp[1024];
+	t_quote			quotes;
 
-	char	buf[WORD_BUF_SIZE];
-	char	tmp[1024];
-	t_quote	quotes;
-
-}	t_buffer;
+}					t_buffer;
 
 typedef struct s_data
 {
-	char	*line;
-	t_arena	arena_tok;
-	t_arena arena_env;
-	t_vec	vec_tok;
-	t_vec	vec_env;
-	t_vec	vec_cmds;
-	t_quote	quote;
-	int		heredoc_skip;
-	int		unclosed_quote;
-}	t_data;
+	char			*line;
+	t_arena			arena_tok;
+	t_arena			arena_env;
+	t_vec			vec_tok;
+	t_vec			vec_env;
+	t_vec			vec_cmds;
+	t_quote			quote;
+	int				heredoc_skip;
+	int				unclosed_quote;
+}					t_data;
 
-typedef struct	s_shell
+typedef struct s_shell
 {
-	int exitcode;
-	int	input;
-	int	output;
-	int	command_index;
-	int	index;
-	int *pids;
-	int	**pipe_array;
-	int	pipes_count;
-	char **envp;
-	t_data *data;
-} t_shell;
+	int				exitcode;
+	int				input;
+	int				output;
+	int				command_index;
+	int				index;
+	int				*pids;
+	int				**pipe_array;
+	int				pipes_count;
+	char			**envp;
+	t_data			*data;
+}					t_shell;
 
+// debug
+void				debug_print_cmds(t_data *d);
+void				debug_print_tokens(t_data *d);
+void				executor(t_data *d);
 
-//debug
-void     debug_print_cmds(t_data *d);
-void     debug_print_tokens(t_data *d);
-void     executor(t_data *d);
+// getters
+t_data				*get_data(void);
+size_t				get_cmd_count(t_data *d);
+t_cmd				*get_cmd(t_data *d, size_t index);
+t_redir				*get_redir(t_cmd *cmd, size_t index);
+t_token				*get_tok(t_data *d, size_t index);
+t_env				*get_env(t_data *d, size_t index);
+t_quote				*get_quote(t_cmd *cmd, size_t index);
 
-//getters
-t_data  *get_data(void);
-size_t   get_cmd_count(t_data *d);
-t_cmd   *get_cmd(t_data *d, size_t index);
-t_redir *get_redir(t_cmd *cmd, size_t index);
-t_token *get_tok(t_data *d, size_t index);
-t_env   *get_env(t_data *d, size_t index);
-t_quote *get_quote(t_cmd *cmd, size_t index);
+// utilities
+bool				ft_isspace(char c);
+bool				str_cmp(char *s1, char *s2);
+char				*tok_type(t_token_type tok_type);
 
-//utilities
-bool     ft_isspace(char c);
-bool     str_cmp(char *s1, char *s2);
-char    *tok_type(t_token_type tok_type);
+// arena & memory management
+int					arena_init(t_arena *arena, size_t capacity);
+void				*arena_alloc(t_data *d, t_arena *arena, size_t elem_size);
+char				*arena_push(t_arena *arena, char *s, size_t len);
+void				arena_reset(t_arena *arena);
+void				arena_free(t_arena *arena);
 
-//arena & memory management
-int      arena_init(t_arena *arena, size_t capacity);
-void    *arena_alloc(t_data *d, t_arena *arena, size_t elem_size);
-char    *arena_push(t_arena *arena, char *s, size_t len);
-void     arena_reset(t_arena *arena);
-void     arena_free(t_arena *arena);
+void				envp_init(t_data *d, char **envp);
 
-void     envp_init(t_data *d, char **envp);
+// tokenizer
+void				push_word_tok(t_data *d, size_t len, int type,
+						t_buffer *buffer);
+size_t				read_word(t_data *d, t_buffer *buffer, size_t i);
+size_t				read_pipe(t_data *d, size_t i);
+size_t				read_redir_operator(t_data *d, size_t i);
+size_t				read_redir_operator2(t_data *d, size_t i);
+bool				tokenizer(t_data *d);
 
-//tokenizer
-void     push_word_tok(t_data *d, size_t len, int type, t_buffer *buffer);
-size_t	read_word(t_data *d, t_buffer *buffer, size_t i);
-size_t   read_pipe(t_data *d, size_t i);
-size_t   read_redir_operator(t_data *d,  size_t i);
-size_t   read_redir_operator2(t_data *d,  size_t i);
-bool     tokenizer(t_data *d);
+// input reading
+void				read_heredoc_mode(t_data *d, size_t *i, size_t *off,
+						t_buffer *buffer);
+size_t				handle_no_quote(t_data *d, char *buf, size_t i,
+						size_t *off);
+size_t				handle_double_quote(t_data *d, size_t i, size_t *off,
+						t_buffer *buffer);
+size_t				handle_single_quote(t_data *d, size_t i, size_t *off,
+						t_buffer *buffer);
 
-//input reading
-void read_heredoc_mode(t_data *d, size_t *i, size_t *off, t_buffer *buffer);
-size_t handle_no_quote(t_data *d, char *buf, size_t i, size_t *off);
-size_t handle_double_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer);
-size_t handle_single_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer);
+// syntax & parser
+bool				parse_error_msg(char *msg, char *var, int exitcode);
+bool				syntax_validation(t_data *d);
+void				build_vec_cmds(t_data *d);
 
-//syntax & parser
-bool     parse_error_msg(char *msg, char *var, int exitcode);
-bool     syntax_validation(t_data *d);
-void     build_vec_cmds(t_data *d);
+// parser helper
+void				handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd);
+void				handle_redir(t_data *d, t_cmd *cmd, t_token *tok,
+						size_t *i);
+void				is_ambigurous_redir(t_redir *redir);
+void				track_quotes(t_data *d, t_token *tok, t_cmd *cmd);
+size_t				count_words(char const *s);
 
-//parser helper
-void handle_pipe(t_data *d, t_vec *argv, t_cmd *cmd);
-void handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i);
-void is_ambigurous_redir(t_redir *redir);
-void track_quotes(t_data *d, t_token *tok, t_cmd *cmd);
-size_t	count_words(char const *s);
+// expansion
+void				handle_expansion(t_data *d, char *buf, size_t *i,
+						size_t *off);
+bool				expand_in_heredoc(t_redir *redir);
+void				handle_variable(t_data *d, char *buf, size_t *i,
+						size_t *off);
+void				store_var_name(t_data *d, char *tmp, size_t *i, size_t *j);
+bool				bare_dollar(t_data *d, char *buf, size_t *off, size_t *i);
+bool				exit_status(t_data *d, size_t *i, char *buf, size_t *off);
 
-//expansion
-void     handle_expansion(t_data *d, char *buf, size_t *i, size_t *off);
-bool     expand_in_heredoc(t_redir *redir);
-void handle_variable(t_data *d, char *buf,  size_t *i, size_t *off);
-void store_var_name(t_data *d, char *tmp, size_t *i, size_t *j);
-bool bare_dollar( t_data *d, char *buf, size_t *off, size_t *i);
-bool exit_status(t_data *d, size_t *i, char *buf, size_t *off);
+// shell loop
+void				read_the_line(t_data *d, t_shell *shell);
+void				shell_init(t_data *d, t_shell *shell, char **envp);
 
+// clean up
+void				cleanup_line(t_data *d);
+void				cleanup_line_runtime(t_data *d);
+void				cleanup_shell(t_data *d);
+void				destroy_and_exit(t_data *d, char *msg, int exitcode);
 
-//shell loop
-void     read_the_line(t_data *d, t_shell *shell);
-void     shell_init(t_data *d, t_shell *shell, char **envp);
+// execution.c
+void				shell_execution(t_data *d, t_shell *shell);
+t_shell				*ft_shell(void);
 
-//clean up
-void     cleanup_line(t_data *d);
-void     cleanup_line_runtime(t_data *d);
-void     cleanup_shell(t_data *d);
-void     destroy_and_exit(t_data *d, char *msg, int exitcode);
+// checkers.c
+int					check_access(const char *full_path, int *found);
 
-//execution.c
-void    shell_execution(t_data *d, t_shell *shell);
-t_shell *ft_shell(void);
+// cleaners.c
+void				free_array(char **array);
+void				error_smt(void);
+void				free_pipes(t_shell *shell);
+void				free_string(char *str);
 
-//checkers.c
-int	check_access(const char *full_path, int *found);
+// path1.c
+char				*get_command_path(const char *cmd, t_shell *shell);
 
-//cleaners.c
-void	free_array(char **array);
-void    error_smt(void);
-void    free_pipes(t_shell *shell);
-void    free_string(char *str);
+// path.c
+char				*join_paths(const char *dir, const char *cmd);
+char				*search_in_cwd(const char *cmd, t_shell *shell);
 
-//path1.c
-char	*get_command_path(const char *cmd, t_shell *shell);
+// single_command.c
+void				single_command_case(t_data *d, t_shell *shell);
+void				wait_for_all(t_shell *shell);
 
-//path.c
-char	*join_paths(const char *dir, const char *cmd);
-char	*search_in_cwd(const char *cmd, t_shell *shell);
+// utils.c
+int					ft_strcmp(const char *s1, const char *s2);
+void				update_exitcode(int error_code, t_shell *shell);
+char				*get_env_value(t_shell *shell, char *str);
+void				handle_path_error(const char *cmd, t_shell *shell,
+						int found);
 
-//single_command.c
-void    single_command_case(t_data *d, t_shell *shell);
-void    wait_for_all(t_shell *shell);
+// builtins
+void				handle_builtin(int flag, t_cmd *command, t_shell *shell);
+int					check_if_builtin(t_shell *shell, char *command);
+void				builtin_cd(int i, char **command_array, t_shell *shell);
+void				builtin_echo(t_cmd *command, t_shell *shell);
+void				builtin_pwd(t_shell *shell);
+void				builtin_env(t_shell *shell);
+void				builtin_export(t_cmd *cmd, t_shell *shell);
+void				builtin_unset(t_cmd *cmd, t_shell *shell);
+void				update_shell_envp(t_shell *shell);
+void				builtin_exit(t_cmd *cmd, t_shell *shell);
 
-//utils.c
-int ft_strcmp(const char *s1, const char *s2);
-void    update_exitcode(int error_code, t_shell *shell);
-char *get_env_value(t_shell *shell, char *str);
-void handle_path_error(const char *cmd, t_shell *shell, int found);
+// piping.c
+int					create_pipes(t_shell *shell);
+void				handle_pipes(t_shell *shell);
 
-//builtins
-void    handle_builtin(int flag, t_cmd *command, t_shell *shell);
-int 	check_if_builtin(t_shell *shell, char *command);
-void    builtin_cd(int i, char **command_array, t_shell *shell);
-void    builtin_echo(t_cmd *command, t_shell *shell);
-void    builtin_pwd(t_shell *shell);
-void    builtin_env(t_shell *shell);
-void	builtin_export(t_cmd *cmd, t_shell *shell);
-void	builtin_unset(t_cmd *cmd, t_shell *shell);
-void	update_shell_envp(t_shell *shell);
-void	builtin_exit(t_cmd *cmd, t_shell *shell);
+// redirection.c
+void				redirect_child(t_cmd *cmd, t_shell *shell);
 
-//piping.c
-int create_pipes(t_shell *shell);
-void    handle_pipes(t_shell *shell);
+// heredoc.c
+int					handle_heredocs(t_data *d, t_cmd *cmd);
 
-//redirection.c
-void	redirect_child(t_cmd *cmd, t_shell *shell);
+// envp.c
+char				**create_envp_from_data(t_data *data);
 
-//heredoc.c
-int	handle_heredocs(t_data *d, t_cmd *cmd);
-
-//envp.c
-char **create_envp_from_data(t_data *data);
-
-//signals.c
-void	set_prompt_signals(void);
-void	set_parent_wait_signals(void);
-void	set_child_signals(void);
-void 	set_heredoc_signal(void);
-void	heredoc_signal_handler(int g_signal);
+// signals.c
+void				set_prompt_signals(void);
+void				set_parent_wait_signals(void);
+void				set_child_signals(void);
+void				set_heredoc_signal(void);
+void				heredoc_signal_handler(int g_signal);
 
 #endif
+
 /*
 
 Stack (t_data)
@@ -302,12 +321,15 @@ signal(SIGINT, handler)			Handle Ctrl+C
 sigaction(SIGINT, &act, NULL)	More powerful alternative to signal()
 sigemptyset(&set)				Prepare empty signal set
 sigaddset(&set, SIGQUIT)		Add signal to signal set
-kill(pid, SIGTERM)				Send signal to process (used for kill or heredoc)
+kill(pid,
+					SIGTERM)				Send signal to process
+										(used for kill or heredoc)
 
 ----Process Management----
 Used to fork processes, wait for them, and execute commands.
 
-fork()							Creates child process (returns 0 in child, >0 in parent)
+fork()							Creates child process (returns 0 in child,
+								>0 in parent)
 execve(path, argv, envp)		Replaces current process with another program
 exit(status)					Terminates current process
 wait(&status)					Waits for any child

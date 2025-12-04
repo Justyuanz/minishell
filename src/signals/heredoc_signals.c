@@ -1,6 +1,18 @@
-#include"minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_signals.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 15:43:23 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/12/04 15:43:26 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void hd_signal_handler(int sig)
+#include "minishell.h"
+
+void	hd_signal_handler(int sig)
 {
 	g_signal = sig;
 	if (sig == SIGINT)
@@ -17,7 +29,8 @@ int	heredoc_event_hook(void)
 	}
 	return (0);
 }
-void set_heredoc_signal(void)
+
+void	set_heredoc_signal(void)
 {
 	struct sigaction	sa;
 

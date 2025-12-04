@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:20:53 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:25:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:32:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ size_t	handle_single_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer)
 {
 	if (!d->line[i])
 		return (i);
-	buffer->quotes.single_ON = true;
+	buffer->quotes.single_on = true;
 	i++;
 	while (d->line[i] && d->line[i] != '\'')
 	{
@@ -35,7 +35,7 @@ size_t	handle_double_quote(t_data *d, size_t i, size_t *off, t_buffer *buffer)
 {
 	if (!d->line[i])
 		return (i);
-	buffer->quotes.double_ON = true;
+	buffer->quotes.double_on = true;
 	i++;
 	while (d->line[i] && d->line[i] != '"')
 	{
@@ -79,7 +79,7 @@ void	read_heredoc_mode(t_data *d, size_t *i, size_t *off, t_buffer *buffer)
 {
 	if (d->line[*i] == '"')
 	{
-		buffer->quotes.double_ON = true;
+		buffer->quotes.double_on = true;
 		(*i)++;
 		while (d->line[*i] && d->line[*i] != '"')
 		{

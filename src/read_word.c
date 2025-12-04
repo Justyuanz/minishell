@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:25:33 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:32:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ size_t	read_word(t_data *d, t_buffer *buffer, size_t i)
 		else
 			buffer->buf[off++] = d->line[i++];
 	}
-	if (off > 0 || buffer->quotes.single_ON == true
-		|| buffer->quotes.double_ON == true)
+	if (off > 0 || buffer->quotes.single_on == true
+		|| buffer->quotes.double_on == true)
 		push_word_tok(d, off, WORD, buffer);
 	d->heredoc_skip = 0;
 	return (i);

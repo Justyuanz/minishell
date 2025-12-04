@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:05:27 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:09:13 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:32:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	track_quotes(t_data *d, t_token *tok, t_cmd *cmd)
 
 void	is_ambigurous_redir(t_redir *redir)
 {
-	if (!redir->quote.single_ON && !redir->quote.double_ON)
+	if (!redir->quote.single_on && !redir->quote.double_on)
 	{
 		if (count_words(redir->file) > 1)
 		{

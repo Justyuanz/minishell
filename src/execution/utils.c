@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 15:55:42 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:41:50 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	int	i;
 
 	if (!s1 || !s2)
-		return(0);
+		return (0);
 	i = 0;
 	while (s1[i] == s2[i] && (s1[i] != '\0' || s2[i] != '\0'))
 		i++;
