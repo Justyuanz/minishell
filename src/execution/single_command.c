@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 15:42:30 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 19:18:56 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,11 @@
 void	check_wait_status(t_shell *shell, int *nl_flag)
 {
 	int	status;
-	//int	signal;
 
 	status = 127;
 	waitpid(-1, &status, 0);
 	if (WIFSIGNALED(status))
 	{
-		//signal = WTERMSIG(status);
-		//shell->exitcode = signal + 128;
 		shell->exitcode = 0;
 		if (WTERMSIG(status) == SIGINT)
 		{
@@ -30,8 +27,6 @@ void	check_wait_status(t_shell *shell, int *nl_flag)
 				write(1, "\n", 1);
 			*nl_flag = 1;
 		}
-		// if (signal != SIGPIPE)
-		//	return ;  //should not return here
 	}
 	if (WIFEXITED(status))
 		update_exitcode(WEXITSTATUS(status), shell);
@@ -83,7 +78,10 @@ int	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	if (hd_ret == 1)
 		shell->exitcode = 1;
 	else if (hd_ret == 130)
+	{
+		shell->exitcode = 130;
 		return (130);
+	}
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
 		error_smt();
@@ -121,10 +119,7 @@ void	single_command_case(t_data *d, t_shell *shell)
 			handle_builtin(flag, cmd, shell);
 		}
 		else if (handle_single_command(d, cmd, shell) == 130)
-		{
-			shell->exitcode = 130;
 			return ;
-		}
 	}
 	dup2(savestdout, STDOUT_FILENO);
 	dup2(savestdin, STDIN_FILENO);

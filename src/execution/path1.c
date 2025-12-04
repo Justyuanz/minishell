@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:40 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:30:42 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:33:42 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,14 @@ static char	*check_command(const char *cmd, t_shell *shell)
 {
 	struct stat	path_stat;
 
-	if (stat(cmd, &path_stat) != 0)
-		// This function retrieves information about cmd
+	if (stat(cmd, &path_stat) != 0) // This function retrieves info about cmd
 	{
 		update_exitcode(127, shell);
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		return (NULL);
 	}
-	if (S_ISDIR(path_stat.st_mode))
-		// Macro that checks if the file is a directory
+	if (S_ISDIR(path_stat.st_mode)) // Macro checks if file is a directory
 	{
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": Is a directory\n", 2);
