@@ -122,7 +122,8 @@ void	shell_execution(t_data *d, t_shell *shell)
 	shell->command_index = command_count;
 	if (create_pids(shell, command_count))
 	{
-		printf("pids creation failed \n");
+		update_exitcode(1, shell);
+		ft_putstr_fd("pids creation failed \n", 2);
 		return ;
 	}
 	if (command_count == 1)
@@ -132,7 +133,11 @@ void	shell_execution(t_data *d, t_shell *shell)
 	else
 	{
 		if (create_pipes(shell) == -1)
-			printf("pipe creation failed \n");
+		{
+			update_exitcode(1, shell);
+			ft_putstr_fd("pipe arr call failed\n", 2);
+			return ;
+		}
 		if (handle_command(d, shell, command_count) == 130)
 		{
 			wait_for_all(shell);

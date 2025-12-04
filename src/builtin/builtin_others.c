@@ -16,11 +16,10 @@ void	builtin_pwd(t_shell *shell)
 {
 	char	cwd[1000000];
 
-	// not sure if it's perfect but seems to be working
-	// error handling?
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		printf("error, cwd");
+		ft_putstr_fd("pwd: error retrieving current directory", 2);
+		update_exitcode(1, shell);
 		return ;
 	}
 	printf("%s\n", cwd);
@@ -35,7 +34,7 @@ void	builtin_env(t_shell *shell)
 
 	i = 0;
 	cmd = get_cmd(shell->data, shell->index);
-	if (shell->data->vec_tok.len > 1)
+	if (cmd->argv[1] != NULL)
 	{
 		ft_putstr_fd("env: ", 2);
 		ft_putstr_fd((char *)cmd->argv[1], 2);
