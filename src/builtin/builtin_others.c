@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:29:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:29:18 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 19:15:46 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	builtin_env(t_shell *shell)
 {
 	t_env	*env;
 	size_t	i;
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	i = 0;
 	cmd = get_cmd(shell->data, shell->index);
@@ -133,5 +133,5 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 	}
 	update_shell_envp(shell);
 	update_exitcode(exit_code, shell);
-	//shell->exitcode = exit_code;
+	// shell->exitcode = exit_code;
 }

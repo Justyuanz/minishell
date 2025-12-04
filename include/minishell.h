@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 15:34:19 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/04 19:40:05 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,6 +265,9 @@ void				redirect_child(t_cmd *cmd, t_shell *shell);
 
 // heredoc.c
 int					handle_heredocs(t_data *d, t_cmd *cmd);
+
+// heredoc_input.c
+int					read_heredoc_input(t_data *d, const char *delimiter, const char *filename, t_redir *redir);
 
 // envp.c
 char				**create_envp_from_data(t_data *data);
