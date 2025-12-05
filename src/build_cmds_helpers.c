@@ -49,13 +49,13 @@ void	is_ambigurous_redir(t_redir *redir)
 		if (count_words(redir->file) > 1)
 		{
 			redir->is_ambiguous = true;
-			parse_error_msg(ERROR_MSG_AMBIGUOUS, redir->file, 1);
+			//parse_error_msg(ERROR_MSG_AMBIGUOUS, redir->file, 1);
 		}
 	}
 	if (!redir->file || redir->file[0] == '\0')
 	{
 		redir->is_ambiguous = true;
-		parse_error_msg(ERROR_MSG_AMBIGUOUS, redir->file, 1);
+		//parse_error_msg(ERROR_MSG_AMBIGUOUS, redir->file, 1);
 	}
 }
 

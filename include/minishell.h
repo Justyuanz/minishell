@@ -16,10 +16,11 @@
 # include "libft.h"
 # include "vec.h"
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+//# include <stdio.h>
 # include <signal.h>
-# include <stdio.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -130,6 +131,9 @@ typedef struct s_shell
 	int				**pipe_array;
 	int				pipes_count;
 	char			**envp;
+	bool			is_amb;
+	int				savestdout;
+	int				savestdin;
 	t_data			*data;
 }					t_shell;
 
@@ -226,7 +230,6 @@ int					check_access(const char *full_path, int *found);
 
 // cleaners.c
 void				free_array(char **array);
-void				error_smt(void);
 void				free_pipes(t_shell *shell);
 void				free_string(char *str);
 

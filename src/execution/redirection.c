@@ -55,6 +55,15 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 	while (i < cmd->redirs.len)
 	{
 		redir = get_redir(cmd, i);
+		if (redir->is_ambiguous == true)
+		{
+			//ft_putstr_fd("HERE\n", 2);
+			//ft_putstr_fd((char *)redir->file, 2);
+			ft_putstr_fd("ambiguous redirection\n", 2);
+			shell->is_amb = true;
+			update_exitcode(1, shell);
+			return ;
+		}
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
 		{
 			if (redir_in(redir, shell))

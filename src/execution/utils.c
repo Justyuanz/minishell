@@ -24,11 +24,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (s1[i] - s2[i]);
 }
 
-void	error_smt(void)
-{
-	printf("\n\nHello world!");
-}
-
 void	update_exitcode(int error_code, t_shell *shell)
 {
 	if (shell->command_index < 2 || shell->index == shell->command_index)

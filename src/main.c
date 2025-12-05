@@ -14,13 +14,23 @@
 
 void	read_the_line(t_data *d, t_shell *shell)
 {
+	int i;
+
+	i = 0;
 	d->line = readline("minishell$ ");
 	if (!d->line)
+	{
+		while (shell->envp[i])
+		{
+			free(shell->envp[i]);
+			i++;
+		}
+		free(shell->envp);
 		destroy_and_exit(d, NULL, 0);
+	}
 	if (*d->line)
 	{
 		add_history(d->line);
-		set_prompt_signals();
 		if (tokenizer(d))
 		{
 			if (syntax_validation(d))
@@ -44,6 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	d = get_data();
 	shell = ft_shell();
 	shell_init(d, shell, envp);
+	set_prompt_signals();
 	while (1)
 		read_the_line(d, shell);
 	cleanup_shell(d);
