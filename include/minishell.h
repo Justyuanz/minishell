@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:29:54 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/05 23:24:35 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ typedef enum e_token_type
 	APPEND,
 	REDIR_OUT,
 	HEREDOC,
-	ENV,
-	EXPAND
 }					t_token_type;
 
 typedef enum e_builtin_type
@@ -118,6 +116,7 @@ typedef struct s_data
 	t_quote			quote;
 	int				heredoc_skip;
 	int				unclosed_quote;
+	int				expanded_empty;
 }					t_data;
 
 typedef struct s_shell

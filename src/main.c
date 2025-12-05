@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 22:56:36 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/06 00:55:18 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,12 @@ void	read_the_line(t_data *d, t_shell *shell)
 		add_history(d->line);
 		if (tokenizer(d))
 		{
+			printf("tknzr done\n");
 			if (syntax_validation(d))
 			{
+				printf("syntax check done\n");
 				build_vec_cmds(d);
+				printf("build cmd done\n");
 				shell_execution(d, shell);
 			}
 		}

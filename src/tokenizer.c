@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:26:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 15:40:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/05 23:51:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,6 @@ char	*tok_type(t_token_type tok_type)
 		return ("REDIR_OUT");
 	else if (tok_type == HEREDOC)
 		return ("HEREDOC");
-	else if (tok_type == ENV)
-		return ("ENV");
-	else if (tok_type == EXPAND)
-		return ("EXPAND");
 	return ("no type");
 }
 
