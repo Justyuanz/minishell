@@ -38,6 +38,7 @@ static int	handle_single_heredoc(t_data *d, t_redir *redir, int count)
 		return (1);
 	delim = ft_strdup(redir->file);
 	redir->file = filename;
+	free (filename);
 	hd_ret = read_heredoc_input(d, delim, redir->file, redir);
 	free(delim);
 	set_prompt_signals();

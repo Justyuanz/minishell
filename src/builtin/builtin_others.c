@@ -18,7 +18,7 @@ void	builtin_pwd(t_shell *shell)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		ft_putstr_fd("pwd: error retrieving current directory", 2);
+		ft_putstr_fd("pwd: error retrieving current directory\n", 2);
 		update_exitcode(1, shell);
 		return ;
 	}

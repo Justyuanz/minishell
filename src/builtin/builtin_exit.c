@@ -14,6 +14,13 @@
 
 void	final_exit(t_shell *shell, int exit_number)
 {
+	int i = 0;
+	while (shell->envp[i])
+	{
+		free(shell->envp[i]);
+		i++;
+	}
+	free(shell->envp);
 	if (shell->pids)
 	{
 		free(shell->pids);
@@ -21,6 +28,10 @@ void	final_exit(t_shell *shell, int exit_number)
 	}
 	if (shell->command_index > 1)
 		free_pipes(shell);
+	cleanup_line_runtime(shell->data);
+	close(shell->savestdout);
+	close(shell->savestdin);
+	destroy_and_exit(shell->data, NULL, 0);
 	exit(exit_number);
 }
 
@@ -61,7 +72,7 @@ void	builtin_exit(t_cmd *cmd, t_shell *shell)
 		final_exit(shell, shell->exitcode);
 	if (is_exit_digit(cmd->argv[1]))
 	{
-		exit_number = 255;
+		exit_number = 2;
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(cmd->argv[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);

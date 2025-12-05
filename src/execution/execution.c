@@ -45,8 +45,19 @@ static bool	execute_pipeline(t_data *d, t_shell *shell, int command_count)
 		free_pipes(shell);
 		return (false);
 	}
+
 	wait_for_all(shell);
+	free_pipes(shell);
 	return (true);
+}
+
+void cleanup_parent(t_shell *shell)
+{
+	if (shell->pids)
+	{
+		free(shell->pids);
+		shell->pids = NULL;
+	}
 }
 
 void	shell_execution(t_data *d, t_shell *shell)
@@ -54,6 +65,7 @@ void	shell_execution(t_data *d, t_shell *shell)
 	int	command_count;
 
 	shell->index = 0;
+	shell->is_amb = false;
 	command_count = shell->data->vec_cmds.len;
 	shell->pipes_count = command_count - 1;
 	shell->command_index = command_count;
@@ -70,6 +82,6 @@ void	shell_execution(t_data *d, t_shell *shell)
 		if (!execute_pipeline(d, shell, command_count))
 			return ;
 	}
-	// cleanup_parent(shell);
+	cleanup_parent(shell);
 	shell->command_index = 0;
 }

@@ -25,7 +25,7 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 			cmd_path = NULL;
 		}
 	}
-	// cleanup_child(shell);
+	//cleanup_child(shell);
 	exit(shell->exitcode);
 }
 
@@ -48,9 +48,11 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 	if (shell->pids[shell->index] == 0)
 	{
 		set_child_signals();
-		handle_pipes(shell);
+		handle_pipes(shell);	
 		if (cmd->redirs.len > 0) // moved this from handle_execution
 			redirect_child(cmd, shell);
+		if (shell->is_amb == true)
+				exit(shell->exitcode);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
 		{
@@ -75,6 +77,7 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 	shell->index = 0;
 	while (shell->index < command_count)
 	{
+		shell->is_amb = false;
 		cmd = get_cmd(shell->data, shell->index);
 		if (cmd->argv)
 		{

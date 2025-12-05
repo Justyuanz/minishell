@@ -84,7 +84,10 @@ int	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	}
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
-		error_smt();
+	{
+		update_exitcode(1, shell);
+		ft_putstr_fd("fork call failed\n", 2);
+	}
 	if (shell->pids[0] == 0)
 	{
 		set_child_signals();
@@ -103,11 +106,9 @@ void	single_command_case(t_data *d, t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
-	int		savestdout;
-	int		savestdin;
 
-	savestdout = dup(STDOUT_FILENO);
-	savestdin = dup(STDIN_FILENO);
+	shell->savestdout = dup(STDOUT_FILENO);
+	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
@@ -116,12 +117,15 @@ void	single_command_case(t_data *d, t_shell *shell)
 		{
 			if (cmd->redirs.len > 0)
 				redirect_child(cmd, shell);
+			if (shell->is_amb == true)
+				return;
 			handle_builtin(flag, cmd, shell);
 		}
 		else if (handle_single_command(d, cmd, shell) == 130)
 			return ;
 	}
-	dup2(savestdout, STDOUT_FILENO);
-	dup2(savestdin, STDIN_FILENO);
-	close(savestdout);
+	dup2(shell->savestdout, STDOUT_FILENO);
+	dup2(shell->savestdin, STDIN_FILENO);
+	close(shell->savestdout);
+	close(shell->savestdin);
 }
