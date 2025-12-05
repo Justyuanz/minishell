@@ -68,10 +68,7 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 		value = ft_strdup(equal_sign + 1);
 	}
 	else
-	{
-		key = ft_strdup(arg);
-		value = NULL;
-	}
+		return (0);
 	if (!key)
 		return (1);
 	i = 0;
