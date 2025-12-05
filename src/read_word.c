@@ -6,16 +6,16 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/06 00:53:44 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/06 01:05:19 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_redir(int type)
-{
-	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
-}
+// static bool	is_redir(int type)
+// {
+// 	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
+// }
 size_t	read_word(t_data *d, t_buffer *buffer, size_t i)
 {
 	size_t	off;
@@ -44,8 +44,8 @@ size_t	read_word(t_data *d, t_buffer *buffer, size_t i)
 	if (off > 0 || buffer->quotes.single_on == true
 		|| buffer->quotes.double_on == true)
 		push_word_tok(d, off, WORD, buffer);
-	else if (d->expanded_empty == 1 && last_tok && is_redir(last_tok->type))
-    	push_word_tok(d, 0, WORD, buffer);
+	// else if (d->expanded_empty == 1 && last_tok && is_redir(last_tok->type))
+    // 	push_word_tok(d, 0, WORD, buffer);
 	d->heredoc_skip = 0;
 	d->expanded_empty = 0;
 	return (i);
