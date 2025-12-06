@@ -52,7 +52,7 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		if (cmd->redirs.len > 0) // moved this from handle_execution
 			redirect_child(cmd, shell);
 		if (shell->is_amb == true)
-				exit(shell->exitcode);
+			exit(shell->exitcode);
 		flag_builtin = check_if_builtin(shell, cmd->argv[0]);
 		if (flag_builtin != 0)
 		{

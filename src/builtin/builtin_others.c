@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-void	builtin_pwd(t_shell *shell)
-{
-	char	cwd[1000000];
-
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		ft_putstr_fd("pwd: error retrieving current directory\n", 2);
-		update_exitcode(1, shell);
-		return ;
-	}
-	printf("%s\n", cwd);
-	update_exitcode(0, shell);
-}
-
 void	builtin_env(t_shell *shell)
 {
 	t_env	*env;
@@ -75,14 +61,12 @@ static void	remove_env_var(t_shell *shell, const char *key)
 	size_t	i;
 	t_env	*last;
 
-	i = 0;
-	while (i < shell->data->vec_env.len)
+	i = -1;
+	while (++i < shell->data->vec_env.len)
 	{
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
 		if (env_var && ft_strcmp(env_var->key, key) == 0)
 		{
-			// free(env_var->key);
-			// free(env_var->value);
 			if (i < shell->data->vec_env.len - 1)
 			{
 				last = (t_env *)vec_get(&shell->data->vec_env,
@@ -93,14 +77,10 @@ static void	remove_env_var(t_shell *shell, const char *key)
 				last->value = NULL;
 			}
 			else
-			{
-				env_var->key = NULL;
-				env_var->value = NULL;
-			}
+				env_to_null(env_var);
 			shell->data->vec_env.len--;
 			return ;
 		}
-		i++;
 	}
 }
 
@@ -115,8 +95,8 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 		return ;
 	}
 	exit_code = 0;
-	i = 1;
-	while (cmd->argv[i])
+	i = 0;
+	while (cmd->argv[++i])
 	{
 		if (!is_valid_unset_identifier(cmd->argv[i]))
 		{
@@ -126,12 +106,8 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 			exit_code = 1;
 		}
 		else
-		{
 			remove_env_var(shell, cmd->argv[i]);
-		}
-		i++;
 	}
 	update_shell_envp(shell);
 	update_exitcode(exit_code, shell);
-	// shell->exitcode = exit_code;
 }

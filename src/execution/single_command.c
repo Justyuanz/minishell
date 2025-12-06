@@ -70,18 +70,9 @@ void	execute_single_command(t_shell *shell)
 	exit(shell->exitcode);
 }
 
-int	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
+int	handle_single_command(t_shell *shell)
 {
-	int	hd_ret;
 
-	hd_ret = handle_heredocs(d, cmd);
-	if (hd_ret == 1)
-		shell->exitcode = 1;
-	else if (hd_ret == 130)
-	{
-		shell->exitcode = 130;
-		return (130);
-	}
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
 	{
@@ -101,7 +92,20 @@ int	handle_single_command(t_data *d, t_cmd *cmd, t_shell *shell)
 	}
 	return (0);
 }
+int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell)
+{
+	int hd_ret;
 
+	hd_ret = handle_heredocs(d, cmd);
+	if (hd_ret == 1)
+		shell->exitcode = 1;
+	else if (hd_ret == 130)
+	{
+		shell->exitcode = 130;
+		return (1);
+	}
+	return (0);
+}
 void	single_command_case(t_data *d, t_shell *shell)
 {
 	int		flag;
@@ -112,17 +116,19 @@ void	single_command_case(t_data *d, t_shell *shell)
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
+		if (heredoc_stuff(d, cmd, shell) != 0)
+			return ;
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
 			if (cmd->redirs.len > 0)
 				redirect_child(cmd, shell);
 			if (shell->is_amb == true)
-				return;
+				return ;
 			handle_builtin(flag, cmd, shell);
 		}
-		else if (handle_single_command(d, cmd, shell) == 130)
-			return ;
+		else 
+			handle_single_command(shell);
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
 	dup2(shell->savestdin, STDIN_FILENO);

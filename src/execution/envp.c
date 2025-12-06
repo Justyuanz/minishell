@@ -12,12 +12,51 @@
 
 #include "minishell.h"
 
+static char	*create_env_entry(t_env *env)
+{
+	char	*temp;
+	char	*result;
+
+	if (!env || !env->key || !env->value)
+		return (NULL);
+	temp = ft_strjoin(env->key, "=");
+	if (!temp)
+		return (NULL);
+	result = ft_strjoin(temp, env->value);
+	free(temp);
+	return (result);
+}
+
+static void	cleanup_partial_envp(char **envp, size_t current_idx)
+{
+	while (current_idx > 0)
+		free(envp[--current_idx]);
+	free(envp);
+}
+
+static bool	process_env_entry(t_data *data, char **envp, size_t i)
+{
+	t_env	*env;
+	char	*entry;
+
+	env = get_env(data, i);
+	entry = create_env_entry(env);
+	if (entry)
+	{
+		envp[i] = entry;
+		return (true);
+	}
+	else
+	{
+		envp[i] = NULL;
+		return (!env || !env->key || !env->value);
+	}
+}
+
 char	**create_envp_from_data(t_data *data)
 {
 	char	**envp;
 	size_t	i;
-	t_env	*env;
-	char	*temp;
 
 	if (!data || data->vec_env.len == 0)
 		return (NULL);
@@ -27,33 +66,11 @@ char	**create_envp_from_data(t_data *data)
 	i = 0;
 	while (i < data->vec_env.len)
 	{
-		env = get_env(data, i);
-		if (env && env->key && env->value)
+		if (!process_env_entry(data, envp, i))
 		{
-			envp[i] = ft_strjoin(env->key, "=");
-			if (envp[i])
-			{
-				temp = envp[i];
-				envp[i] = ft_strjoin(temp, env->value);
-				free(temp);
-				if (!envp[i])
-				{
-					while (i > 0)
-						free(envp[--i]);
-					free(envp);
-					return (NULL);
-				}
-			}
-			else
-			{
-				while (i > 0)
-					free(envp[--i]);
-				free(envp);
-				return (NULL);
-			}
+			cleanup_partial_envp(envp, i);
+			return (NULL);
 		}
-		else
-			envp[i] = NULL;
 		i++;
 	}
 	envp[data->vec_env.len] = NULL;

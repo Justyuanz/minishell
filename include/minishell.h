@@ -262,6 +262,12 @@ void				builtin_export(t_cmd *cmd, t_shell *shell);
 void				builtin_unset(t_cmd *cmd, t_shell *shell);
 void				update_shell_envp(t_shell *shell);
 void				builtin_exit(t_cmd *cmd, t_shell *shell);
+int	is_valid_identifier(const char *str);
+void	print_exported_vars(t_shell *shell);
+int	update_env_var(t_shell *shell, char *key, t_env *env_var, char *value);
+int add_env_var(t_shell *shell, char *key, t_env *env_var, char *value);
+void env_to_null(t_env *env);
+int export_argv(t_cmd *cmd, t_shell *shell);
 
 // piping.c
 int					create_pipes(t_shell *shell);
