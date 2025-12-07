@@ -6,13 +6,11 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:28:40 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/01 14:49:15 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/07 15:55:07 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// need to think about possible errors here
 
 void	print_echo(char **array, int i)
 {

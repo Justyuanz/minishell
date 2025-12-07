@@ -1,0 +1,141 @@
+- `echo hello | >file | rev` file gets created but rev gets no input
+- `ls | ls | ls` only shows the output of the last ls (because the previous ones go to the pipe instead of the terminal and ls doesn't care about stdin)
+
+# someone
+
+- `<out <file >one >two`, so there doesn't need to be any commands, this will create the files one and two
+- `echo -nnnnn hi -nnnnn`, the later -nnn will be treated as text and not as a flag
+- we should be prepared to hande an empty environment
+- `echo '$'$'$'` vs `echo 'a'a'a'`
+
+# johnny
+
+- multiple heredocs on one line `cat << h << h`
+- trying to expand a missing variable, trying to write to a missing variable `echo hello >> $not_there`
+- `'"'"`  is unclosed
+- `'"$USER"'` `"'$USER'"`
+- `mkdir 1/2/3 && cd 1/2/3 && rm ../../1`
+- `env -i ./minishell` empties the environment
+- `export a b c d e`
+- `export a=`
+- `export a=''`
+- `echo hello "" something`
+- redirection with nothing
+- `> file`
+- `export ARG='o hello'` `ech$ARG`
+
+```bash
+cat << eof
+$USER
+'$USER'
+"$USER"
+eof
+```
+
+```bash
+cat << "eof"
+$USER
+'$USER'
+"$USER"
+eof
+```
+
+"bash does one level of quote removal per token"
+
+```bash
+export = abc
+export += dfe
+```
+
+- export shows empty variables, env doesn't, export is sorted env is not
+- `unset a b c d`
+- env variable can't start with a number, can start with letter or underscore, anyways figure out which characters are allowed
+- `cat | cat | ls` waits for two cats to take input (the pipes get closed from right to left) study SIGPIPE, this case might look like it leaks
+- `cat | echo hello | ls`
+- `cd ""test` `cd "" test`
+- `>|` or other two operators next to each other should be a syntax error
+
+
+`tests.sh | ./minishell` works if you use readline instead of get next line?
+
+- `exit abc abc`, `exit 1 abc`, `exit abc 1`, check exit codes
+- `^C`, `echo &?`
+- the different error codes for all different weird stuff
+    - `./minishell/`
+    - `./src`
+    - `arstsrtsratsr`
+- `echo hello""''world`
+- `echo hello"''"''world` (only one level get removed) 
+- `echo $USER$HOME`, `echo $USER$NOT_THERE` `echo $USERa$NOT_THEREa`
+- `unset PWD`
+- `unset PATH`
+- `sleep 1 | sleep 2 | sleep 3` should take 3 sec
+- `sleep 1 | arstarstra | sleep 1` error code is 0, the error code is the rightmost process, not the one that finishes last
+- `echo -nnnN hello`
+- `echo - hello`
+- always check for open file descriptors
+- ctrl + D in middle of heredoc complains but doesn't give an error code
+- `../../bin/ls`
+
+
+# boris
+
+- more than 16x `<< EOF` in a row, vs first just `echo` then `<< EOF`
+
+"quote expansion happens at the late stage"
+"make sure it doesn't crash or leak, then differences to bash can be argued"
+
+- `export DOG="aaaaa       bbbbbb"`
+- `export DOG="       echo       aaaaa"`
+
+- `exit hello`, `exit 5 5` exit is 1 only if it was 0 earlier (don't need to implement this)
+- `mkdir -p 1/2/3`, go to innermost dir, remove 2, you can still go .. (`1/2/3/..`) and then ..
+    - chdir() does this for you but make sure it doesn't crash or leak
+- `echo $`
+
+
+when tokenizing, the rules are different depending on if you are inside quotes or not
+
+# yutong
+
+- `cat <file|grep NAME`
+- `cat "<file"` 
+- `echo hello >file1 <file2 >file3`
+
+
+# johannes
+
+- `<< EOF <<|`, `<<EOF <<EOF2 <<|` give syntax error but still let you complete the `EOF`
+- pipe has a character limit, heredoc doesn't (insert many characters with ctrl + option + numbers)
+- a variable that has a value shows both in env and export but one without shows only in export
+- be aware of `$_` even though you don't need to implement it
+- running just `""` is command not found but `$MISSING` does nothing (and doesn't crash)
+- `cd ""` does nothing, `cd "" ""` is too many arguments, `cd """"` does nothing, but! `cd $MISSING` is the same as `cd`
+- `cd ////`
+- `yes "echo blaa" | bash | head -n 10`, when head finishes, the pipe closes, resulting in sigpipe (but there was something in this that we don't need to worry about)
+- `<<"EOF"` is the same as `<<""EOF` (stuff doesn't get expanded)
+- `>file | <file | >file` sometimes gives problems sometimes not, depending on what order things happen to get done each time
+
+```bash
+export a=blaa two="blaa blaa"  # multiple assignments on one command
+<$two                          # (ambiguous redirect more words than one)
+ls | <$two | ls
+ls | $nothing | ls             # ambiguous redirect but still ls runs
+ls | < | ls                    # syntax error, ls does not run
+
+export empty=
+<$empty                        # (ambiguous redirect less words than one)
+```
+
+- `echo $+` returns `$+`
+- `$` vs `$$EMPTY`
+- if the error code is not 0 and exit exits, it won't change the error code even if for example you give too many arguments, but if it's 0 then it does change the code on an error of the exit command (this makes sense in a way, that it thinks that the error code before the exit is more important than the error code of the exit)
+- what happens when you try to do stuff with a file with `chmod 000` permissions
+    - `<file`
+    - `>file`
+    - `ls | >file`
+    - `ls | <file`
+    - `ls | <file >file`
+    - the error codes for these are wonky, but you probably shouldn't replicate them but instead do what would make sense
+big-list-of-tests.md
+6 KB
