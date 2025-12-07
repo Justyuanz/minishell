@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:00 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/07 22:09:31 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/07 23:23:20 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	check_end_with_redirs(t_data *d, size_t i)
 
 	tok = get_tok(d, i);
 	if ((tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND
-			|| tok->type == HEREDOC) && i + 1 == d->vec_tok.len)
+			|| tok->type == HEREDOC) && get_tok(d, i + 1)->type != EMPTY_WORD)
 		return (parse_error_msg(SYNTAX_ERROR_NEWLINE, NULL, 2));
 	return (true);
 }
@@ -44,7 +44,7 @@ static bool	check_redir_sequence(t_data *d)
 		next_tok = get_tok(d, i + 1);
 		if (tok->type == REDIR_IN || tok->type == REDIR_OUT
 			|| tok->type == APPEND || tok->type == HEREDOC)
-			if (next_tok->type != WORD)
+			if (!(next_tok->type == WORD || next_tok->type == EMPTY_WORD))
 				return (parse_error_msg(SYNTAX_ERROR_REDIR, next_tok->str, 2));
 		i++;
 	}
@@ -65,8 +65,10 @@ static bool	check_pipe_sequence(t_data *d)
 		tok = get_tok(d, i);
 		next_tok = get_tok(d, i + 1);
 		if (tok->type == PIPE)
+		{
 			if (next_tok->type == PIPE)
 				return (parse_error_msg(SYNTAX_ERROR_PIPE, NULL, 2));
+		}
 		i++;
 	}
 	return (true);
