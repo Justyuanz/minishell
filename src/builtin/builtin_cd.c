@@ -89,8 +89,6 @@ void	builtin_cd(int i, char **command_array, t_shell *shell)
 		if (chdir(command_array[1]) == -1)
 		{
 			free_string(old_pwd);
-			// ft_putstr_fd("No such file or directory\n", 2);
-			// update_exitcode(1, shell);
 			return (error_cd(2, shell));
 		}
 	}

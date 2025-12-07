@@ -31,8 +31,7 @@ void	final_exit(t_shell *shell, int exit_number)
 	cleanup_line_runtime(shell->data);
 	close(shell->savestdout);
 	close(shell->savestdin);
-	destroy_and_exit(shell->data, NULL, 0);
-	exit(exit_number);
+	destroy_and_exit(shell->data, NULL, exit_number);
 }
 
 int	is_exit_digit(char *exit_str)
