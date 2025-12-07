@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:00 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/28 19:06:05 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/07 22:09:31 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	check_end_with_redirs(t_data *d, size_t i)
 
 	tok = get_tok(d, i);
 	if ((tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND
-			|| tok->type == HEREDOC))
+			|| tok->type == HEREDOC) && i + 1 == d->vec_tok.len)
 		return (parse_error_msg(SYNTAX_ERROR_NEWLINE, NULL, 2));
 	return (true);
 }
