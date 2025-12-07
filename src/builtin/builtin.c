@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+int export_argv(t_cmd *cmd, t_shell *shell)
+{
+	if (!cmd->argv[1])
+	{
+		print_exported_vars(shell);
+		shell->exitcode = 0;
+		return (1);
+	}
+	return (0);
+}
+
+void env_to_null(t_env *env)
+{
+	env->key = NULL;
+	env->value = NULL;
+}
+
 int	check_if_builtin(t_shell *shell, char *command)
 {
 	if (!command)

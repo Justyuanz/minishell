@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:28:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/05 23:30:53 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/07 15:28:51 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	final_exit(t_shell *shell, int exit_number)
 	close(shell->savestdout);
 	close(shell->savestdin);
 	destroy_and_exit(shell->data, NULL, exit_number);
-	exit(exit_number);
 }
 
 int	is_exit_digit(char *exit_str)

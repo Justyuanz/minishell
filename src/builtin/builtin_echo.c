@@ -45,3 +45,17 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 		write(1, "\n", 1);
 	update_exitcode(0, shell);
 }
+
+void	builtin_pwd(t_shell *shell)
+{
+	char	cwd[1000000];
+
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		ft_putstr_fd("pwd: error retrieving current directory\n", 2);
+		update_exitcode(1, shell);
+		return ;
+	}
+	printf("%s\n", cwd);
+	update_exitcode(0, shell);
+}
