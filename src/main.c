@@ -6,28 +6,18 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/06 01:49:48 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 09:43:50 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
 void	read_the_line(t_data *d, t_shell *shell)
 {
-	int i;
-
-	i = 0;
 	d->line = readline("minishell$ ");
 	if (!d->line)
-	{
-		while (shell->envp[i])
-		{
-			free(shell->envp[i]);
-			i++;
-		}
-		free(shell->envp);
-		destroy_and_exit(d, NULL, 0);
-	}
+		eof_cleanup(d, shell);
 	if (*d->line)
 	{
 		add_history(d->line);
