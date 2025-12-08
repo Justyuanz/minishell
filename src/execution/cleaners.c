@@ -61,3 +61,12 @@ void	free_string(char *str)
 	free(str);
 	str = NULL;
 }
+
+void	close_parent_pipes(t_shell *shell)
+{
+	if (shell->index > 0 && shell->pipe_array[shell->index - 1])
+		close(shell->pipe_array[shell->index - 1][0]);
+	if (shell->index < shell->command_index - 1
+		&& shell->pipe_array[shell->index])
+		close(shell->pipe_array[shell->index][1]);
+}

@@ -14,9 +14,9 @@
 
 static bool	is_redir(int type)
 {
- 	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
+	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
 }
- 
+
 static void push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)
 {
 	t_token *last_tok;

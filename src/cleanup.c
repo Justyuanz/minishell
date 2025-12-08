@@ -73,7 +73,7 @@ void	cleanup_line_runtime(t_data *d)
 
 void	eof_cleanup(t_data *d, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (shell->envp[i])

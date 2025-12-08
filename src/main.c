@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 void	read_the_line(t_data *d, t_shell *shell)
 {
 	d->line = readline("minishell$ ");

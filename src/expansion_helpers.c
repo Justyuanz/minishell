@@ -74,14 +74,15 @@ void	store_var_name(t_data *d, char *tmp, size_t *i, size_t *j)
 	}
 	tmp[*j] = '\0';
 }
-static void copy_env(t_data *d, char *buf, size_t *off, char *tmp)
+
+static void	copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 {
 	size_t j;
 	size_t	k;
 	t_env *env;
 	bool found;
 
-	k= 0;
+	k = 0;
 	j = ~0;
 	while (++j < d->vec_env.len)
 	{
