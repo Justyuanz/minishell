@@ -6,12 +6,11 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 09:43:50 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:31:42 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	read_the_line(t_data *d, t_shell *shell)
 {
