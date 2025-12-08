@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 12:56:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:53:18 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,13 @@ static void	push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)
 			|| last_tok->type == PIPE))
 	{
 		buffer->buf[0] = '\0';
-		push_word_tok(d, 1, EMPTY_WORD, buffer);
+		push_word_tok(d, 0, EMPTY_WORD, buffer);
 	}
+	else if (d->expanded_empty == 1)
+    {
+        buffer->buf[0] = '\0';
+        push_word_tok(d, 0, EMPTY_WORD, buffer);
+    }
 	d->heredoc_skip = 0;
 	d->expanded_empty = 0;
 }

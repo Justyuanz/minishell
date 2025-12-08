@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 14:56:45 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:58:11 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	cleanup_dupped_files(t_cmd *cmd)
 			free(redir->file);
 			redir->file = NULL;
 		}
+		redir->strdupped = 0;
 		j++;
 	}
 }
@@ -101,5 +102,15 @@ void	eof_cleanup(t_data *d, t_shell *shell)
 		i++;
 	}
 	free(shell->envp);
+	if (shell->pids)
+	{
+		free(shell->pids);
+		shell->pids = NULL;
+	}
+	if (shell->command_index > 1)
+		free_pipes(shell);
+	cleanup_line_runtime(shell->data);
+	close(shell->savestdout);
+	close(shell->savestdin);
 	destroy_and_exit(d, NULL, 0);
 }
