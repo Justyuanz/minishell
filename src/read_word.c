@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 09:51:47 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:35:10 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,32 @@ static bool	is_redir(int type)
 	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
 }
 
-static void push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)
+bool	expand_in_heredoc(t_redir *redir)
 {
-	t_token *last_tok;
-	
+	return (redir && redir->type == HEREDOC && redir->quote.single_on == false
+		&& redir->quote.double_on == false);
+}
+
+static void	push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)
+{
+	t_token	*last_tok;
+
 	last_tok = NULL;
 	if (d->vec_tok.len > 0)
 		last_tok = get_tok(d, (d->vec_tok.len - 1));
 	if (off > 0 || buffer->quotes.single_on == true
 		|| buffer->quotes.double_on == true)
 		push_word_tok(d, off, WORD, buffer);
-	 else if (d->expanded_empty == 1 && last_tok && (is_redir(last_tok->type) || last_tok->type == PIPE))
-	 {
+	else if (d->expanded_empty == 1 && last_tok && (is_redir(last_tok->type)
+			|| last_tok->type == PIPE))
+	{
 		buffer->buf[0] = '\0';
-     	push_word_tok(d, 0, EMPTY_WORD, buffer);
-	 }
+		push_word_tok(d, 0, EMPTY_WORD, buffer);
+	}
 	d->heredoc_skip = 0;
 	d->expanded_empty = 0;
 }
- 
+
 size_t	read_word(t_data *d, t_buffer *buffer, size_t i)
 {
 	size_t	off;

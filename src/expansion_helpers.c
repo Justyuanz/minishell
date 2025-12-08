@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:08:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:23:18 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:36:52 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,6 @@ bool	expand_in_heredoc(t_redir *redir)
 {
 	return (redir && redir->type == HEREDOC && redir->quote.single_on == false
 		&& redir->quote.double_on == false);
-}
-
-bool	exit_status(t_data *d, size_t *i, char *buf, size_t *off)
-{
-	int		code;
-	char	*num;
-	size_t	k;
-
-	if (d->line[*i] == '?')
-	{
-		k = 0;
-		code = ft_shell()->exitcode;
-		num = ft_itoa(code);
-		while (num[k])
-			buf[(*off)++] = num[k++];
-		free(num);
-		(*i)++;
-		return (true);
-	}
-	return (false);
 }
 
 bool	bare_dollar(t_data *d, char *buf, size_t *off, size_t *i)
@@ -109,9 +89,8 @@ void	handle_variable(t_data *d, char *buf, size_t *i, size_t *off)
 {
 	char	tmp[1024];
 	size_t	j;
-	
+
 	j = 0;
 	store_var_name(d, tmp, i, &j);
 	copy_env(d, buf, off, tmp);
 }
-
