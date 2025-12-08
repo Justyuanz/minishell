@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:35:10 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:51:35 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 static bool	is_redir(int type)
 {
 	return (type == REDIR_IN || type == REDIR_OUT || type == APPEND);
-}
-
-bool	expand_in_heredoc(t_redir *redir)
-{
-	return (redir && redir->type == HEREDOC && redir->quote.single_on == false
-		&& redir->quote.double_on == false);
 }
 
 static void	push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)

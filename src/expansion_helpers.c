@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:08:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:36:52 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:53:02 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,9 @@ void	store_var_name(t_data *d, char *tmp, size_t *i, size_t *j)
 
 static void	copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 {
-	size_t j;
+	size_t	j;
 	size_t	k;
-	t_env *env;
-	bool found;
+	t_env	*env;
 
 	k = 0;
 	j = ~0;
@@ -69,7 +68,6 @@ static void	copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 		env = get_env(d, j);
 		if (str_cmp(tmp, env->key) == true)
 		{
-			found = true;
 			if (env->value[0] == '\0')
 				d->expanded_empty = 1;
 			while (++k < ft_strlen(env->value) && (*off) < 1023)

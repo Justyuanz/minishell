@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:31:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:52:46 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,13 +275,14 @@ int					export_argv(t_cmd *cmd, t_shell *shell);
 // piping.c
 int					create_pipes(t_shell *shell);
 void				handle_pipes(t_shell *shell);
+void				close_parent_pipes(t_shell *shell);
 
 // redirection.c
 void				redirect_child(t_cmd *cmd, t_shell *shell);
 
 // heredoc.c
 int					handle_heredocs(t_data *d, t_cmd *cmd);
-int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell);
+int					heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell);
 
 // heredoc_input.c
 int					read_heredoc_input(t_data *d, const char *delimiter,
