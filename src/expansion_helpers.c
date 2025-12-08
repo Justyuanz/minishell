@@ -89,8 +89,8 @@ static void copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 		if (str_cmp(tmp, env->key) == true)
 		{
 			found = true;
-			 if (env->value[0] == '\0')
-             	d->expanded_empty = 1;
+			if (env->value[0] == '\0')
+				d->expanded_empty = 1;
 			while (++k < ft_strlen(env->value) && (*off) < 1023)
 			{
 				buf[*off] = env->value[k];

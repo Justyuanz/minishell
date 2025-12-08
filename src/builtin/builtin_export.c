@@ -65,6 +65,7 @@ void	while_loop_update_envp(t_shell *shell)
 		i++;
 	}
 }
+
 void	update_shell_envp(t_shell *shell)
 {
 	size_t	i;
