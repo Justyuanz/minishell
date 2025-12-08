@@ -17,9 +17,7 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 	char	*equal_sign;
 	char	*key;
 	char	*value;
-	t_env	*env_var;
 
-	env_var = NULL;
 	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign)
 	{
@@ -30,9 +28,9 @@ int	update_or_add_env_var(t_shell *shell, const char *arg)
 		return (0);
 	if (!key)
 		return (1);
-	if (update_env_var(shell, key, env_var, value) == 0)
+	if (update_env_var(shell, key,value) == 0)
 		return (0);
-	if (add_env_var(shell, key, env_var, value) == 1)
+	if (add_env_var(shell, key, value) == 1)
 		return (1);
 	return (0);
 }
@@ -42,6 +40,7 @@ void	while_loop_update_envp(t_shell *shell)
 	size_t	i;
 	t_env	*env_var;
 	char	*env_str;
+	size_t	total_len;
 
 	i = 0;
 	while (i < shell->data->vec_env.len)
@@ -49,14 +48,13 @@ void	while_loop_update_envp(t_shell *shell)
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
 		if (env_var->value)
 		{
-			env_str = malloc(ft_strlen(env_var->key) + ft_strlen(env_var->value)
-					+ 2);
+			total_len = ft_strlen(env_var->key) + ft_strlen(env_var->value) + 2;
+			env_str = malloc(total_len);
 			if (env_str)
 			{
-				ft_strlcpy(env_str, env_var->key, ft_strlen(env_var->key) + 1);
-				ft_strlcat(env_str, "=", ft_strlen(env_var->key) + 2);
-				ft_strlcat(env_str, env_var->value, ft_strlen(env_var->key)
-					+ ft_strlen(env_var->value) + 2);
+				ft_strlcpy(env_str, env_var->key, total_len);
+				ft_strlcat(env_str, "=", total_len);
+				ft_strlcat(env_str, env_var->value, total_len);
 			}
 			shell->envp[i] = env_str;
 		}
@@ -82,8 +80,10 @@ void	update_shell_envp(t_shell *shell)
 	if (!shell->envp)
 		return ;
 	i = 0;
+	while (i <= shell->data->vec_env.len)
+		shell->envp[i++] = NULL;
 	while_loop_update_envp(shell);
-	shell->envp[i] = NULL;
+	shell->envp[shell->data->vec_env.len] = NULL;
 }
 
 void	builtin_export(t_cmd *cmd, t_shell *shell)
@@ -110,7 +110,10 @@ void	builtin_export(t_cmd *cmd, t_shell *shell)
 				shell->exitcode = 1;
 			}
 			else
+			{
 				update_shell_envp(shell);
+				shell->exitcode = 0;
+			}
 		}
 	}
 }
