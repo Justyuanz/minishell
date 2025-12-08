@@ -69,7 +69,7 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
 		{
 			if (redir_in(redir, shell))
-				exit(EXIT_FAILURE);
+				final_exit(shell, EXIT_FAILURE);
 		}
 		if (redir->type == REDIR_OUT || redir->type == APPEND)
 		{
