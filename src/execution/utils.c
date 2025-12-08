@@ -48,6 +48,14 @@ char	*get_env_value(t_shell *shell, char *str)
 	return (NULL);
 }
 
+void	final_cleaner(t_shell *shell)
+{
+	cleanup_line_runtime(shell->data);
+	close(shell->savestdout);
+	close(shell->savestdin);
+	destroy_and_exit(shell->data, NULL, shell->exitcode);
+}
+
 void	handle_path_error(const char *cmd, t_shell *shell, int found)
 {
 	if (found)
@@ -62,4 +70,5 @@ void	handle_path_error(const char *cmd, t_shell *shell, int found)
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);
 	}
+	final_exit(shell, shell->exitcode);
 }

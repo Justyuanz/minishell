@@ -253,7 +253,8 @@ void				update_exitcode(int error_code, t_shell *shell);
 char				*get_env_value(t_shell *shell, char *str);
 void				handle_path_error(const char *cmd, t_shell *shell,
 						int found);
-
+void	final_cleaner(t_shell *shell);
+void	final_exit(t_shell *shell, int exit_number);
 // builtins
 void				handle_builtin(int flag, t_cmd *command, t_shell *shell);
 int					check_if_builtin(t_shell *shell, char *command);
