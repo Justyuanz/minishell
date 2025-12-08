@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 20:28:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:28:20 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 22:07:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 		cmd = get_cmd(shell->data, shell->index);
 		if (cmd->argv)
 		{
-			hd_ret = handle_heredocs(d, cmd);
+			//in the runtime, read the heredoc
 			if (hd_ret == 1)
 			{
 				shell->exitcode = 1;

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:28:48 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 22:09:27 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	shell_execution(t_data *d, t_shell *shell)
 		single_command_case(d, shell);
 	else
 	{
+		//maybe read all heredocs here maybe?
 		if (!execute_pipeline(d, shell, command_count))
 			return ;
 	}
