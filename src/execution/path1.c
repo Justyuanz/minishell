@@ -53,14 +53,14 @@ static char	*check_command(const char *cmd, t_shell *shell)
 {
 	struct stat	path_stat;
 
-	if (stat(cmd, &path_stat) != 0) // This function retrieves info about cmd
+	if (stat(cmd, &path_stat) != 0)
 	{
 		update_exitcode(127, shell);
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		return (NULL);
 	}
-	if (S_ISDIR(path_stat.st_mode)) // Macro checks if file is a directory
+	if (S_ISDIR(path_stat.st_mode))
 	{
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": Is a directory\n", 2);

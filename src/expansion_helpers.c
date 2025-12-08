@@ -68,6 +68,10 @@ static void	copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 		env = get_env(d, j);
 		if (str_cmp(tmp, env->key) == true)
 		{
+<<<<<<< HEAD
+=======
+			found = true;
+>>>>>>> 6ca33d4cdd3e6059f3cf3aad05374dedd83d41b1
 			if (env->value[0] == '\0')
 				d->expanded_empty = 1;
 			while (++k < ft_strlen(env->value) && (*off) < 1023)

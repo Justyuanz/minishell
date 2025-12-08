@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int export_argv(t_cmd *cmd, t_shell *shell)
+int	export_argv(t_cmd *cmd, t_shell *shell)
 {
 	if (!cmd->argv[1])
 	{
@@ -23,7 +23,7 @@ int export_argv(t_cmd *cmd, t_shell *shell)
 	return (0);
 }
 
-void env_to_null(t_env *env)
+void	env_to_null(t_env *env)
 {
 	env->key = NULL;
 	env->value = NULL;

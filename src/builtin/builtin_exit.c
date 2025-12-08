@@ -14,7 +14,9 @@
 
 void	final_exit(t_shell *shell, int exit_number)
 {
-	int i = 0;
+	int	i;
+	
+	i = 0;
 	while (shell->envp[i])
 	{
 		free(shell->envp[i]);
