@@ -109,14 +109,17 @@ void	single_command_case(t_data *d, t_shell *shell)
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
+			shell->savestdin = dup(STDIN_FILENO);
 			if (cmd->redirs.len > 0)
 				redirect_child(cmd, shell);
 			if (shell->is_amb == true)
 				return ;
 			handle_builtin(flag, cmd, shell);
+			dup2(shell->savestdin, STDIN_FILENO);
+			close(shell->savestdin);
 		}
 		else
-			handle_single_command(shell);
+			handle_single_command(shell);	
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
 	dup2(shell->savestdin, STDIN_FILENO);

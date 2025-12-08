@@ -17,13 +17,13 @@ void	close_pipes(t_shell *shell)
 	int	i;
 
 	i = 0;
-	while (i < shell->command_index - 1)
+	while (i < shell->pipes_count)
 	{
 		if (shell->pipe_array[i])
 		{
-			if (shell->pipe_array[i][0] > 0)
+			//if (shell->pipe_array[i][0] > 0)
 				close(shell->pipe_array[i][0]);
-			if (shell->pipe_array[i][1] > 1)
+			//if (shell->pipe_array[i][1] > 1)
 				close(shell->pipe_array[i][1]);
 		}
 		i++;
