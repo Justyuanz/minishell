@@ -12,35 +12,31 @@
 
 #include "minishell.h"
 
-void	builtin_env(t_shell *shell)
-{
-	t_env	*env;
-	size_t	i;
-	t_cmd	*cmd;
+// void	builtin_env(t_shell *shell)
+// {
+// 	t_env	*env;
+// 	size_t	i;
+// 	t_cmd	*cmd;
 
-	i = 0;
-	cmd = get_cmd(shell->data, shell->index);
-	if (cmd->argv[1] != NULL)
-	{
-		ft_putstr_fd("env: ", 2);
-		ft_putstr_fd((char *)cmd->argv[1], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		shell->exitcode = 127;
-	}
-	else
-	{
-		while (i < shell->data->vec_env.len)
-		{
-			env = get_env(shell->data, i);
-			ft_putstr_fd((char *)env->key, 2);
-			ft_putstr_fd("=", 2);
-			ft_putendl_fd((char *)env->value, 2);
-			//printf("%s=%s\n", env->key, env->value);
-			i++;
-		}
-		shell->exitcode = 0;
-	}
-}
+// 	i = 0;
+// 	cmd = get_cmd(shell->data, shell->index);
+// 	if (cmd->argv[1] != NULL)
+// 	{
+// 		ft_putstr_fd("env: ", 2);
+// 		ft_putstr_fd((char *)cmd->argv[1], 2);
+// 		ft_putstr_fd(": No such file or directory\n", 2);
+// 		shell->exitcode = 127;
+// 	}
+// 	else
+// 	{
+// 		while (shell->envp && shell->envp[i])
+// 		{
+// 			ft_putendl_fd(shell->envp[i], 1);
+// 			i++;
+// 		}
+// 		shell->exitcode = 0;
+// 	}
+// }
 
 static int	is_valid_unset_identifier(const char *str)
 {
@@ -87,6 +83,61 @@ static void	remove_env_var(t_shell *shell, const char *key)
 	}
 }
 
+// void	builtin_unset(t_cmd *cmd, t_shell *shell)
+// {
+// 	int	i;
+// 	int	exit_code;
+
+// 	if (!cmd->argv[1])
+// 	{
+// 		shell->exitcode = 0;
+// 		return ;
+// 	}
+// 	exit_code = 0;
+// 	i = 0;
+// 	while (cmd->argv[++i])
+// 	{
+// 		if (!is_valid_unset_identifier(cmd->argv[i]))
+// 		{
+// 			ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
+// 			ft_putstr_fd(cmd->argv[i], STDERR_FILENO);
+// 			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+// 			exit_code = 1;
+// 		}
+// 		else
+// 			remove_env_var(shell, cmd->argv[i]);
+// 	}
+// 	update_shell_envp(shell);
+// 	update_exitcode(exit_code, shell);
+// }
+
+void	builtin_env(t_shell *shell)
+{
+	int	i;
+	t_cmd	*cmd;
+
+	i = 0;
+	cmd = get_cmd(shell->data, shell->index);
+	
+	if (cmd->argv[1] != NULL)
+	{
+		ft_putstr_fd("env: ", 2);
+		ft_putstr_fd((char *)cmd->argv[1], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		shell->exitcode = 127;
+	}
+	else
+	{
+		i = 0;
+		while (shell->envp && shell->envp[i])
+		{
+			ft_putendl_fd(shell->envp[i], 1);
+			i++;
+		}
+		shell->exitcode = 0;
+	}
+}
+
 void	builtin_unset(t_cmd *cmd, t_shell *shell)
 {
 	int	i;
@@ -97,6 +148,7 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 		shell->exitcode = 0;
 		return ;
 	}
+	
 	exit_code = 0;
 	i = 0;
 	while (cmd->argv[++i])
@@ -109,8 +161,10 @@ void	builtin_unset(t_cmd *cmd, t_shell *shell)
 			exit_code = 1;
 		}
 		else
+		{
 			remove_env_var(shell, cmd->argv[i]);
+			update_shell_envp(shell);
+		}
 	}
-	update_shell_envp(shell);
-	update_exitcode(exit_code, shell);
+	shell->exitcode = exit_code;
 }
