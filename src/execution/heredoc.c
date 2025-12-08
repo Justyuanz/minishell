@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:10:50 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:40:10 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int	handle_single_heredoc(t_data *d, t_redir *redir, int count)
 		return (1);
 	delim = ft_strdup(redir->file);
 	redir->file = ft_strdup(filename);
+	redir->strdupped = 88;
 	free (filename);
 	hd_ret = read_heredoc_input(d, delim, redir->file, redir);
 	free(delim);

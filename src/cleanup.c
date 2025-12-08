@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:35:57 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:43:43 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,23 @@ void	cleanup_shell(t_data *d)
 	arena_free(&d->arena_tok);
 	rl_clear_history();
 }
+void	cleanup_dupped_files(t_cmd *cmd)
+{
+	size_t j;
+	t_redir *redir;
+
+	j = 0;
+	while (j < cmd->redirs.len)
+	{
+		redir = get_redir(cmd, j);
+		if(redir->strdupped == 88)
+		{
+			free (redir->file);
+			redir->file = NULL;
+		}
+		j++;
+	}
+}
 
 void	cleanup_line_runtime(t_data *d)
 {
@@ -57,6 +74,7 @@ void	cleanup_line_runtime(t_data *d)
 	while (i < d->vec_cmds.len)
 	{
 		cmd = get_cmd(d, i);
+		cleanup_dupped_files(cmd);
 		if (cmd->argv)
 		{
 			free(cmd->argv);

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 11:52:46 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:19:03 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_redir
 	char			*file;
 	t_quote			quote;
 	bool			is_ambiguous;
+	int				strdupped;
 }					t_redir;
 
 typedef struct s_cmd
@@ -118,6 +119,7 @@ typedef struct s_data
 	int				heredoc_skip;
 	int				unclosed_quote;
 	int				expanded_empty;
+	int				heredoc_done;
 }					t_data;
 
 typedef struct s_shell
@@ -286,7 +288,7 @@ int					heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell);
 
 // heredoc_input.c
 int					read_heredoc_input(t_data *d, const char *delimiter,
-						const char *filename, t_redir *redir);
+						char *filename, t_redir *redir);
 
 // envp.c
 char				**create_envp_from_data(t_data *data);
