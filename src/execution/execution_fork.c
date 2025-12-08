@@ -16,7 +16,7 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
-	if (!cmd || cmd->argv[0] == NULL)
+	if (!cmd || cmd->argv[0] == NULL || cmd->argv == NULL) 
 		final_exit(shell, shell->exitcode);
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)
@@ -80,14 +80,14 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 		if (cmd->argv)
 		{
 			hd_ret = handle_heredocs(d, cmd);
-			if (hd_ret == 1)
+			if (hd_ret != 0)
 			{
+				if (hd_ret == 130)
+					return (130);
 				shell->exitcode = 1;
 				shell->index++;
 				continue ;
 			}
-			else if (hd_ret == 130)
-				return (130);
 			do_command_fork(cmd, shell);
 		}
 		shell->index++;
