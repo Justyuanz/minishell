@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:28:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 14:19:49 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:55:47 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	final_exit(t_shell *shell, int exit_number)
 	int	i;
 
 	i = 0;
-
 	while (shell->envp[i])
 	{
 		free(shell->envp[i]);
