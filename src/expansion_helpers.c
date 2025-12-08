@@ -57,9 +57,10 @@ void	store_var_name(t_data *d, char *tmp, size_t *i, size_t *j)
 
 static void	copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 {
-	size_t	j;
+	size_t j;
 	size_t	k;
-	t_env	*env;
+	t_env *env;
+	bool found;
 
 	k = 0;
 	j = ~0;

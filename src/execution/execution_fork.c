@@ -28,13 +28,10 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 	exit(shell->exitcode);
 }
 
-void	close_parent_pipes(t_shell *shell)
+static void	fork_else(t_shell *shell)
 {
-	if (shell->index > 0 && shell->pipe_array[shell->index - 1])
-		close(shell->pipe_array[shell->index - 1][0]);
-	if (shell->index < shell->command_index - 1
-		&& shell->pipe_array[shell->index])
-		close(shell->pipe_array[shell->index][1]);
+	set_parent_wait_signals();
+	close_parent_pipes(shell);
 }
 
 void	do_command_fork(t_cmd *cmd, t_shell *shell)
@@ -62,10 +59,7 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 			handle_execution(cmd, shell);
 	}
 	else
-	{
-		set_parent_wait_signals();
-		close_parent_pipes(shell);
-	}
+		fork_else(shell);
 }
 
 int	handle_command(t_data *d, t_shell *shell, int command_count)
