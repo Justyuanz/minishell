@@ -53,7 +53,7 @@ char	*arena_push(t_arena *arena, char *s, size_t len)
 		return (NULL);
 	if (arena->offset + len > arena->capacity)
 	{
-		printf("ARENA IS FULL FIX MEEE!");
+		ft_putstr_fd("ARENA IS FULL FIX MEEE!", 2);
 		return (NULL);
 	}
 	current_start = &arena->data[arena->offset];

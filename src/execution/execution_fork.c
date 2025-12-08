@@ -16,16 +16,21 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
+	if (!cmd || cmd->argv[0] == NULL)
+		final_exit(shell, shell->exitcode);
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)
 	{
 		if (execve(cmd_path, cmd->argv, shell->envp) == -1)
 		{
+			ft_putstr_fd("EXEC failed\n", 2);
 			free(cmd_path);
+			shell->exitcode = 126;
 			cmd_path = NULL;
 		}
 	}
-	exit(shell->exitcode);
+	final_exit(shell, shell->exitcode);
+	//exit(shell->exitcode);
 }
 
 static void	fork_else(t_shell *shell)
@@ -53,7 +58,7 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		if (flag_builtin != 0)
 		{
 			handle_builtin(flag_builtin, cmd, shell);
-			exit(shell->exitcode);
+			final_exit(shell, shell->exitcode);
 		}
 		else
 			handle_execution(cmd, shell);

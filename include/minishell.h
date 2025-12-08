@@ -16,9 +16,10 @@
 # include "libft.h"
 # include "vec.h"
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
+
 //# include <stdio.h>
 # include <signal.h>
 # include <sys/stat.h>
@@ -253,7 +254,9 @@ void				update_exitcode(int error_code, t_shell *shell);
 char				*get_env_value(t_shell *shell, char *str);
 void				handle_path_error(const char *cmd, t_shell *shell,
 						int found);
-
+void	cleanup_parent(t_shell *shell);
+void	final_cleaner(t_shell *shell);
+void	final_exit(t_shell *shell, int exit_number);
 // builtins
 void				handle_builtin(int flag, t_cmd *command, t_shell *shell);
 int					check_if_builtin(t_shell *shell, char *command);
@@ -267,10 +270,13 @@ void				update_shell_envp(t_shell *shell);
 void				builtin_exit(t_cmd *cmd, t_shell *shell);
 int					is_valid_identifier(const char *str);
 void				print_exported_vars(t_shell *shell);
-int					update_env_var(t_shell *shell, char *key, t_env *env_var,
-						char *value);
-int					add_env_var(t_shell *shell, char *key, t_env *env_var,
-						char *value);
+// int					update_env_var(t_shell *shell, char *key, t_env *env_var,
+// 						char *value);
+// int					add_env_var(t_shell *shell, char *key, t_env *env_var,
+// 						char *value);
+
+int     update_env_var(t_shell *shell, char *key, char *value);
+int     add_env_var(t_shell *shell, char *key, char *value);
 void				env_to_null(t_env *env);
 int					export_argv(t_cmd *cmd, t_shell *shell);
 

@@ -55,6 +55,8 @@ void	execute_single_command(t_shell *shell)
 	t_cmd	*cmd;
 
 	cmd = get_cmd(shell->data, 0);
+	if (!cmd || cmd->argv[0] == NULL || cmd->argv[0][0] == '\0')
+		final_exit(shell, shell->exitcode);
 	if (cmd->redirs.len > 0)
 		redirect_child(cmd, shell);
 	command_path = get_command_path(cmd->argv[0], shell);
@@ -62,11 +64,14 @@ void	execute_single_command(t_shell *shell)
 	{
 		if (execve(command_path, cmd->argv, shell->envp) == -1)
 		{
+			ft_putstr_fd("EXEC failed\n", 2);
+			shell->exitcode = 126;
 			free(command_path);
 			command_path = NULL;
 		}
 	}
-	exit(shell->exitcode);
+	final_exit(shell, shell->exitcode);
+	//exit(shell->exitcode);
 }
 
 int	handle_single_command(t_shell *shell)

@@ -33,6 +33,7 @@ void	final_exit(t_shell *shell, int exit_number)
 	cleanup_line_runtime(shell->data);
 	close(shell->savestdout);
 	close(shell->savestdin);
+	cleanup_parent(shell);
 	destroy_and_exit(shell->data, NULL, exit_number);
 }
 

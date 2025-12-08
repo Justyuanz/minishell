@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 19:58:11 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:11:31 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,6 @@ void	eof_cleanup(t_data *d, t_shell *shell)
 		free(shell->pids);
 		shell->pids = NULL;
 	}
-	if (shell->command_index > 1)
-		free_pipes(shell);
-	cleanup_line_runtime(shell->data);
 	close(shell->savestdout);
 	close(shell->savestdin);
 	destroy_and_exit(d, NULL, 0);

@@ -80,6 +80,7 @@ int	handle_heredocs(t_data *d, t_cmd *cmd)
 	while (i < cmd->redirs.len)
 	{
 		redir = get_redir(cmd, i);
+		redir->strdupped = 0;
 		if (redir->type == HEREDOC)
 		{
 			heredoc_count++;

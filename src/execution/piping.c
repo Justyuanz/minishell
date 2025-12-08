@@ -35,19 +35,19 @@ void	handle_pipes(t_shell *shell)
 	if (shell->index == 0)
 	{
 		if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
-			printf("dup2 failed for first command");
+			ft_putstr_fd("dup2 failed for first command", 2);
 	}
 	else if (shell->index > 0 && shell->index < shell->command_index - 1)
 	{
 		if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
-			printf("dup2 failed for middle command input");
+			ft_putstr_fd("dup2 failed for middle command input", 2);
 		if (dup2(shell->pipe_array[shell->index][1], STDOUT_FILENO) == -1)
-			printf("dup2 failed for middle command output");
+			ft_putstr_fd("dup2 failed for middle command output", 2);
 	}
 	else if (shell->index == shell->command_index - 1)
 	{
 		if (dup2(shell->pipe_array[shell->index - 1][0], STDIN_FILENO) == -1)
-			printf("dup2 failed for last command");
+			ft_putstr_fd("dup2 failed for last command", 2);
 	}
 	close_pipes(shell);
 }
