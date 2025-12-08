@@ -25,7 +25,6 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 			cmd_path = NULL;
 		}
 	}
-	//cleanup_child(shell);
 	exit(shell->exitcode);
 }
 
@@ -48,8 +47,8 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 	if (shell->pids[shell->index] == 0)
 	{
 		set_child_signals();
-		handle_pipes(shell);	
-		if (cmd->redirs.len > 0) // moved this from handle_execution
+		handle_pipes(shell);
+		if (cmd->redirs.len > 0)
 			redirect_child(cmd, shell);
 		if (shell->is_amb == true)
 			exit(shell->exitcode);

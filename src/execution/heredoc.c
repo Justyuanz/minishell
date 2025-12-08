@@ -13,6 +13,21 @@
 #include "minishell.h"
 #include <sys/wait.h>
 
+int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell)
+{
+	int	hd_ret;
+
+	hd_ret = handle_heredocs(d, cmd);
+	if (hd_ret == 1)
+		shell->exitcode = 1;
+	else if (hd_ret == 130)
+	{
+		shell->exitcode = 130;
+		return (1);
+	}
+	return (0);
+}
+
 char	*create_heredoc_filename(int heredoc_num)
 {
 	char	*num_str;

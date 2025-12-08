@@ -66,13 +66,11 @@ void	execute_single_command(t_shell *shell)
 			command_path = NULL;
 		}
 	}
-	// cleanup_child(shell);
 	exit(shell->exitcode);
 }
 
 int	handle_single_command(t_shell *shell)
 {
-
 	shell->pids[0] = fork();
 	if (shell->pids[0] < 0)
 	{
@@ -92,27 +90,12 @@ int	handle_single_command(t_shell *shell)
 	}
 	return (0);
 }
-int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell)
-{
-	int hd_ret;
 
-	hd_ret = handle_heredocs(d, cmd);
-	if (hd_ret == 1)
-		shell->exitcode = 1;
-	else if (hd_ret == 130)
-	{
-		shell->exitcode = 130;
-		return (1);
-	}
-	return (0);
-}
 void	single_command_case(t_data *d, t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
 
-	shell->savestdout = dup(STDOUT_FILENO);
-	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
@@ -127,7 +110,7 @@ void	single_command_case(t_data *d, t_shell *shell)
 				return ;
 			handle_builtin(flag, cmd, shell);
 		}
-		else 
+		else
 			handle_single_command(shell);
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
