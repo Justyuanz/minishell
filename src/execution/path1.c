@@ -58,7 +58,7 @@ static char	*check_command(const char *cmd, t_shell *shell)
 		update_exitcode(127, shell);
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		return (NULL);
+		final_exit(shell, shell->exitcode);
 	}
 	if (S_ISDIR(path_stat.st_mode))
 	{
@@ -94,8 +94,7 @@ char	*get_command_path(const char *cmd, t_shell *shell)
 		{
 			ft_putstr_fd((char *)cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
-			shell->exitcode = 127;
-			return (NULL);
+			final_exit(shell, 127);
 		}
 		else
 			return (cmd_path);
