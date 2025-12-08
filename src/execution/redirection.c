@@ -35,7 +35,7 @@ int	redir_out(t_redir *redir, t_shell *shell)
 		shell->output = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (redir->type == APPEND)
 		shell->output = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (shell->output < 0) // fixed typo
+	if (shell->output < 0)
 		return (1);
 	if (dup2(shell->output, STDOUT_FILENO) == -1)
 	{

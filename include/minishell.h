@@ -278,6 +278,7 @@ void				redirect_child(t_cmd *cmd, t_shell *shell);
 
 // heredoc.c
 int					handle_heredocs(t_data *d, t_cmd *cmd);
+int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell);
 
 // heredoc_input.c
 int					read_heredoc_input(t_data *d, const char *delimiter,

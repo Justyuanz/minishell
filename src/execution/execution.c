@@ -45,13 +45,12 @@ static bool	execute_pipeline(t_data *d, t_shell *shell, int command_count)
 		free_pipes(shell);
 		return (false);
 	}
-
 	wait_for_all(shell);
 	free_pipes(shell);
 	return (true);
 }
 
-void cleanup_parent(t_shell *shell)
+void	cleanup_parent(t_shell *shell)
 {
 	if (shell->pids)
 	{

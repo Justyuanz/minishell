@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_others.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 16:29:15 by jinzhang          #+#    #+#             */
+/*   Updated: 2025/12/04 19:15:46 by jinzhang         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_valid_identifier(const char *str)
@@ -57,10 +69,10 @@ int	update_env_var(t_shell *shell, char *key, t_env *env_var, char *value)
 		}
 		i++;
 	}
-    return (1);
+	return (1);
 }
 
-int add_env_var(t_shell *shell, char *key, t_env *env_var, char *value)
+int	add_env_var(t_shell *shell, char *key, t_env *env_var, char *value)
 {
 	env_var = malloc(sizeof(t_env));
 	if (!env_var)
