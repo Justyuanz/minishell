@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 19:48:42 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 19:48:44 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:58:52 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	write_heredoc_line(t_data *d, t_redir *redir, int fd)
 	write(fd, "\n", 1);
 }
 
-int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
+int	read_heredoc_input(t_data *d, const char *delimiter, char *filename,
 		t_redir *redir)
 {
 	int	fd;
@@ -56,7 +56,9 @@ int	read_heredoc_input(t_data *d, const char *delimiter, const char *filename,
 			return (130);
 		}
 		if (!d->line || ft_strcmp(d->line, delimiter) == 0)
+		{
 			break ;
+		}
 		write_heredoc_line(d, redir, fd);
 	}
 	g_signal = 0;

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:06 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 17:02:27 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:40:14 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@ int	redir_in(t_redir *redir, t_shell *shell)
 	if (redir->type == REDIR_IN)
 		shell->input = open(redir->file, O_RDONLY);
 	else if (redir->type == HEREDOC)
+	{
 		shell->input = open(redir->file, O_RDONLY);
+		free(redir->file);
+		redir->file = NULL;
+	}
 	if (shell->input < 0)
 		return (1);
 	if (dup2(shell->input, STDIN_FILENO) == -1)
