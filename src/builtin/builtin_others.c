@@ -32,7 +32,10 @@ void	builtin_env(t_shell *shell)
 		while (i < shell->data->vec_env.len)
 		{
 			env = get_env(shell->data, i);
-			printf("%s=%s\n", env->key, env->value);
+			ft_putstr_fd((char *)env->key, 2);
+			ft_putstr_fd("=", 2);
+			ft_putendl_fd((char *)env->value, 2);
+			//printf("%s=%s\n", env->key, env->value);
 			i++;
 		}
 		shell->exitcode = 0;

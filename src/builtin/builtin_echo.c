@@ -54,6 +54,6 @@ void	builtin_pwd(t_shell *shell)
 		update_exitcode(1, shell);
 		return ;
 	}
-	printf("%s\n", cwd);
+	ft_putendl_fd((char *)cwd, 2);
 	update_exitcode(0, shell);
 }

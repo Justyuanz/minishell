@@ -14,6 +14,16 @@
 
 void	read_the_line(t_data *d, t_shell *shell)
 {
+	// if (isatty(fileno(stdin)))
+	// 	d->line = readline("mini>>");
+	// else
+	// {
+	// 	char *line;
+	// 	line = get_next_line(fileno(stdin));
+	// 	d->line = ft_strtrim(line, "\n");
+	// 	free(line);
+	// }
+
 	d->line = readline("minishell$ ");
 	if (!d->line)
 		eof_cleanup(d, shell);
@@ -30,7 +40,7 @@ void	read_the_line(t_data *d, t_shell *shell)
 		}
 		cleanup_line_runtime(d);
 	}
-	free(d->line);
+	 free(d->line);
 }
 
 int	main(int argc, char **argv, char **envp)

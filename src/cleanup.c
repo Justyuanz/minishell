@@ -100,5 +100,7 @@ void	eof_cleanup(t_data *d, t_shell *shell)
 		i++;
 	}
 	free(shell->envp);
+	close(shell->savestdin);
+	close(shell->savestdout);
 	destroy_and_exit(d, NULL, 0);
 }

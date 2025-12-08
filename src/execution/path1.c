@@ -65,7 +65,7 @@ static char	*check_command(const char *cmd, t_shell *shell)
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": Is a directory\n", 2);
 		update_exitcode(126, shell);
-		return (NULL);
+		final_exit(shell, shell->exitcode);
 	}
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
@@ -74,6 +74,7 @@ static char	*check_command(const char *cmd, t_shell *shell)
 		update_exitcode(126, shell);
 		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
+		final_exit(shell, shell->exitcode);
 	}
 	return (NULL);
 }
