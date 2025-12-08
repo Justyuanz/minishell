@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:05:27 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/07 15:55:43 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:35:46 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	is_ambigurous_redir(t_redir *redir)
 			redir->is_ambiguous = true;
 	}
 	if (!redir->file || redir->file[0] == '\0')
-		redir->is_ambiguous = true;	
+		redir->is_ambiguous = true;
 }
 
 void	handle_redir(t_data *d, t_cmd *cmd, t_token *tok, size_t *i)

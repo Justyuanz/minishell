@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 09:44:44 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:35:57 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	cleanup_line_runtime(t_data *d)
 
 void	eof_cleanup(t_data *d, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (shell->envp[i])

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 09:45:07 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:31:56 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "libft.h"
 # include "vec.h"
 # include <fcntl.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdio.h>
 //# include <stdio.h>
 # include <signal.h>
 # include <sys/stat.h>
@@ -216,8 +216,7 @@ void				cleanup_line(t_data *d);
 void				cleanup_line_runtime(t_data *d);
 void				cleanup_shell(t_data *d);
 void				destroy_and_exit(t_data *d, char *msg, int exitcode);
-void	eof_cleanup(t_data *d, t_shell *shell);
-
+void				eof_cleanup(t_data *d, t_shell *shell);
 
 // execution.c
 void				shell_execution(t_data *d, t_shell *shell);
@@ -264,12 +263,14 @@ void				builtin_export(t_cmd *cmd, t_shell *shell);
 void				builtin_unset(t_cmd *cmd, t_shell *shell);
 void				update_shell_envp(t_shell *shell);
 void				builtin_exit(t_cmd *cmd, t_shell *shell);
-int	is_valid_identifier(const char *str);
-void	print_exported_vars(t_shell *shell);
-int	update_env_var(t_shell *shell, char *key, t_env *env_var, char *value);
-int add_env_var(t_shell *shell, char *key, t_env *env_var, char *value);
-void env_to_null(t_env *env);
-int export_argv(t_cmd *cmd, t_shell *shell);
+int					is_valid_identifier(const char *str);
+void				print_exported_vars(t_shell *shell);
+int					update_env_var(t_shell *shell, char *key, t_env *env_var,
+						char *value);
+int					add_env_var(t_shell *shell, char *key, t_env *env_var,
+						char *value);
+void				env_to_null(t_env *env);
+int					export_argv(t_cmd *cmd, t_shell *shell);
 
 // piping.c
 int					create_pipes(t_shell *shell);
