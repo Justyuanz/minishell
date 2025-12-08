@@ -23,7 +23,9 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 	{
 		if (execve(cmd_path, cmd->argv, shell->envp) == -1)
 		{
+			ft_putstr_fd("EXEC failed\n", 2);
 			free(cmd_path);
+			shell->exitcode = 126;
 			cmd_path = NULL;
 		}
 	}

@@ -253,6 +253,7 @@ void				update_exitcode(int error_code, t_shell *shell);
 char				*get_env_value(t_shell *shell, char *str);
 void				handle_path_error(const char *cmd, t_shell *shell,
 						int found);
+void	cleanup_parent(t_shell *shell);
 void	final_cleaner(t_shell *shell);
 void	final_exit(t_shell *shell, int exit_number);
 // builtins
