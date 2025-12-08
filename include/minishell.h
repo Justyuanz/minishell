@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/07 22:23:37 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 09:45:07 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,8 @@ void				cleanup_line(t_data *d);
 void				cleanup_line_runtime(t_data *d);
 void				cleanup_shell(t_data *d);
 void				destroy_and_exit(t_data *d, char *msg, int exitcode);
+void	eof_cleanup(t_data *d, t_shell *shell);
+
 
 // execution.c
 void				shell_execution(t_data *d, t_shell *shell);

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:08:24 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/07 22:34:16 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:23:18 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,14 @@ void	store_var_name(t_data *d, char *tmp, size_t *i, size_t *j)
 	}
 	tmp[*j] = '\0';
 }
-
-void	handle_variable(t_data *d, char *buf, size_t *i, size_t *off)
+static void copy_env(t_data *d, char *buf, size_t *off, char *tmp)
 {
-	t_env	*env;
-	char	tmp[1024];
+	size_t j;
 	size_t	k;
-	size_t	j;
-	bool	found;
+	t_env *env;
+	bool found;
 
-	j = 0;
-	found = true;
-	store_var_name(d, tmp, i, &j);
-	k = ~0;
+	k= 0;
 	j = ~0;
 	while (++j < d->vec_env.len)
 	{
@@ -108,3 +103,14 @@ void	handle_variable(t_data *d, char *buf, size_t *i, size_t *off)
 	}
 	d->expanded_empty = 1;
 }
+
+void	handle_variable(t_data *d, char *buf, size_t *i, size_t *off)
+{
+	char	tmp[1024];
+	size_t	j;
+	
+	j = 0;
+	store_var_name(d, tmp, i, &j);
+	copy_env(d, buf, off, tmp);
+}
+
