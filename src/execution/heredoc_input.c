@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 19:48:42 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 13:58:52 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:57:05 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ int	read_heredoc_input(t_data *d, const char *delimiter, char *filename,
 			return (130);
 		}
 		if (!d->line || ft_strcmp(d->line, delimiter) == 0)
-		{
 			break ;
-		}
 		write_heredoc_line(d, redir, fd);
 	}
 	g_signal = 0;

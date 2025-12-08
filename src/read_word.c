@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:19:34 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 12:56:56 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:11:57 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,25 @@ static void    push_word_or_empty(t_data *d, t_buffer *buffer, size_t off)
 {
     t_token    *last_tok;
 
-    last_tok = NULL;
-    if (d->vec_tok.len > 0)
-        last_tok = get_tok(d, (d->vec_tok.len - 1));
-    if (off > 0 || buffer->quotes.single_on == true ||
-         buffer->quotes.double_on == true)
-        push_word_tok(d, off, WORD, buffer);
-    else if (d->expanded_empty == 1 && last_tok && (is_redir(last_tok->type)
-            || last_tok->type == PIPE))
+	last_tok = NULL;
+	if (d->vec_tok.len > 0)
+		last_tok = get_tok(d, (d->vec_tok.len - 1));
+	if (off > 0 || buffer->quotes.single_on == true
+		|| buffer->quotes.double_on == true)
+		push_word_tok(d, off, WORD, buffer);
+	else if (d->expanded_empty == 1 && last_tok && (is_redir(last_tok->type)
+			|| last_tok->type == PIPE))
+	{
+		buffer->buf[0] = '\0';
+		push_word_tok(d, 0, EMPTY_WORD, buffer);
+	}
+	else if (d->expanded_empty == 1)
     {
         buffer->buf[0] = '\0';
         push_word_tok(d, 0, EMPTY_WORD, buffer);
     }
-    else if (d->expanded_empty == 1)
-    {
-        buffer->buf[0] = '\0';
-        push_word_tok(d, 0, EMPTY_WORD, buffer);
-    }
-    d->heredoc_skip = 0;
-    d->expanded_empty = 0;
+	d->heredoc_skip = 0;
+	d->expanded_empty = 0;
 }
 
 size_t	read_word(t_data *d, t_buffer *buffer, size_t i)
