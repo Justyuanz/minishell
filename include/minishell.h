@@ -139,6 +139,7 @@ typedef struct s_shell
 	bool			is_amb;
 	int				savestdout;
 	int				savestdin;
+	int				single_builtin;
 	t_data			*data;
 }					t_shell;
 
