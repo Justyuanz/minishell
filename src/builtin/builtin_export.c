@@ -46,7 +46,7 @@ void	while_loop_update_envp(t_shell *shell)
 	while (i < shell->data->vec_env.len)
 	{
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
-		if (env_var->value)
+		if (env_var->value != NULL && env_var->key != NULL)
 		{
 			total_len = ft_strlen(env_var->key) + ft_strlen(env_var->value) + 2;
 			env_str = malloc(total_len);
@@ -55,11 +55,16 @@ void	while_loop_update_envp(t_shell *shell)
 				ft_strlcpy(env_str, env_var->key, total_len);
 				ft_strlcat(env_str, "=", total_len);
 				ft_strlcat(env_str, env_var->value, total_len);
+				shell->envp[i] = env_str;
 			}
-			shell->envp[i] = env_str;
+			else
+				shell->envp[i] = NULL;
 		}
 		else
+		{
 			shell->envp[i] = ft_strdup(env_var->key);
+			env_var->key_dupped = 1;
+		}
 		i++;
 	}
 }

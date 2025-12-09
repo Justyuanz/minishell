@@ -6,17 +6,17 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:10:58 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 15:37:47 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:15:22 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include "get_next_line_bonus.h"
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "get_next_line_bonus.h"
 
 typedef struct s_list
 {
@@ -69,6 +69,5 @@ void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 20:28:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 22:07:37 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:02:39 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
-	if (!cmd || cmd->argv[0] == NULL)
+	if (!cmd || cmd->argv[0] == NULL || cmd->argv == NULL)
 		final_exit(shell, shell->exitcode);
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)
@@ -67,10 +67,9 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		fork_else(shell);
 }
 
-int	handle_command(t_data *d, t_shell *shell, int command_count)
+int	handle_command(t_shell *shell, int command_count)
 {
 	t_cmd	*cmd;
-	int		hd_ret;
 
 	shell->index = 0;
 	while (shell->index < command_count)
@@ -79,15 +78,6 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 		cmd = get_cmd(shell->data, shell->index);
 		if (cmd->argv)
 		{
-			//in the runtime, read the heredoc
-			if (hd_ret == 1)
-			{
-				shell->exitcode = 1;
-				shell->index++;
-				continue ;
-			}
-			else if (hd_ret == 130)
-				return (130);
 			do_command_fork(cmd, shell);
 		}
 		shell->index++;

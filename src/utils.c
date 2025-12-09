@@ -35,7 +35,6 @@ void	shell_init(t_data *d, t_shell *shell, char **envp)
 	envp_init(d, envp);
 	shell->envp = create_envp_from_data(d);
 	shell->savestdout = dup(STDOUT_FILENO);
-	shell->savestdin = dup(STDIN_FILENO);
 }
 
 t_data	*get_data(void)

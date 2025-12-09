@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 20:11:31 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:31:48 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,30 @@ void	cleanup_line(t_data *d)
 	}
 	vec_free(&d->vec_cmds);
 	vec_free(&d->vec_tok);
+}
+
+void	cleanup_env_vars(t_shell *shell)
+{
+	size_t	i;
+	t_env	*env_var;
+
+	i = 0;
+	while (i < shell->data->vec_env.len)
+	{
+		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
+		if (env_var)
+		{
+			if (env_var->key_dupped && env_var->key)
+				free(env_var->key);
+			if (env_var->value_dupped && env_var->value)
+				free(env_var->value);
+			//free(env_var);
+		}
+		i++;
+	}
+	// shell->data->vec_env.len = 0;
+	if (shell && shell->data)
+		shell->data->vec_env.len = 0;
 }
 
 void	cleanup_shell(t_data *d)
@@ -109,5 +133,6 @@ void	eof_cleanup(t_data *d, t_shell *shell)
 	}
 	close(shell->savestdout);
 	close(shell->savestdin);
-	destroy_and_exit(d, NULL, 0);
+	cleanup_env_vars(shell);
+	destroy_and_exit(d, NULL, shell->exitcode);
 }

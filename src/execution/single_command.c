@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 12:47:22 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:29:12 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,15 @@ void	execute_single_command(t_shell *shell)
 
 	cmd = get_cmd(shell->data, 0);
 	if (!cmd || cmd->argv[0] == NULL || cmd->argv[0][0] == '\0')
+	{
+		//printf("here here\n");
+		//exit(shell->exitcode);
 		final_exit(shell, shell->exitcode);
+	}
 	if (cmd->redirs.len > 0)
 		redirect_child(cmd, shell);
 	command_path = get_command_path(cmd->argv[0], shell);
+	//printf("commad path %s\n", command_path);
 	if (command_path)
 	{
 		if (execve(command_path, cmd->argv, shell->envp) == -1)
@@ -70,6 +75,7 @@ void	execute_single_command(t_shell *shell)
 			command_path = NULL;
 		}
 	}
+	//printf("here here1\n");
 	final_exit(shell, shell->exitcode);
 	//exit(shell->exitcode);
 }
@@ -96,16 +102,15 @@ int	handle_single_command(t_shell *shell)
 	return (0);
 }
 
-void	single_command_case(t_data *d, t_shell *shell)
+void	single_command_case(t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
 
+	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
-		if (heredoc_stuff(d, cmd, shell) != 0)
-			return ;
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
@@ -114,12 +119,18 @@ void	single_command_case(t_data *d, t_shell *shell)
 			if (shell->is_amb == true)
 				return ;
 			handle_builtin(flag, cmd, shell);
+			dup2(shell->savestdin, STDIN_FILENO);
+			close(shell->savestdin);
 		}
 		else
-			handle_single_command(shell);
+			handle_single_command(shell);	
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
-	dup2(shell->savestdin, STDIN_FILENO);
 	close(shell->savestdout);
-	close(shell->savestdin);
+	if (shell->savestdin != -1)
+	{
+		dup2(shell->savestdin, STDIN_FILENO);
+		close(shell->savestdin);
+	}
+
 }
