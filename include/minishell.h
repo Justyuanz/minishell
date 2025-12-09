@@ -98,6 +98,8 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	int				key_dupped;
+	int				value_dupped;
 }					t_env;
 
 typedef struct s_buffer
@@ -236,6 +238,7 @@ int					check_access(const char *full_path, int *found);
 void				free_array(char **array);
 void				free_pipes(t_shell *shell);
 void				free_string(char *str);
+void	cleanup_env_vars(t_shell *shell);
 
 // path1.c
 char				*get_command_path(const char *cmd, t_shell *shell);

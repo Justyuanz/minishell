@@ -30,19 +30,42 @@ void	update_exitcode(int error_code, t_shell *shell)
 		shell->exitcode = error_code;
 }
 
+// char	*get_env_value(t_shell *shell, char *str)
+// {
+// 	t_env	*env_var;
+// 	size_t	i;
+
+// 	i = 0;
+// 	if (!shell || !shell->data || !str)
+// 		return (NULL);
+// 	while (i < shell->data->vec_env.len)
+// 	{
+// 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
+// 		if (env_var && env_var->key && ft_strcmp(env_var->key, str) == 0)
+// 			return (env_var->value);
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
+
 char	*get_env_value(t_shell *shell, char *str)
 {
-	t_env	*env_var;
-	size_t	i;
+	int		i;
+	//char	*key;
+	size_t	key_len;
 
-	i = 0;
-	if (!shell || !shell->data || !str)
+	if (!shell || !shell->envp || !str)
 		return (NULL);
-	while (i < shell->data->vec_env.len)
+	
+	key_len = ft_strlen(str);
+	i = 0;
+	while (shell->envp[i])
 	{
-		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
-		if (env_var && env_var->key && ft_strcmp(env_var->key, str) == 0)
-			return (env_var->value);
+		if (ft_strncmp(shell->envp[i], str, key_len) == 0 && 
+			shell->envp[i][key_len] == '=')
+		{
+			return (shell->envp[i] + key_len + 1);
+		}
 		i++;
 	}
 	return (NULL);

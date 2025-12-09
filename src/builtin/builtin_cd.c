@@ -47,6 +47,7 @@ int	update_old_pwd(t_vec *vec_env, char *old_pwd)
 		if (env_var && env_var->key && ft_strcmp("OLDPWD", env_var->key) == 0)
 		{
 			env_var->value = ft_strdup(old_pwd);
+			env_var->value_dupped = 1;
 			free(old_pwd);
 			old_pwd = NULL;
 			return (0);
