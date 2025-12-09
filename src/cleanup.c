@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 15:31:48 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:42:30 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	cleanup_line_runtime(t_data *d)
 	vec_reset(&d->vec_cmds);
 	vec_reset(&d->vec_tok);
 	arena_reset(&d->arena_tok);
+	ft_shell()->single_builtin = 0;
 }
 
 void	eof_cleanup(t_data *d, t_shell *shell)

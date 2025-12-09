@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:06 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 14:40:14 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:57:22 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,7 @@ int	redir_out(t_redir *redir, t_shell *shell)
 	return (0);
 }
 
-void	just_clean(t_shell *shell)
-{
-	cleanup_line_runtime(shell->data);
-	close(shell->savestdout);
-	close(shell->savestdin);
-	shell->exitcode = 1;
-	shell->single_builtin = 0;
-}
-
-void	redirect_child(t_cmd *cmd, t_shell *shell)
+int	redirect_child(t_cmd *cmd, t_shell *shell)
 {
 	t_redir	*redir;
 	size_t	i;
@@ -73,14 +64,14 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 			ft_putstr_fd("ambiguous redirection\n", 2);
 			shell->is_amb = true;
 			update_exitcode(1, shell);
-			return ;
+			return (1) ;
 		}
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
 		{
 			if (redir_in(redir, shell))
 			{
 				if (shell->single_builtin == 1)
-					just_clean(shell);
+					return(1);
 				else
 					final_exit(shell, EXIT_FAILURE);
 			}
@@ -90,10 +81,11 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 			if (redir_out(redir, shell))
 			{
 				if (shell->single_builtin == 1)
-					just_clean(shell);
+					return(1) ;
 				else
 					final_exit(shell, EXIT_FAILURE);
 			}
 		}
 	}
+	return (0);
 }
