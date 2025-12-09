@@ -56,15 +56,10 @@ void	execute_single_command(t_shell *shell)
 
 	cmd = get_cmd(shell->data, 0);
 	if (!cmd || cmd->argv[0] == NULL || cmd->argv[0][0] == '\0')
-	{
-		//printf("here here\n");
-		//exit(shell->exitcode);
 		final_exit(shell, shell->exitcode);
-	}
 	if (cmd->redirs.len > 0)
 		redirect_child(cmd, shell);
 	command_path = get_command_path(cmd->argv[0], shell);
-	//printf("commad path %s\n", command_path);
 	if (command_path)
 	{
 		if (execve(command_path, cmd->argv, shell->envp) == -1)
@@ -75,9 +70,7 @@ void	execute_single_command(t_shell *shell)
 			command_path = NULL;
 		}
 	}
-	//printf("here here1\n");
 	final_exit(shell, shell->exitcode);
-	//exit(shell->exitcode);
 }
 
 int	handle_single_command(t_shell *shell)
@@ -119,11 +112,9 @@ void	single_command_case(t_shell *shell)
 			if (shell->is_amb == true)
 				return ;
 			handle_builtin(flag, cmd, shell);
-			dup2(shell->savestdin, STDIN_FILENO);
-			close(shell->savestdin);
 		}
 		else
-			handle_single_command(shell);	
+			handle_single_command(shell);
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
 	close(shell->savestdout);
@@ -132,5 +123,4 @@ void	single_command_case(t_shell *shell)
 		dup2(shell->savestdin, STDIN_FILENO);
 		close(shell->savestdin);
 	}
-
 }

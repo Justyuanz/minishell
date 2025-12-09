@@ -39,7 +39,7 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 		index++;
 	i = index;
 	print_echo(command->argv, i);
-	if(shell->data->heredoc_skip != 1)
+	if (shell->data->heredoc_skip != 1)
 	{
 		if (new_line)
 			write(1, "\n", 1);

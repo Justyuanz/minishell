@@ -34,13 +34,11 @@ static char	*search_in_path(const char *cmd, char **dirs, t_shell *shell)
 
 	i = 0;
 	found = 0;
-	//printf("abc\n");
 	while (dirs[i] != NULL)
 	{
 		result = check_full_path(cmd, dirs[i], &found);
 		if (result)
 		{
-			//printf("if it here?\n%s\n", result);
 			free_array(dirs);
 			return (result);
 		}
@@ -90,10 +88,8 @@ char	*get_command_path(const char *cmd, t_shell *shell)
 	if (ft_strchr(cmd, '/'))
 		return (check_command(cmd, shell));
 	env_path = get_env_value(shell, "PATH");
-	//printf("%s\n", env_path);
 	if (!env_path)
 	{
-		//printf("here2\n");
 		cmd_path = search_in_cwd(cmd, shell);
 		if (!cmd_path)
 		{

@@ -53,45 +53,6 @@ void	print_exported_vars(t_shell *shell)
 	}
 }
 
-// int	update_env_var(t_shell *shell, char *key, t_env *env_var, char *value)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (i < shell->data->vec_env.len)
-// 	{
-// 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
-// 		if (env_var && ft_strcmp(env_var->key, key) == 0)
-// 		{
-// 			env_var->value = value;
-// 			free(key);
-// 			return (0);
-// 		}
-// 		i++;
-// 	}
-// 	return (1);
-// }
-
-// int	add_env_var(t_shell *shell, char *key, t_env *env_var, char *value)
-// {
-// 	env_var = malloc(sizeof(t_env));
-// 	if (!env_var)
-// 	{
-// 		free(key);
-// 		free(value);
-// 		return (1);
-// 	}
-// 	env_var->key = key;
-// 	env_var->value = value;
-// 	if (!vec_push(&shell->data->vec_env, env_var))
-// 	{
-// 		free(key);
-// 		free(value);
-// 		free(env_var);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
 int	update_env_var(t_shell *shell, char *key, char *value)
 {
 	size_t	i;
@@ -105,7 +66,6 @@ int	update_env_var(t_shell *shell, char *key, char *value)
 		{
 			if (env_var->value && env_var->value_dupped)
 				free(env_var->value);
-			
 			env_var->value = value;
 			env_var->value_dupped = 1;
 			free(key);
@@ -128,7 +88,6 @@ int	add_env_var(t_shell *shell, char *key, char *value)
 			free(value);
 		return (1);
 	}
-	
 	env_var->key = key;
 	env_var->value = value;
 	env_var->key_dupped = 1;
@@ -138,7 +97,6 @@ int	add_env_var(t_shell *shell, char *key, char *value)
 		free(key);
 		if (value)
 			free(value);
-		//free(env_var);
 		return (1);
 	}
 	return (0);

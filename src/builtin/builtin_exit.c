@@ -36,7 +36,6 @@ void	final_exit(t_shell *shell, int exit_number)
 	cleanup_parent(shell);
 	shell->exitcode = exit_number;
 	cleanup_env_vars(shell);
-	//eof_cleanup(shell->data, shell);
 	destroy_and_exit(shell->data, NULL, exit_number);
 }
 

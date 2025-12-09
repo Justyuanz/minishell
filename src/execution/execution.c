@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 15:25:39 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:31:47 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,25 +59,31 @@ void	cleanup_parent(t_shell *shell)
 	}
 }
 
-void	shell_execution(t_data *d, t_shell *shell)
+void	handle_exec_here(t_shell *shell, t_data *d)
 {
-	int	command_count;
 	t_cmd *cmd;
 	size_t i;
 
 	i = 0;
-	shell->index = 0;
-	shell->is_amb = false;
-	command_count = shell->data->vec_cmds.len;
-	shell->pipes_count = command_count - 1;
-	shell->command_index = command_count;
 	while (i < d->vec_cmds.len)
-	{
+	{	
 		cmd = get_cmd(d, i);
 		if (heredoc_stuff(d, cmd, shell) != 0)
 			return ;
 		i++;
 	}
+}
+
+void	shell_execution(t_data *d, t_shell *shell)
+{
+	int	command_count;
+	
+	shell->index = 0;
+	shell->is_amb = false;
+	command_count = shell->data->vec_cmds.len;
+	shell->pipes_count = command_count - 1;
+	shell->command_index = command_count;
+	handle_exec_here(shell, d);
 	if (create_pids(shell, command_count))
 	{
 		update_exitcode(1, shell);
