@@ -69,6 +69,25 @@ void	error_cd(int flag, t_shell *shell)
 	update_exitcode(1, shell);
 }
 
+void	free_oldpwd_dup(t_shell *shell)
+{
+	size_t	j;
+	t_env	*env;
+
+	j = 0;
+	while (j < shell->data->vec_env.len)
+	{
+		env = get_env(shell->data, j);
+		if (env->value_dupped == 1)
+		{
+			free(env->value);
+			env->value = NULL;
+			env->value_dupped = 0;
+		}
+		j++;
+	}
+}
+
 void	builtin_cd(int i, char **command_array, t_shell *shell)
 {
 	char	*old_pwd;
@@ -95,19 +114,5 @@ void	builtin_cd(int i, char **command_array, t_shell *shell)
 		}
 	}
 	update_old_pwd(&shell->data->vec_env, old_pwd);
-	size_t j;
-
-	j = 0;
-	while (j < shell->data->vec_env.len)
-	{
-		t_env *env = get_env(shell->data , j);
-
-		if  (env->value_dupped == 1)
-		{
-			free(env->value);
-			env->value = NULL;
-			env->value_dupped = 0;
-		}
-		j++;
-	}
+	free_oldpwd_dup(shell);
 }

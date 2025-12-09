@@ -30,7 +30,6 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 		}
 	}
 	final_exit(shell, shell->exitcode);
-	//exit(shell->exitcode);
 }
 
 static void	fork_else(t_shell *shell)
