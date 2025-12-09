@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 11:29:12 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:57:49 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ void	single_command_case(t_shell *shell)
 			if (shell->is_amb == true)
 				return ;
 			handle_builtin(flag, cmd, shell);
-			dup2(shell->savestdin, STDIN_FILENO);
-			close(shell->savestdin);
+			//dup2(shell->savestdin, STDIN_FILENO);
+			//close(shell->savestdin);
 		}
 		else
-			handle_single_command(shell);	
+			handle_single_command(shell);
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
 	close(shell->savestdout);
