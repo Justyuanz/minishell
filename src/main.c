@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 18:38:38 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:35:52 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,5 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 		read_the_line(d, shell);
 	cleanup_shell(d);
-	return (0);
+	return (shell->exitcode);
 }
