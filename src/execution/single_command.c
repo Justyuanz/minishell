@@ -56,10 +56,15 @@ void	execute_single_command(t_shell *shell)
 
 	cmd = get_cmd(shell->data, 0);
 	if (!cmd || cmd->argv[0] == NULL || cmd->argv[0][0] == '\0')
+	{
+		//printf("here here\n");
+		//exit(shell->exitcode);
 		final_exit(shell, shell->exitcode);
+	}
 	if (cmd->redirs.len > 0)
 		redirect_child(cmd, shell);
 	command_path = get_command_path(cmd->argv[0], shell);
+	//printf("commad path %s\n", command_path);
 	if (command_path)
 	{
 		if (execve(command_path, cmd->argv, shell->envp) == -1)
@@ -70,6 +75,7 @@ void	execute_single_command(t_shell *shell)
 			command_path = NULL;
 		}
 	}
+	//printf("here here1\n");
 	final_exit(shell, shell->exitcode);
 	//exit(shell->exitcode);
 }
@@ -104,10 +110,12 @@ void	single_command_case(t_shell *shell)
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
+		
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
-			shell->savestdin = dup(STDIN_FILENO);
+			if (!shell->savestdin)
+				shell->savestdin = dup(STDIN_FILENO);
 			if (cmd->redirs.len > 0)
 				redirect_child(cmd, shell);
 			if (shell->is_amb == true)
