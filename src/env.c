@@ -30,9 +30,12 @@ void	push_env(t_data *d, char **envp, size_t i)
 			destroy_and_exit(d, "Arena alloc env fail", 1);
 		env->key = str;
 		env->value = equal + 1;
+		env->key_dupped = 0;
+		env->value_dupped = 0;
 		if (vec_push(&d->vec_env, env) == -1)
 			destroy_and_exit(d, "Vec push env fail", 1);
 	}
+
 }
 
 void	envp_init(t_data *d, char **envp)
