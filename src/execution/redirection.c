@@ -50,6 +50,15 @@ int	redir_out(t_redir *redir, t_shell *shell)
 	return (0);
 }
 
+void	just_clean(t_shell *shell)
+{
+	cleanup_line_runtime(shell->data);
+	close(shell->savestdout);
+	close(shell->savestdin);
+	shell->exitcode = 1;
+	shell->single_builtin = 0;
+}
+
 void	redirect_child(t_cmd *cmd, t_shell *shell)
 {
 	t_redir	*redir;
@@ -69,12 +78,22 @@ void	redirect_child(t_cmd *cmd, t_shell *shell)
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
 		{
 			if (redir_in(redir, shell))
-				final_exit(shell, EXIT_FAILURE);
+			{
+				if (shell->single_builtin == 1)
+					just_clean(shell);
+				else
+					final_exit(shell, EXIT_FAILURE);
+			}
 		}
 		if (redir->type == REDIR_OUT || redir->type == APPEND)
 		{
 			if (redir_out(redir, shell))
-				final_exit(shell, EXIT_FAILURE);
+			{
+				if (shell->single_builtin == 1)
+					just_clean(shell);
+				else
+					final_exit(shell, EXIT_FAILURE);
+			}
 		}
 	}
 }
