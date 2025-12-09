@@ -39,7 +39,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		error_msg.c \
 		builtin/builtin.c builtin/builtin_echo.c execution/execution.c execution/execution_fork.c execution/single_command.c \
 		execution/utils.c builtin/builtin_others.c builtin/builtin_cd.c execution/path1.c execution/path.c execution/checkers.c execution/cleaners.c \
-		execution/piping.c execution/redirection.c execution/heredoc.c execution/heredoc_input.c builtin/builtin_exit.c builtin/builtin_export.c \
+		execution/piping.c execution/redirection.c heredoc/heredoc.c heredoc/heredoc_input.c builtin/builtin_exit.c builtin/builtin_export.c \
 		execution/envp.c signals/signals.c signals/heredoc_signals.c \
 		cleanup.c builtin/export_utils.c\
 )

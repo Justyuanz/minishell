@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 14:19:03 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:31:01 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,7 @@ void				shell_execution(t_data *d, t_shell *shell);
 t_shell				*ft_shell(void);
 
 // execution_fork.c
-int					handle_command(t_data *d, t_shell *shell,
+int					handle_command(t_shell *shell,
 						int command_count);
 
 // checkers.c
@@ -245,7 +245,7 @@ char				*join_paths(const char *dir, const char *cmd);
 char				*search_in_cwd(const char *cmd, t_shell *shell);
 
 // single_command.c
-void				single_command_case(t_data *d, t_shell *shell);
+void				single_command_case(t_shell *shell);
 void				wait_for_all(t_shell *shell);
 
 // utils.c

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 12:47:22 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:29:12 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	handle_single_command(t_shell *shell)
 	return (0);
 }
 
-void	single_command_case(t_data *d, t_shell *shell)
+void	single_command_case(t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
@@ -104,8 +104,6 @@ void	single_command_case(t_data *d, t_shell *shell)
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
-		if (heredoc_stuff(d, cmd, shell) != 0)
-			return ;
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{

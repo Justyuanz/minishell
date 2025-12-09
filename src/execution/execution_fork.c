@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 20:28:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:28:20 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:11:37 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,9 @@ void	do_command_fork(t_cmd *cmd, t_shell *shell)
 		fork_else(shell);
 }
 
-int	handle_command(t_data *d, t_shell *shell, int command_count)
+int	handle_command(t_shell *shell, int command_count)
 {
 	t_cmd	*cmd;
-	int		hd_ret;
 
 	shell->index = 0;
 	while (shell->index < command_count)
@@ -79,15 +78,6 @@ int	handle_command(t_data *d, t_shell *shell, int command_count)
 		cmd = get_cmd(shell->data, shell->index);
 		if (cmd->argv)
 		{
-			hd_ret = handle_heredocs(d, cmd);
-			if (hd_ret != 0)
-			{
-				if (hd_ret == 130)
-					return (130);
-				shell->exitcode = 1;
-				shell->index++;
-				continue ;
-			}
 			do_command_fork(cmd, shell);
 		}
 		shell->index++;

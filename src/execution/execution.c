@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 20:28:48 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:31:47 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	create_pids(t_shell *shell, int command_count)
 	return (0);
 }
 
-static bool	execute_pipeline(t_data *d, t_shell *shell, int command_count)
+static bool	execute_pipeline(t_shell *shell, int command_count)
 {
 	if (create_pipes(shell) == -1)
 	{
@@ -38,7 +38,7 @@ static bool	execute_pipeline(t_data *d, t_shell *shell, int command_count)
 		ft_putstr_fd("pipe arr call failed\n", 2);
 		return (false);
 	}
-	if (handle_command(d, shell, command_count) == 130)
+	if (handle_command(shell, command_count) == 130)
 	{
 		wait_for_all(shell);
 		shell->exitcode = 130;
@@ -62,12 +62,22 @@ void	cleanup_parent(t_shell *shell)
 void	shell_execution(t_data *d, t_shell *shell)
 {
 	int	command_count;
-
+	t_cmd *cmd;
+	size_t i;
+	
+	i = 0;
 	shell->index = 0;
 	shell->is_amb = false;
 	command_count = shell->data->vec_cmds.len;
 	shell->pipes_count = command_count - 1;
 	shell->command_index = command_count;
+	while (i < d->vec_cmds.len)
+	{	
+		cmd = get_cmd(d, i);
+		if (heredoc_stuff(d, cmd, shell) != 0)
+			return ;
+		i++;
+	}
 	if (create_pids(shell, command_count))
 	{
 		update_exitcode(1, shell);
@@ -75,10 +85,10 @@ void	shell_execution(t_data *d, t_shell *shell)
 		return ;
 	}
 	if (command_count == 1)
-		single_command_case(d, shell);
+		single_command_case(shell);
 	else
 	{
-		if (!execute_pipeline(d, shell, command_count))
+		if (!execute_pipeline(shell, command_count))
 			return ;
 	}
 	cleanup_parent(shell);
