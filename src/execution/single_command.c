@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 11:29:12 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:55:18 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	single_command_case(t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
+	int		redir_rt;
 
 	shell->single_builtin = 0;
 	shell->savestdin = dup(STDIN_FILENO);
@@ -110,13 +111,17 @@ void	single_command_case(t_shell *shell)
 		{
 			shell->single_builtin = 1;
 			if (cmd->redirs.len > 0)
-				redirect_child(cmd, shell);
+			{
+				redir_rt = redirect_child(cmd, shell);
+			}
 			if (shell->single_builtin == 0)
 				return ;
 			if (shell->is_amb == true)
 				return ;
 			handle_builtin(flag, cmd, shell);
-
+			if (redir_rt != 0)
+				update_exitcode(redir_rt, shell);
+			dup2(shell->savestdin, STDIN_FILENO);
 		}
 		else
 			handle_single_command(shell);

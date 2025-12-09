@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:28:40 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/07 15:55:07 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:02:00 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 
 	new_line = 0;
 	index = 1;
+	if (!command ||!command->argv)
+		return ;
 	if (command->argv[1] != NULL && ft_strncmp(command->argv[1], "-n", 2) == 0)
 		index++;
 	else
