@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 20:11:31 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:31:48 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,5 +134,5 @@ void	eof_cleanup(t_data *d, t_shell *shell)
 	close(shell->savestdout);
 	close(shell->savestdin);
 	cleanup_env_vars(shell);
-	destroy_and_exit(d, NULL, 0);
+	destroy_and_exit(d, NULL, shell->exitcode);
 }

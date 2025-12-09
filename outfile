@@ -59,7 +59,7 @@ $(NAME): $(OBJS) $(LIBFT_A) $(C_VEC_A)
 		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) $(READLINE_LIB) -lreadline -o $(NAME)
 		@echo "$(GREEN) Compiled!$(DEF_COLOR)"
 
-valgrind: all
+valgrind:
 		$(VALGRIND) ./minishell
 
 clean:

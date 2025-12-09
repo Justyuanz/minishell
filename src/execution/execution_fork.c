@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 20:28:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 11:11:37 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:02:39 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
-	if (!cmd || cmd->argv[0] == NULL || cmd->argv == NULL) 
+	if (!cmd || cmd->argv[0] == NULL || cmd->argv == NULL)
 		final_exit(shell, shell->exitcode);
 	cmd_path = get_command_path(cmd->argv[0], shell);
 	if (cmd_path)

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 11:31:01 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:18:27 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "libft.h"
 # include "vec.h"
 # include <fcntl.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdio.h>
 
 //# include <stdio.h>
 # include <signal.h>
@@ -228,8 +228,7 @@ void				shell_execution(t_data *d, t_shell *shell);
 t_shell				*ft_shell(void);
 
 // execution_fork.c
-int					handle_command(t_shell *shell,
-						int command_count);
+int					handle_command(t_shell *shell, int command_count);
 
 // checkers.c
 int					check_access(const char *full_path, int *found);
@@ -238,7 +237,7 @@ int					check_access(const char *full_path, int *found);
 void				free_array(char **array);
 void				free_pipes(t_shell *shell);
 void				free_string(char *str);
-void	cleanup_env_vars(t_shell *shell);
+void				cleanup_env_vars(t_shell *shell);
 
 // path1.c
 char				*get_command_path(const char *cmd, t_shell *shell);
@@ -257,9 +256,9 @@ void				update_exitcode(int error_code, t_shell *shell);
 char				*get_env_value(t_shell *shell, char *str);
 void				handle_path_error(const char *cmd, t_shell *shell,
 						int found);
-void	cleanup_parent(t_shell *shell);
-void	final_cleaner(t_shell *shell);
-void	final_exit(t_shell *shell, int exit_number);
+void				cleanup_parent(t_shell *shell);
+void				final_cleaner(t_shell *shell);
+void				final_exit(t_shell *shell, int exit_number);
 // builtins
 void				handle_builtin(int flag, t_cmd *command, t_shell *shell);
 int					check_if_builtin(t_shell *shell, char *command);
@@ -273,13 +272,14 @@ void				update_shell_envp(t_shell *shell);
 void				builtin_exit(t_cmd *cmd, t_shell *shell);
 int					is_valid_identifier(const char *str);
 void				print_exported_vars(t_shell *shell);
-// int					update_env_var(t_shell *shell, char *key, t_env *env_var,
+// int					update_env_var(t_shell *shell, char *key,
+//						t_env *env_var;
 // 						char *value);
 // int					add_env_var(t_shell *shell, char *key, t_env *env_var,
 // 						char *value);
 
-int     update_env_var(t_shell *shell, char *key, char *value);
-int     add_env_var(t_shell *shell, char *key, char *value);
+int					update_env_var(t_shell *shell, char *key, char *value);
+int					add_env_var(t_shell *shell, char *key, char *value);
 void				env_to_null(t_env *env);
 int					export_argv(t_cmd *cmd, t_shell *shell);
 
