@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 20:18:54 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 18:38:38 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:26:49 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,33 @@ int	main(int argc, char **argv, char **envp)
 	shell = ft_shell();
 	shell_init(d, shell, envp);
 	set_prompt_signals();
-	while (1)
-		read_the_line(d, shell);
+	if (isatty(fileno(stdin)))
+	{
+		while (1)
+			read_the_line(d, shell);
+	}
+	else
+	{
+		char *line = get_next_line(fileno(stdin));
+		d->line = ft_strtrim(line, "\n");
+		free(line);
+		if (!d->line)
+			eof_cleanup(d, shell);
+		if (*d->line)
+		{
+			add_history(d->line);
+			if (tokenizer(d))
+			{
+				if (syntax_validation(d))
+				{
+					build_vec_cmds(d);
+					shell_execution(d, shell);
+				}
+			}
+			cleanup_line_runtime(d);
+		}
+		free(d->line);
+	}
 	cleanup_shell(d);
-	return (0);
+	return (shell->exitcode);
 }

@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 19:48:42 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/08 14:57:05 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:21:02 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,16 @@ int	read_heredoc_input(t_data *d, const char *delimiter, char *filename,
 		return (-1);
 	while (1)
 	{
-		d->line = readline("> ");
+		if (isatty(fileno(stdin)))
+		{
+			d->line = readline("> ");
+		}
+		else
+		{
+			char *line = get_next_line(fileno(stdin));
+			d->line = ft_strtrim(line, "\n");
+			free(line);
+		}
 		if (g_signal == SIGINT)
 		{
 			rl_done = 0;
