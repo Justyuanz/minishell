@@ -107,15 +107,13 @@ void	single_command_case(t_shell *shell)
 	int		flag;
 	t_cmd	*cmd;
 
+	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
-		
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
-			if (!shell->savestdin)
-				shell->savestdin = dup(STDIN_FILENO);
 			if (cmd->redirs.len > 0)
 				redirect_child(cmd, shell);
 			if (shell->is_amb == true)
@@ -128,7 +126,10 @@ void	single_command_case(t_shell *shell)
 			handle_single_command(shell);	
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
-	dup2(shell->savestdin, STDIN_FILENO);
+	if (shell->savestdin != -1)
+	{
+		dup2(shell->savestdin, STDIN_FILENO);
+		close(shell->savestdin);
+	}
 	close(shell->savestdout);
-	close(shell->savestdin);
 }
