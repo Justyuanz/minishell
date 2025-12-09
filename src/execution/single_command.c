@@ -126,10 +126,11 @@ void	single_command_case(t_shell *shell)
 			handle_single_command(shell);	
 	}
 	dup2(shell->savestdout, STDOUT_FILENO);
+	close(shell->savestdout);
 	if (shell->savestdin != -1)
 	{
 		dup2(shell->savestdin, STDIN_FILENO);
 		close(shell->savestdin);
 	}
-	close(shell->savestdout);
+
 }
