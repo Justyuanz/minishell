@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 11:31:47 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 16:53:33 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,32 @@ void	cleanup_parent(t_shell *shell)
 	}
 }
 
-void	handle_exec_here(t_shell *shell, t_data *d)
+
+int count_hd(t_cmd *cmd, t_shell *shell, int here_count)
+{
+	size_t	i;
+	t_redir *redir;
+
+	i = 0;
+
+	while (i < cmd->redirs.len)
+	{
+		redir = get_redir(cmd, i);
+		if (redir->type == HEREDOC)
+		{
+			here_count++;
+			if (here_count > 16)
+			{
+				ft_putstr_fd("maximum here-document count exceeded\n", 2);
+				final_exit(shell, 2);
+			}
+		}
+		i++;
+	}
+	return (here_count);
+}
+
+bool	handle_exec_here(t_shell *shell, t_data *d)
 {
 	t_cmd	*cmd;
 	size_t	i;
@@ -69,9 +94,10 @@ void	handle_exec_here(t_shell *shell, t_data *d)
 	{
 		cmd = get_cmd(d, i);
 		if (heredoc_stuff(d, cmd, shell) != 0)
-			return ;
+			return(false) ;
 		i++;
 	}
+	return (true);
 }
 
 void	shell_execution(t_data *d, t_shell *shell)
@@ -83,19 +109,21 @@ void	shell_execution(t_data *d, t_shell *shell)
 	command_count = shell->data->vec_cmds.len;
 	shell->pipes_count = command_count - 1;
 	shell->command_index = command_count;
-	handle_exec_here(shell, d);
-	if (create_pids(shell, command_count))
+	if (handle_exec_here(shell, d))
 	{
-		update_exitcode(1, shell);
-		ft_putstr_fd("pids creation failed \n", 2);
-		return ;
-	}
-	if (command_count == 1)
-		single_command_case(shell);
-	else
-	{
-		if (!execute_pipeline(shell, command_count))
+		if (create_pids(shell, command_count))
+		{
+			update_exitcode(1, shell);
+			ft_putstr_fd("pids creation failed \n", 2);
 			return ;
+		}
+		if (command_count == 1)
+			single_command_case(shell);
+		else
+		{
+			if (!execute_pipeline(shell, command_count))
+				return ;
+		}
 	}
 	cleanup_parent(shell);
 	shell->command_index = 0;
