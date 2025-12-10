@@ -72,7 +72,6 @@ static char	*check_command(const char *cmd, t_shell *shell)
 	if (access(cmd, F_OK) == 0)
 	{
 		update_exitcode(126, shell);
-		ft_putstr_fd((char *)cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		final_exit(shell, shell->exitcode);
 	}
@@ -100,7 +99,6 @@ char	*get_command_path(const char *cmd, t_shell *shell)
 		else
 			return (cmd_path);
 	}
-
 	directories = ft_split(env_path, ':');
 	if (!directories)
 		return (NULL);

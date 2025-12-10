@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/10 16:36:04 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 16:53:33 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,9 @@ int count_hd(t_cmd *cmd, t_shell *shell, int here_count)
 
 bool	handle_exec_here(t_shell *shell, t_data *d)
 {
-	t_cmd *cmd;
-	size_t i;
-	int	here_count;
+	t_cmd	*cmd;
+	size_t	i;
 
-	here_count = 0;
-
-	i = 0;
-	while (i < d->vec_cmds.len)
-	{
-		cmd = get_cmd(d, i);
-		here_count += count_hd(cmd, shell, here_count);
-		i++;
-	}
 	i = 0;
 	while (i < d->vec_cmds.len)
 	{

@@ -230,6 +230,7 @@ t_shell				*ft_shell(void);
 
 // execution_fork.c
 int					handle_command(t_shell *shell, int command_count);
+void				single_builtin(t_shell *shell, t_cmd *cmd, int flag);
 
 // checkers.c
 int					check_access(const char *full_path, int *found);
