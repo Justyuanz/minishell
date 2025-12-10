@@ -70,6 +70,9 @@ int	redirect_child(t_cmd *cmd, t_shell *shell)
 		{
 			if (redir_in(redir, shell))
 			{
+				ft_putstr_fd((char *)redir->file, 2);
+				ft_putendl_fd("permission denied", 2);
+
 				if (shell->single_builtin == 1)
 					return(1);
 				else
@@ -80,6 +83,8 @@ int	redirect_child(t_cmd *cmd, t_shell *shell)
 		{
 			if (redir_out(redir, shell))
 			{
+				ft_putstr_fd((char *)redir->file, 2);
+				ft_putendl_fd(" :permission denied", 2);
 				if (shell->single_builtin == 1)
 					return(1) ;
 				else
