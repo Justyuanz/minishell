@@ -26,9 +26,9 @@ static bool	check_end_with_redirs(t_data *d, size_t i)
 
 	tok = get_tok(d, i);
 	if ((i + 1 < d->vec_tok.len && get_tok(d, i + 1)->type != EMPTY_WORD))
-        return (true);
-	else if ((tok->type == REDIR_IN || tok->type == REDIR_OUT || tok->type == APPEND
-			|| tok->type == HEREDOC))
+		return (true);
+	else if ((tok->type == REDIR_IN || tok->type == REDIR_OUT
+			|| tok->type == APPEND || tok->type == HEREDOC))
 		return (parse_error_msg(SYNTAX_ERROR_NEWLINE, NULL, 2));
 	return (true);
 }

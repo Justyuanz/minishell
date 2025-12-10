@@ -21,10 +21,8 @@ void	close_pipes(t_shell *shell)
 	{
 		if (shell->pipe_array[i])
 		{
-			//if (shell->pipe_array[i][0] > 0)
-				close(shell->pipe_array[i][0]);
-			//if (shell->pipe_array[i][1] > 1)
-				close(shell->pipe_array[i][1]);
+			close(shell->pipe_array[i][0]);
+			close(shell->pipe_array[i][1]);
 		}
 		i++;
 	}

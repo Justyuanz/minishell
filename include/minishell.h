@@ -230,6 +230,7 @@ t_shell				*ft_shell(void);
 
 // execution_fork.c
 int					handle_command(t_shell *shell, int command_count);
+void				single_builtin(t_shell *shell, t_cmd *cmd, int flag);
 
 // checkers.c
 int					check_access(const char *full_path, int *found);
@@ -290,7 +291,7 @@ void				handle_pipes(t_shell *shell);
 void				close_parent_pipes(t_shell *shell);
 
 // redirection.c
-int				redirect_child(t_cmd *cmd, t_shell *shell);
+int					redirect_child(t_cmd *cmd, t_shell *shell);
 
 // heredoc.c
 int					handle_heredocs(t_data *d, t_cmd *cmd);

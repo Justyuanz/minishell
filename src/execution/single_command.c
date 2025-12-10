@@ -99,10 +99,8 @@ void	single_command_case(t_shell *shell)
 {
 	int		flag;
 	t_cmd	*cmd;
-	int		redir_rt;
 
 	shell->single_builtin = 0;
-	redir_rt = 0;
 	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
@@ -110,20 +108,7 @@ void	single_command_case(t_shell *shell)
 		flag = check_if_builtin(shell, cmd->argv[0]);
 		if (flag != 0)
 		{
-			shell->single_builtin = 1;
-			if (cmd->redirs.len > 0)
-			{
-				redir_rt = redirect_child(cmd, shell);
-			}
-			if (redir_rt != 0)
-			{
-				update_exitcode(1, shell);
-				dup2(shell->savestdin, STDIN_FILENO);
-				flag = 0;
-			}
-			
-			handle_builtin(flag, cmd, shell);
-			dup2(shell->savestdin, STDIN_FILENO);
+			single_builtin(shell, cmd, flag);
 		}
 		else
 			handle_single_command(shell);
