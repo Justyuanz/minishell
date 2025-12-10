@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:31 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/10 16:48:22 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 17:21:28 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,29 @@ int	heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell)
 		return (1);
 	}
 	return (0);
+}
+
+int	count_hd(t_cmd *cmd, t_shell *shell, int here_count)
+{
+	size_t	i;
+	t_redir	*redir;
+
+	i = 0;
+	while (i < cmd->redirs.len)
+	{
+		redir = get_redir(cmd, i);
+		if (redir->type == HEREDOC)
+		{
+			here_count++;
+			if (here_count > 16)
+			{
+				ft_putstr_fd("maximum here-document count exceeded\n", 2);
+				final_exit(shell, 2);
+			}
+		}
+		i++;
+	}
+	return (here_count);
 }
 
 char	*create_heredoc_filename(int heredoc_num)
