@@ -118,6 +118,7 @@ void	single_command_case(t_shell *shell)
 			if (redir_rt != 0)
 			{
 				update_exitcode(1, shell);
+				dup2(shell->savestdin, STDIN_FILENO);
 				flag = 0;
 			}
 			
