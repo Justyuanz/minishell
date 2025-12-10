@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:07:13 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/03 23:07:02 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:06:21 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	push_env(t_data *d, char **envp, size_t i)
 		if (vec_push(&d->vec_env, env) == -1)
 			destroy_and_exit(d, "Vec push env fail", 1);
 	}
-
 }
 
 void	envp_init(t_data *d, char **envp)

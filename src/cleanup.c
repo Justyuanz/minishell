@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:06:26 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 18:42:30 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:05:49 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	cleanup_env_vars(t_shell *shell)
 				free(env_var->key);
 			if (env_var->value_dupped && env_var->value)
 				free(env_var->value);
-			//free(env_var);
 		}
 		i++;
 	}

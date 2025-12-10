@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:59 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/11/30 16:31:01 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:07:35 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ void	close_pipes(t_shell *shell)
 	{
 		if (shell->pipe_array[i])
 		{
-			//if (shell->pipe_array[i][0] > 0)
-				close(shell->pipe_array[i][0]);
-			//if (shell->pipe_array[i][1] > 1)
-				close(shell->pipe_array[i][1]);
+			close(shell->pipe_array[i][0]);
+			close(shell->pipe_array[i][1]);
 		}
 		i++;
 	}

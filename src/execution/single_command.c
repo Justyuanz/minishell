@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 18:55:18 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:43:46 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,10 @@ void	single_command_case(t_shell *shell)
 			if (redir_rt != 0)
 			{
 				update_exitcode(1, shell);
+				dup2(shell->savestdin, STDIN_FILENO);
 				flag = 0;
 			}
-			
+
 			handle_builtin(flag, cmd, shell);
 			dup2(shell->savestdin, STDIN_FILENO);
 		}
