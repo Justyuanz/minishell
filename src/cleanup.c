@@ -35,30 +35,6 @@ void	cleanup_line(t_data *d)
 	vec_free(&d->vec_tok);
 }
 
-void	cleanup_env_vars(t_shell *shell)
-{
-	size_t	i;
-	t_env	*env_var;
-
-	i = 0;
-	while (i < shell->data->vec_env.len)
-	{
-		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
-		if (env_var)
-		{
-			if (env_var->key_dupped && env_var->key)
-				free(env_var->key);
-			if (env_var->value_dupped && env_var->value)
-				free(env_var->value);
-			//free(env_var);
-		}
-		i++;
-	}
-	// shell->data->vec_env.len = 0;
-	if (shell && shell->data)
-		shell->data->vec_env.len = 0;
-}
-
 void	cleanup_shell(t_data *d)
 {
 	if (!d)

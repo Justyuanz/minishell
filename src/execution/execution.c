@@ -61,12 +61,12 @@ void	cleanup_parent(t_shell *shell)
 
 void	handle_exec_here(t_shell *shell, t_data *d)
 {
-	t_cmd *cmd;
-	size_t i;
+	t_cmd	*cmd;
+	size_t	i;
 
 	i = 0;
 	while (i < d->vec_cmds.len)
-	{	
+	{
 		cmd = get_cmd(d, i);
 		if (heredoc_stuff(d, cmd, shell) != 0)
 			return ;
@@ -77,7 +77,7 @@ void	handle_exec_here(t_shell *shell, t_data *d)
 void	shell_execution(t_data *d, t_shell *shell)
 {
 	int	command_count;
-	
+
 	shell->index = 0;
 	shell->is_amb = false;
 	command_count = shell->data->vec_cmds.len;

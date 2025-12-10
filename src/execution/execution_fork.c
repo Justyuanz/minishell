@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+void	single_builtin(t_shell *shell, t_cmd *cmd, int flag)
+{
+	int	redir_rt;
+
+	redir_rt = 0;
+	shell->single_builtin = 1;
+	if (cmd->redirs.len > 0)
+	{
+		redir_rt = redirect_child(cmd, shell);
+	}
+	if (redir_rt != 0)
+	{
+		update_exitcode(1, shell);
+		dup2(shell->savestdin, STDIN_FILENO);
+		flag = 0;
+	}
+	handle_builtin(flag, cmd, shell);
+	dup2(shell->savestdin, STDIN_FILENO);
+}
+
 void	handle_execution(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
