@@ -102,6 +102,7 @@ void	single_command_case(t_shell *shell)
 	int		redir_rt;
 
 	shell->single_builtin = 0;
+	redir_rt = 0;
 	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
@@ -114,13 +115,13 @@ void	single_command_case(t_shell *shell)
 			{
 				redir_rt = redirect_child(cmd, shell);
 			}
-			if (shell->single_builtin == 0)
-				return ;
-			if (shell->is_amb == true)
-				return ;
-			handle_builtin(flag, cmd, shell);
 			if (redir_rt != 0)
-				update_exitcode(redir_rt, shell);
+			{
+				update_exitcode(1, shell);
+				flag = 0;
+			}
+			
+			handle_builtin(flag, cmd, shell);
 			dup2(shell->savestdin, STDIN_FILENO);
 		}
 		else

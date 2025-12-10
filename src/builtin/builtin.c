@@ -74,4 +74,6 @@ void	handle_builtin(int flag, t_cmd *command, t_shell *shell)
 		builtin_env(shell);
 	if (flag == BUILTIN_EXIT)
 		builtin_exit(command, shell);
+	if (flag == -1)
+		return ;
 }
