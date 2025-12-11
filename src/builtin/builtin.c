@@ -26,9 +26,15 @@ int	export_argv(t_cmd *cmd, t_shell *shell)
 void	env_to_null(t_env *env)
 {
 	if (env->key_dupped == 1)
+	{
 		free(env->key);
+		env->key_dupped = 0;
+	}
 	if (env->value_dupped == 1)
+	{
 		free(env->value);
+		env->value_dupped = 0;
+	}
 	env->key = NULL;
 	env->value = NULL;
 }

@@ -83,9 +83,15 @@ void	cleanup_env_vars(t_shell *shell)
 		if (env_var)
 		{
 			if (env_var->key_dupped && env_var->key)
+			{
 				free(env_var->key);
+				env_var->key_dupped = 0;
+			}
 			if (env_var->value_dupped && env_var->value)
+			{
 				free(env_var->value);
+				env_var->value_dupped = 0;
+			}
 		}
 		i++;
 	}
