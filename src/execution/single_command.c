@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/11 17:03:51 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 23:30:33 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	handle_single_command(t_shell *shell)
 	if (shell->pids[0] == 0)
 	{
 		set_child_signals();
+		close(shell->savestdin);
+		close(shell->savestdout);
 		execute_single_command(shell);
 	}
 	else
