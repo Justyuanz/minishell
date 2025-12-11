@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 14:25:10 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/10 17:21:47 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 13:15:32 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,7 +300,7 @@ int					redir_in(t_redir *redir, t_shell *shell);
 // heredoc.c
 int					handle_heredocs(t_data *d, t_cmd *cmd);
 int					heredoc_stuff(t_data *d, t_cmd *cmd, t_shell *shell);
-int					count_hd(t_cmd *cmd, t_shell *shell, int here_count);
+int					count_hd(t_cmd *cmd, int here_count);
 
 // heredoc_input.c
 int					read_heredoc_input(t_data *d, const char *delimiter,
