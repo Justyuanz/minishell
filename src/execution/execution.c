@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/11 13:27:07 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:57:33 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static bool	execute_pipeline(t_shell *shell, int command_count)
 		return (false);
 	}
 	wait_for_all(shell);
+	set_prompt_signals();
 	free_pipes(shell);
 	return (true);
 }

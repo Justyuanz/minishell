@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/10 16:53:44 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:52:54 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 void	check_wait_status(t_shell *shell, int *nl_flag)
 {
 	int	status;
+	int signal;
 
 	status = 127;
 	waitpid(-1, &status, 0);
 	if (WIFSIGNALED(status))
 	{
-		shell->exitcode = 0;
+		//shell->exitcode = 0;
 		if (WTERMSIG(status) == SIGINT)
 		{
 			if (*nl_flag == 0)
 				write(1, "\n", 1);
 			*nl_flag = 1;
+		}
+		if (WIFSIGNALED(status))
+		{
+			signal = WTERMSIG(status);
+			shell->exitcode = signal + 128;
 		}
 	}
 	if (WIFEXITED(status))
