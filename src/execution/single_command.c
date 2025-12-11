@@ -107,7 +107,6 @@ void	single_command_case(t_shell *shell)
 	t_cmd	*cmd;
 
 	shell->single_builtin = 0;
-	shell->savestdin = dup(STDIN_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
