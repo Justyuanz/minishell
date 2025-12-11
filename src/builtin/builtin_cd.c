@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:27:44 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 15:40:18 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:34:48 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	cd_home(char *old_pwd, t_shell *shell)
 	return (0);
 }
 
-int	update_old_pwd(t_vec *vec_env, char *old_pwd)
+int	update_old_pwd(t_shell *shell, t_vec *vec_env, char *old_pwd)
 {
 	t_env	*env_var;
 	size_t	i;
@@ -46,8 +46,8 @@ int	update_old_pwd(t_vec *vec_env, char *old_pwd)
 		env_var = (t_env *)vec_get(vec_env, i);
 		if (env_var && env_var->key && ft_strcmp("OLDPWD", env_var->key) == 0)
 		{
-			env_var->value = ft_strdup(old_pwd);
-			env_var->value_dupped = 1;
+			env_var->value = arena_push(&shell->data->arena_env, old_pwd, ft_strlen(old_pwd));
+			// env_var->value_dupped = 1;
 			free(old_pwd);
 			old_pwd = NULL;
 			return (0);
@@ -113,6 +113,6 @@ void	builtin_cd(int i, char **command_array, t_shell *shell)
 			return (error_cd(2, shell));
 		}
 	}
-	update_old_pwd(&shell->data->vec_env, old_pwd);
+	update_old_pwd(shell, &shell->data->vec_env, old_pwd);
 	free_oldpwd_dup(shell);
 }
