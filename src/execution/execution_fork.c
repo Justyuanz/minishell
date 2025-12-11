@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 20:28:18 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/09 15:02:39 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 17:04:29 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	single_builtin(t_shell *shell, t_cmd *cmd, int flag)
 
 	redir_rt = 0;
 	shell->single_builtin = 1;
-	shell->savestdin = dup(STDIN_FILENO);
-	shell->savestdout = dup(STDOUT_FILENO);
 	if (cmd->redirs.len > 0)
 	{
 		redir_rt = redirect_child(cmd, shell);
@@ -57,7 +55,6 @@ void	handle_execution(t_cmd *cmd, t_shell *shell)
 static void	fork_else(t_shell *shell)
 {
 	set_parent_wait_signals();
-	wait_for_all(shell);
 	close_parent_pipes(shell);
 }
 
