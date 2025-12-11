@@ -36,8 +36,8 @@ void	builtin_echo(t_cmd *command, t_shell *shell)
 		index++;
 	else
 		new_line = 1;
-	while (command->argv[index] != NULL && ft_strcmp(command->argv[index],
-			"-n") == 0)
+	while (command->argv[index] != NULL && ft_strncmp(command->argv[index],
+			"-n", 2) == 0)
 		index++;
 	i = index;
 	print_echo(command->argv, i);
