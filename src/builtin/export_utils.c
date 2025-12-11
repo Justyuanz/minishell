@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_others.c                                   :+:      :+:    :+:   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:29:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/04 19:15:46 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 13:25:00 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int	update_env_var(t_shell *shell, char *key, char *value)
 		{
 			if (env_var->value && env_var->value_dupped)
 				free(env_var->value);
+
 			env_var->value = value;
 			env_var->value_dupped = 1;
 			free(key);

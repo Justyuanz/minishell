@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:30:20 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/10 17:20:41 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 13:27:07 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,26 @@ bool	handle_exec_here(t_shell *shell, t_data *d)
 {
 	t_cmd	*cmd;
 	size_t	i;
+	size_t	count;
 
-	i = 0;
-	while (i < d->vec_cmds.len)
+	count = 0;
+	i = ~0;
+	while (++i < d->vec_cmds.len)
+	{
+		cmd = get_cmd(d, i);
+		count += count_hd(cmd, count);
+		if (count > 16)
+		{
+			ft_putstr_fd("maximum here-document count exceeded\n", 2);
+			final_exit(shell, 2);
+		}
+	}
+	i = ~0;
+	while (++i < d->vec_cmds.len)
 	{
 		cmd = get_cmd(d, i);
 		if (heredoc_stuff(d, cmd, shell) != 0)
-			return (false);
-		i++;
+			return (false) ;
 	}
 	return (true);
 }
