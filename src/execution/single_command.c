@@ -6,7 +6,7 @@
 /*   By: jinzhang <jinzhang@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 16:31:15 by jinzhang          #+#    #+#             */
-/*   Updated: 2025/12/11 16:52:54 by jinzhang         ###   ########.fr       */
+/*   Updated: 2025/12/11 17:03:51 by jinzhang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void	single_command_case(t_shell *shell)
 	t_cmd	*cmd;
 
 	shell->single_builtin = 0;
+	shell->savestdin = dup(STDIN_FILENO);
+	shell->savestdout = dup(STDOUT_FILENO);
 	cmd = get_cmd(shell->data, 0);
 	if (cmd)
 	{
