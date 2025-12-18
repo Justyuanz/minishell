@@ -28,6 +28,18 @@ static int	is_valid_unset_identifier(const char *str)
 	return (1);
 }
 
+static void	env_to_last(t_env *env_var, t_env *last)
+{
+	if (env_var->key_dupped == 1)
+		free(env_var->key);
+	if (env_var->value_dupped == 1)
+		free(env_var->value);
+	env_var->key = last->key;
+	env_var->value = last->value;
+	last->key = NULL;
+	last->value = NULL;
+}
+
 static void	remove_env_var(t_shell *shell, const char *key)
 {
 	t_env	*env_var;
@@ -44,16 +56,7 @@ static void	remove_env_var(t_shell *shell, const char *key)
 			{
 				last = (t_env *)vec_get(&shell->data->vec_env,
 						shell->data->vec_env.len - 1);
-				if (env_var->key_dupped == 1)
-					free(env_var->key);
-				if (env_var->value_dupped == 1)
-				{
-					free(env_var->value);
-				}
-				env_var->key = last->key;
-				env_var->value = last->value;
-				last->key = NULL;
-				last->value = NULL;
+				env_to_last(env_var, last);
 			}
 			else
 				env_to_null(env_var);

@@ -64,12 +64,10 @@ int	update_env_var(t_shell *shell, char *key, char *value)
 		env_var = (t_env *)vec_get(&shell->data->vec_env, i);
 		if (env_var && ft_strcmp(env_var->key, key) == 0)
 		{
-			if (env_var->value && env_var->value_dupped)
-				free(env_var->value);
-
-			env_var->value = value;
-			env_var->value_dupped = 1;
+			env_var->value = arena_push(&shell->data->arena_env,
+					value, ft_strlen(value));
 			free(key);
+			free(value);
 			return (0);
 		}
 		i++;
@@ -89,10 +87,9 @@ int	add_env_var(t_shell *shell, char *key, char *value)
 			free(value);
 		return (1);
 	}
-	env_var->key = key;
-	env_var->value = value;
-	env_var->key_dupped = 1;
-	env_var->value_dupped = 1;
+	env_var->key = arena_push(&shell->data->arena_env, key, ft_strlen(key));
+	env_var->value = arena_push(&shell->data->arena_env,
+			value, ft_strlen(value));
 	if (!vec_push(&shell->data->vec_env, env_var))
 	{
 		free(key);
@@ -100,5 +97,8 @@ int	add_env_var(t_shell *shell, char *key, char *value)
 			free(value);
 		return (1);
 	}
+	free(key);
+	if (value)
+		free(value);
 	return (0);
 }

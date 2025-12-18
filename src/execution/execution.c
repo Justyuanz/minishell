@@ -83,7 +83,7 @@ bool	handle_exec_here(t_shell *shell, t_data *d)
 	{
 		cmd = get_cmd(d, i);
 		if (heredoc_stuff(d, cmd, shell) != 0)
-			return (false) ;
+			return (false);
 	}
 	return (true);
 }

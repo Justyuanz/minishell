@@ -52,7 +52,7 @@ int	is_exit_digit(char *exit_str)
 			ret++;
 		i++;
 	}
-	if (ret > 1)
+	if (ret >= 1)
 		return (ret);
 	if (ft_strlen(exit_str) > 19)
 		return (1);
