@@ -46,8 +46,8 @@ int	update_old_pwd(t_shell *shell, t_vec *vec_env, char *old_pwd)
 		env_var = (t_env *)vec_get(vec_env, i);
 		if (env_var && env_var->key && ft_strcmp("OLDPWD", env_var->key) == 0)
 		{
-			env_var->value = arena_push(&shell->data->arena_env, old_pwd, ft_strlen(old_pwd));
-			// env_var->value_dupped = 1;
+			env_var->value = arena_push(&shell->data->arena_env,
+					old_pwd, ft_strlen(old_pwd));
 			free(old_pwd);
 			old_pwd = NULL;
 			return (0);
